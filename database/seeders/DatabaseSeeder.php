@@ -32,6 +32,9 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             InquirySeeder::class,
             ConsultationSeeder::class,
+            HeroSectionSeeder::class,
+            ServiceTypeSeeder::class,
+            PropertyTypeSeeder::class,
         ]);
     }
 }

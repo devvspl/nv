@@ -5,15 +5,9 @@
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-pattern-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        
-        <!-- 404 Illustration -->
-        <div class="mb-8">
-            <img src="{{ asset('main/images/404.svg') }}" alt="404 Not Found" class="mx-auto h-64 w-auto">
-        </div>
-
         <!-- Error Content -->
         <div class="mb-8">
-            <h1 class="text-6xl font-heading text-zendo-navy mb-4">404</h1>
+            <h1 class="text-6xl font-heading text-zendo-navy mb-4">&nbsp;</h1>
             <h2 class="text-3xl font-heading text-zendo-navy mb-4">Page Not Found</h2>
             <p class="text-lg text-gray-600 font-body max-w-2xl mx-auto mb-8">
                 Sorry, we couldn't find the page you're looking for. The page might have been moved, deleted, or you entered the wrong URL.

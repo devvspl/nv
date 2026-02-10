@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\AboutUsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CommercialSectionController;
+use App\Http\Controllers\Admin\HeroSectionController;
+use App\Http\Controllers\Admin\ServiceTypeController;
+use App\Http\Controllers\Admin\PropertyTypeController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ConsultationController as AdminConsultationController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +56,18 @@ Route::middleware('auth')->group(function () {
         // Commercial Sections
         Route::resource('commercial-sections', CommercialSectionController::class);
         Route::patch('commercial-sections/{commercialSection}/toggle-status', [CommercialSectionController::class, 'toggleStatus'])->name('commercial-sections.toggle-status');
+        
+        // Hero Sections
+        Route::resource('hero-sections', HeroSectionController::class);
+        Route::patch('hero-sections/{heroSection}/toggle-status', [HeroSectionController::class, 'toggleStatus'])->name('hero-sections.toggle-status');
+        
+        // Service Types
+        Route::resource('service-types', ServiceTypeController::class);
+        Route::patch('service-types/{serviceType}/toggle-status', [ServiceTypeController::class, 'toggleStatus'])->name('service-types.toggle-status');
+        
+        // Property Types
+        Route::resource('property-types', PropertyTypeController::class);
+        Route::patch('property-types/{propertyType}/toggle-status', [PropertyTypeController::class, 'toggleStatus'])->name('property-types.toggle-status');
         
         // Inquiries management
         Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');

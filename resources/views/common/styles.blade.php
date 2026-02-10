@@ -71,7 +71,7 @@
         background-color: #0b2c3d;
     }
     header:not(.scrolled) {
-        background-color: transparent;
+         background-color: rgb(11 44 61 / 52%);
     }
     header:not(.scrolled) .header-nav-link {
         color: #ffffff;
