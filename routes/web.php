@@ -15,12 +15,35 @@ use App\Http\Controllers\Admin\CommercialSectionController;
 use App\Http\Controllers\Admin\HeroSectionController;
 use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\Admin\PropertyTypeController;
+use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\ProjectStatusController;
+use App\Http\Controllers\Admin\BhkController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ConsultationController as AdminConsultationController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
+
+// Cache clearing routes
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    return 'Cache cleared successfully!';
+});
+
+Route::get('/optimize', function() {
+    Artisan::call('optimize:clear');
+    return 'Optimization cache cleared!';
+});
+
+Route::get('/storage-link', function() {
+    Artisan::call('storage:link');
+    return 'Storage link created!';
+});
 
 // Public inquiry submission
 Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
@@ -68,6 +91,18 @@ Route::middleware('auth')->group(function () {
         // Property Types
         Route::resource('property-types', PropertyTypeController::class);
         Route::patch('property-types/{propertyType}/toggle-status', [PropertyTypeController::class, 'toggleStatus'])->name('property-types.toggle-status');
+        
+        // Locations
+        Route::resource('locations', LocationController::class);
+        Route::patch('locations/{location}/toggle-status', [LocationController::class, 'toggleStatus'])->name('locations.toggle-status');
+        
+        // Project Statuses
+        Route::resource('project-statuses', ProjectStatusController::class);
+        Route::patch('project-statuses/{projectStatus}/toggle-status', [ProjectStatusController::class, 'toggleStatus'])->name('project-statuses.toggle-status');
+        
+        // BHKs
+        Route::resource('bhks', BhkController::class);
+        Route::patch('bhks/{bhk}/toggle-status', [BhkController::class, 'toggleStatus'])->name('bhks.toggle-status');
         
         // Inquiries management
         Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');

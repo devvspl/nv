@@ -407,13 +407,13 @@
                     </div>
 
                     <!-- Property Management Dropdown -->
-                    <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*') ? 'true' : 'false' }}, showFloating: false }" 
+                    <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*') ? 'true' : 'false' }}, showFloating: false }" 
                          @mouseenter="showFloating = sidebarCollapsed" 
                          @mouseleave="showFloating = false"
                          class="relative">
                         <!-- Dropdown Toggle -->
                         <button @click="open = !open"
-                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                             :class="{ 'justify-center': sidebarCollapsed }">
                             <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
                                 <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
@@ -457,6 +457,39 @@
                                 </svg>
                                 Property Types
                             </a>
+
+                            <a href="{{ route('admin.locations.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.locations.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z">
+                                    </path>
+                                </svg>
+                                Locations
+                            </a>
+
+                            <a href="{{ route('admin.project-statuses.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.project-statuses.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                                    </path>
+                                </svg>
+                                Project Statuses
+                            </a>
+
+                            <a href="{{ route('admin.bhks.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.bhks.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                    </path>
+                                </svg>
+                                BHK
+                            </a>
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -487,6 +520,45 @@
                                     </path>
                                 </svg>
                                 Property Types
+                            </a>
+
+                            <!-- Locations -->
+                            <a href="{{ route('admin.locations.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.locations.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z">
+                                    </path>
+                                </svg>
+                                Locations
+                            </a>
+
+                            <!-- Project Statuses -->
+                            <a href="{{ route('admin.project-statuses.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.project-statuses.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                                    </path>
+                                </svg>
+                                Project Statuses
+                            </a>
+
+                            <!-- BHK -->
+                            <a href="{{ route('admin.bhks.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.bhks.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                    </path>
+                                </svg>
+                                BHK
                             </a>
                         </div>
                     </div>
