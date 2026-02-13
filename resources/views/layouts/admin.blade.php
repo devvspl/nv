@@ -407,13 +407,13 @@
                     </div>
 
                     <!-- Property Management Dropdown -->
-                    <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*') ? 'true' : 'false' }}, showFloating: false }" 
+                    <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*', 'admin.property-inquiries.*') ? 'true' : 'false' }}, showFloating: false }" 
                          @mouseenter="showFloating = sidebarCollapsed" 
                          @mouseleave="showFloating = false"
                          class="relative">
                         <!-- Dropdown Toggle -->
                         <button @click="open = !open"
-                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*', 'admin.property-inquiries.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                             :class="{ 'justify-center': sidebarCollapsed }">
                             <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
                                 <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
@@ -490,6 +490,48 @@
                                 </svg>
                                 BHK
                             </a>
+
+                            <a href="{{ route('admin.builders.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.builders.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                Builders
+                            </a>
+
+                            <a href="{{ route('admin.amenities.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.amenities.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                                    </path>
+                                </svg>
+                                Amenities
+                            </a>
+
+                            <div class="border-t border-gray-700 my-2"></div>
+
+                            <a href="{{ route('admin.properties.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.properties.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z">
+                                    </path>
+                                </svg>
+                                Properties
+                            </a>
+
+                            <a href="{{ route('admin.property-inquiries.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.property-inquiries.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                                    </path>
+                                </svg>
+                                Property Inquiries
+                            </a>
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -559,6 +601,60 @@
                                     </path>
                                 </svg>
                                 BHK
+                            </a>
+
+                            <!-- Builders -->
+                            <a href="{{ route('admin.builders.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.builders.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                Builders
+                            </a>
+
+                            <!-- Amenities -->
+                            <a href="{{ route('admin.amenities.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.amenities.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                                    </path>
+                                </svg>
+                                Amenities
+                            </a>
+
+                            <div class="border-t border-gray-700 my-2 mx-4"></div>
+
+                            <!-- Properties -->
+                            <a href="{{ route('admin.properties.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.properties.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z">
+                                    </path>
+                                </svg>
+                                Properties
+                            </a>
+
+                            <!-- Property Inquiries -->
+                            <a href="{{ route('admin.property-inquiries.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.property-inquiries.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                                    </path>
+                                </svg>
+                                Property Inquiries
+                            </a>
+                                    </path>
+                                </svg>
+                                
                             </a>
                         </div>
                     </div>

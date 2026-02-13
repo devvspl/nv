@@ -227,48 +227,153 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
     </div>
 </div>
 
-<!-- Quick Actions -->
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-    <h3 class="text-lg font-semibold text-zendo-navy font-heading mb-6">Quick Actions</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <a href="{{ route('admin.users.create') }}" class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-zendo-gold hover:bg-zendo-light-bg transition-colors group">
-            <div class="text-center">
-                <svg class="w-8 h-8 mx-auto text-gray-400 group-hover:text-zendo-gold mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                <p class="text-sm font-medium text-gray-600 group-hover:text-zendo-navy">Add User</p>
+<!-- Visitor Analytics - AJAX Powered -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-8" id="visitor-analytics">
+    <!-- Header with Filters -->
+    <div class="p-6 border-b border-gray-100">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h3 class="text-lg font-semibold text-zendo-navy font-heading">Visitor Analytics</h3>
+                <p class="text-sm text-gray-500 mt-1">Track and analyze your website traffic</p>
             </div>
-        </a>
-        <a href="{{ route('admin.testimonials.create') }}" class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-zendo-gold hover:bg-zendo-light-bg transition-colors group">
-            <div class="text-center">
-                <svg class="w-8 h-8 mx-auto text-gray-400 group-hover:text-zendo-gold mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                </svg>
-                <p class="text-sm font-medium text-gray-600 group-hover:text-zendo-navy">Add Testimonial</p>
+            <div class="flex gap-2">
+                <button onclick="loadAnalytics('today')" id="btn-today" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
+                    Today
+                </button>
+                <button onclick="loadAnalytics('week')" id="btn-week" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
+                    Week
+                </button>
+                <button onclick="loadAnalytics('month')" id="btn-month" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
+                    Month
+                </button>
+                <button onclick="loadAnalytics('all')" id="btn-all" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-zendo-navy text-white">
+                    All Time
+                </button>
             </div>
-        </a>
-        <a href="{{ route('admin.features.create') }}" class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-zendo-gold hover:bg-zendo-light-bg transition-colors group">
-            <div class="text-center">
-                <svg class="w-8 h-8 mx-auto text-gray-400 group-hover:text-zendo-gold mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                </svg>
-                <p class="text-sm font-medium text-gray-600 group-hover:text-zendo-navy">Add Feature</p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="analytics-loading" class="p-12 text-center hidden">
+        <svg class="animate-spin h-8 w-8 mx-auto text-zendo-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-gray-500 mt-2">Loading analytics...</p>
+    </div>
+
+    <!-- Analytics Content -->
+    <div id="analytics-content">
+        <!-- Stats Overview -->
+        <div class="p-6 border-b border-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Visits -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-blue-900">Total Visits</span>
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-900" id="stat-visits">0</p>
+                </div>
+
+                <!-- Unique Visitors -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-green-900">Unique Visitors</span>
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-2xl font-bold text-green-900" id="stat-unique">0</p>
+                </div>
+
+                <!-- Desktop -->
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-orange-900">Desktop</span>
+                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-2xl font-bold text-orange-900" id="stat-desktop">0</p>
+                    <p class="text-xs text-orange-700 mt-1" id="stat-desktop-pct">0% of traffic</p>
+                </div>
+
+                <!-- Mobile -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-purple-900">Mobile</span>
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-2xl font-bold text-purple-900" id="stat-mobile">0</p>
+                    <p class="text-xs text-purple-700 mt-1" id="stat-mobile-pct">0% of traffic</p>
+                </div>
             </div>
-        </a>
-        <a href="{{ route('admin.cities.create') }}" class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-zendo-gold hover:bg-zendo-light-bg transition-colors group">
-            <div class="text-center">
-                <svg class="w-8 h-8 mx-auto text-gray-400 group-hover:text-zendo-gold mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                <p class="text-sm font-medium text-gray-600 group-hover:text-zendo-navy">Add City</p>
+        </div>
+
+        <!-- Charts -->
+        <div class="p-6 border-b border-gray-100">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Daily Visits Trend -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Daily Visits Trend (Last 7 Days)</h4>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="dailyVisitsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Device Distribution -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Device Distribution</h4>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="deviceChart"></canvas>
+                    </div>
+                </div>
             </div>
-        </a>
+        </div>
+
+        <!-- Details -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Most Visited Pages -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Most Visited Pages</h4>
+                    <div class="space-y-2" id="most-visited-pages">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Top Browsers -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Top Browsers</h4>
+                    <div class="space-y-2" id="top-browsers">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Recent Activity</h4>
+                    <div class="space-y-2" id="recent-activity">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 @endsection
 
 @section('scripts')
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 <script>
     // Update current time
     function updateTime() {
@@ -287,8 +392,279 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
 
     // Update time every second
     setInterval(updateTime, 1000);
-    
-    // Initialize time on page load
     updateTime();
+
+    // Chart instances
+    let dailyVisitsChart = null;
+    let deviceChart = null;
+    let currentPeriod = 'all';
+
+    // Load analytics data
+    function loadAnalytics(period) {
+        currentPeriod = period;
+        
+        // Update button states
+        document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+            btn.classList.remove('bg-zendo-navy', 'text-white');
+            btn.classList.add('bg-gray-100', 'text-gray-700');
+        });
+        document.getElementById(`btn-${period}`).classList.remove('bg-gray-100', 'text-gray-700');
+        document.getElementById(`btn-${period}`).classList.add('bg-zendo-navy', 'text-white');
+
+        // Show loading
+        document.getElementById('analytics-loading').classList.remove('hidden');
+        document.getElementById('analytics-content').style.opacity = '0.5';
+
+        // Fetch data
+        fetch(`{{ route('dashboard.analytics') }}?period=${period}`)
+            .then(response => response.json())
+            .then(data => {
+                // Update stats
+                document.getElementById('stat-visits').textContent = data.stats.visits;
+                document.getElementById('stat-unique').textContent = data.stats.unique;
+                document.getElementById('stat-desktop').textContent = data.devices.desktop.count;
+                document.getElementById('stat-desktop-pct').textContent = data.devices.desktop.percentage + '% of traffic';
+                document.getElementById('stat-mobile').textContent = data.devices.mobile.count;
+                document.getElementById('stat-mobile-pct').textContent = data.devices.mobile.percentage + '% of traffic';
+
+                // Update charts
+                updateDailyVisitsChart(data.charts.daily);
+                updateDeviceChart(data.charts.device);
+
+                // Update details
+                updateMostVisitedPages(data.details.most_visited);
+                updateTopBrowsers(data.details.top_browsers);
+                updateRecentActivity(data.details.recent_activity);
+
+                // Hide loading
+                document.getElementById('analytics-loading').classList.add('hidden');
+                document.getElementById('analytics-content').style.opacity = '1';
+            })
+            .catch(error => {
+                console.error('Error loading analytics:', error);
+                document.getElementById('analytics-loading').classList.add('hidden');
+                document.getElementById('analytics-content').style.opacity = '1';
+            });
+    }
+
+    // Update Daily Visits Chart
+    function updateDailyVisitsChart(chartData) {
+        const ctx = document.getElementById('dailyVisitsChart');
+        
+        if (dailyVisitsChart) {
+            dailyVisitsChart.destroy();
+        }
+
+        dailyVisitsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Page Visits',
+                    data: chartData.data,
+                    borderColor: '#B39359',
+                    backgroundColor: 'rgba(179, 147, 89, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#B39359',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#0B2C3D',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return 'Visits: ' + context.parsed.y;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            color: '#6B7280'
+                        },
+                        grid: {
+                            color: '#F3F4F6'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#6B7280'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Update Device Chart
+    function updateDeviceChart(chartData) {
+        const ctx = document.getElementById('deviceChart');
+        
+        if (deviceChart) {
+            deviceChart.destroy();
+        }
+
+        deviceChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: chartData.labels.length > 0 ? chartData.labels : ['No Data'],
+                datasets: [{
+                    data: chartData.data.length > 0 ? chartData.data : [1],
+                    backgroundColor: chartData.data.length > 0 ? [
+                        '#3B82F6', // Blue for Desktop
+                        '#10B981', // Green for Mobile
+                        '#F59E0B', // Orange for Tablet
+                    ] : ['#E5E7EB'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 13
+                            },
+                            color: '#374151',
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#0B2C3D',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
+    // Update Most Visited Pages
+    function updateMostVisitedPages(pages) {
+        const container = document.getElementById('most-visited-pages');
+        
+        if (pages.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500">No data yet</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = pages.map(page => `
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 truncate">${page.name}</p>
+                </div>
+                <span class="ml-2 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                    ${page.visits}
+                </span>
+            </div>
+        `).join('');
+    }
+
+    // Update Top Browsers
+    function updateTopBrowsers(browsers) {
+        const container = document.getElementById('top-browsers');
+        
+        if (browsers.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500">No data yet</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = browsers.map(browser => `
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-900">${browser.name}</p>
+                </div>
+                <span class="ml-2 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800">
+                    ${browser.count}
+                </span>
+            </div>
+        `).join('');
+    }
+
+    // Update Recent Activity
+    function updateRecentActivity(activities) {
+        const container = document.getElementById('recent-activity');
+        
+        if (activities.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500">No activity yet</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = activities.map(visit => `
+            <div class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <p class="text-sm font-medium text-gray-900 truncate">${visit.page_name}</p>
+                <div class="flex items-center justify-between mt-1">
+                    <span class="text-xs text-gray-500 capitalize">${visit.device_type}</span>
+                    <span class="text-xs text-gray-400">${visit.time_ago}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Load initial data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadAnalytics('all');
+    });
 </script>
 @endsection

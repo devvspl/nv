@@ -65,35 +65,19 @@
                 @enderror
             </div>
 
-            <!-- Icon and Sort Order -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <label for="icon" class="block text-sm font-medium text-gray-700 mb-2">Icon (Emoji or Text)</label>
-                    <input type="text" 
-                           name="icon" 
-                           id="icon" 
-                           value="{{ old('icon') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('icon') border-red-500 @enderror"
-                           placeholder="🏠">
-                    <p class="mt-1 text-sm text-gray-500">Enter an emoji or icon text</p>
-                    @error('icon')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="sort_order" class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
-                    <input type="number" 
-                           name="sort_order" 
-                           id="sort_order" 
-                           value="{{ old('sort_order', 0) }}"
-                           min="0"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('sort_order') border-red-500 @enderror">
-                    <p class="mt-1 text-sm text-gray-500">Lower numbers appear first</p>
-                    @error('sort_order')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+            <!-- Sort Order -->
+            <div>
+                <label for="sort_order" class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
+                <input type="number" 
+                       name="sort_order" 
+                       id="sort_order" 
+                       value="{{ old('sort_order', 0) }}"
+                       min="0"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('sort_order') border-red-500 @enderror">
+                <p class="mt-1 text-sm text-gray-500">Lower numbers appear first</p>
+                @error('sort_order')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Property Types Mapping -->
@@ -113,7 +97,6 @@
                                 {{ in_array($propertyType->id, old('property_types', [])) ? 'checked' : '' }}
                                 class="rounded border-gray-300 text-zendo-gold focus:ring-zendo-gold mr-3">
                             <span class="text-sm font-medium text-gray-700">
-                                @if($propertyType->icon){{ $propertyType->icon }} @endif
                                 {{ $propertyType->name }}
                             </span>
                         </label>

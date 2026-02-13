@@ -10,13 +10,6 @@
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-heading text-zendo-navy font-semibold">Property Type Details</h2>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('admin.property-types.edit', $propertyType) }}" 
-                       class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        Edit Property Type
-                    </a>
                     <a href="{{ route('admin.property-types.index') }}" 
                        class="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-zendo-navy transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,9 +44,6 @@
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Property Type Name</h3>
                         <p class="text-gray-700 bg-gray-50 p-4 rounded-lg text-xl font-medium">
-                            @if($propertyType->icon)
-                                <span class="text-3xl mr-2">{{ $propertyType->icon }}</span>
-                            @endif
                             {{ $propertyType->name }}
                         </p>
                     </div>
@@ -62,15 +52,6 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Slug</h3>
                         <p class="text-gray-700 bg-gray-50 p-4 rounded-lg font-mono">{{ $propertyType->slug }}</p>
                     </div>
-
-                    @if($propertyType->icon)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Icon</h3>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <span class="text-5xl">{{ $propertyType->icon }}</span>
-                        </div>
-                    </div>
-                    @endif
                 </div>
 
                 <!-- Right Column -->
@@ -98,7 +79,6 @@
                                     @foreach($propertyType->serviceTypes as $serviceType)
                                         <div class="flex items-center justify-between p-2 bg-white border border-gray-200 rounded">
                                             <span class="text-sm font-medium text-gray-700">
-                                                @if($serviceType->icon){{ $serviceType->icon }} @endif
                                                 {{ $serviceType->name }}
                                             </span>
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {{ $serviceType->status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

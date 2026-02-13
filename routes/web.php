@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\ConsultationController;
@@ -18,6 +19,10 @@ use App\Http\Controllers\Admin\PropertyTypeController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\ProjectStatusController;
 use App\Http\Controllers\Admin\BhkController;
+use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\Admin\BuilderController;
+use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\PropertyInquiryController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ConsultationController as AdminConsultationController;
 use Illuminate\Support\Facades\Route;
@@ -51,11 +56,13 @@ Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.
 // Public consultation submission
 Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+    // Dashboard
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
+    
+    // Dashboard Analytics API
+    Route::get('/api/dashboard/visitor-analytics', [DashboardController::class, 'getVisitorAnalytics'])->name('dashboard.analytics');
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -103,6 +110,28 @@ Route::middleware('auth')->group(function () {
         // BHKs
         Route::resource('bhks', BhkController::class);
         Route::patch('bhks/{bhk}/toggle-status', [BhkController::class, 'toggleStatus'])->name('bhks.toggle-status');
+        
+        // Builders
+        Route::resource('builders', BuilderController::class);
+        Route::patch('builders/{builder}/toggle-status', [BuilderController::class, 'toggleStatus'])->name('builders.toggle-status');
+        Route::patch('builders/{builder}/toggle-verified', [BuilderController::class, 'toggleVerified'])->name('builders.toggle-verified');
+        
+        // Amenities
+        Route::resource('amenities', AmenityController::class);
+        Route::patch('amenities/{amenity}/toggle-status', [AmenityController::class, 'toggleStatus'])->name('amenities.toggle-status');
+        
+        // Properties
+        Route::resource('properties', PropertyController::class);
+        Route::patch('properties/{property}/toggle-status', [PropertyController::class, 'toggleStatus'])->name('properties.toggle-status');
+        Route::patch('properties/{property}/toggle-featured', [PropertyController::class, 'toggleFeatured'])->name('properties.toggle-featured');
+        Route::patch('properties/{property}/toggle-verified', [PropertyController::class, 'toggleVerified'])->name('properties.toggle-verified');
+        Route::delete('properties/images/{image}', [PropertyController::class, 'deleteImage'])->name('properties.delete-image');
+        
+        // Property Inquiries
+        Route::get('property-inquiries', [PropertyInquiryController::class, 'index'])->name('property-inquiries.index');
+        Route::get('property-inquiries/{propertyInquiry}', [PropertyInquiryController::class, 'show'])->name('property-inquiries.show');
+        Route::patch('property-inquiries/{propertyInquiry}/status', [PropertyInquiryController::class, 'updateStatus'])->name('property-inquiries.update-status');
+        Route::delete('property-inquiries/{propertyInquiry}', [PropertyInquiryController::class, 'destroy'])->name('property-inquiries.destroy');
         
         // Inquiries management
         Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');
