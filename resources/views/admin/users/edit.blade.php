@@ -1,124 +1,116 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit User - ZendoIndia Admin')
-
-@section('page-title', 'Edit User')
-@section('page-description')
-Update user information and settings.
-@endsection
+@section('title', 'Edit User')
 
 @section('content')
-<!-- Breadcrumb -->
-<div class="mb-6">
-    <nav class="flex" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a href="{{ route('admin.users.index') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-zendo-navy">
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-heading text-zendo-navy font-semibold">Edit User</h2>
+                <a href="{{ route('admin.users.index') }}" 
+                   class="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-zendo-navy transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Users
+                    Back to List
                 </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="ml-1 text-sm font-medium text-gray-500">Edit {{ $user->name }}</span>
-                </div>
-            </li>
-        </ol>
-    </nav>
-</div>
-
-<!-- Edit User Form -->
-<div class="max-w-2xl">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <!-- User Info Header -->
-        <div class="flex items-center mb-6 pb-6 border-b border-gray-200">
-            <div class="w-16 h-16 bg-zendo-gold rounded-full flex items-center justify-center">
-                <span class="text-white font-bold text-xl">{{ substr($user->name, 0, 1) }}</span>
-            </div>
-            <div class="ml-4">
-                <h3 class="text-lg font-semibold text-gray-900">{{ $user->name }}</h3>
-                <p class="text-gray-600">{{ $user->email }}</p>
-                <p class="text-sm text-gray-500">Member since {{ $user->created_at->format('M d, Y') }}</p>
             </div>
         </div>
 
-        <form action="{{ route('admin.users.update', $user) }}" method="POST">
+        <form action="{{ route('admin.users.update', $user) }}" method="POST" class="p-6 space-y-6">
             @csrf
             @method('PUT')
             
-            <!-- Name Field -->
-            <div class="mb-6">
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input type="text" 
-                       name="name" 
-                       id="name" 
-                       value="{{ old('name', $user->name) }}"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-zendo-gold transition-colors @error('name') border-red-500 @enderror"
-                       placeholder="Enter full name"
-                       required>
-                @error('name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+            <!-- User Info Header -->
+            <div>
+                <div class="flex items-center">
+                    <div class="w-16 h-16 bg-zendo-gold rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">{{ substr($user->name, 0, 1) }}</span>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ $user->name }}</h3>
+                        <p class="text-gray-600">{{ $user->email }}</p>
+                        <p class="text-sm text-gray-500">Member since {{ $user->created_at->format('M d, Y') }}</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Email Field -->
-            <div class="mb-6">
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                <input type="email" 
-                       name="email" 
-                       id="email" 
-                       value="{{ old('email', $user->email) }}"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-zendo-gold transition-colors @error('email') border-red-500 @enderror"
-                       placeholder="Enter email address"
-                       required>
-                @error('email')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+            <!-- Basic Information -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Basic Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                        <input type="text" 
+                               name="name" 
+                               id="name" 
+                               value="{{ old('name', $user->name) }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('name') border-red-500 @enderror"
+                               placeholder="Enter full name"
+                               required>
+                        @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                        <input type="email" 
+                               name="email" 
+                               id="email" 
+                               value="{{ old('email', $user->email) }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('email') border-red-500 @enderror"
+                               placeholder="Enter email address"
+                               required>
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
-            <!-- Password Section -->
-            <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-                <h4 class="text-sm font-medium text-gray-900 mb-3">Change Password (Optional)</h4>
+            <!-- Change Password -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900 mb-2">Change Password</h3>
                 <p class="text-sm text-gray-600 mb-4">Leave blank to keep current password</p>
                 
-                <!-- New Password Field -->
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                    <input type="password" 
-                           name="password" 
-                           id="password"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-zendo-gold transition-colors @error('password') border-red-500 @enderror"
-                           placeholder="Enter new password (min. 8 characters)">
-                    @error('password')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                        <input type="password" 
+                               name="password" 
+                               id="password"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('password') border-red-500 @enderror"
+                               placeholder="Enter new password (min. 8 characters)">
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <!-- Confirm Password Field -->
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-                    <input type="password" 
-                           name="password_confirmation" 
-                           id="password_confirmation"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-zendo-gold transition-colors"
-                           placeholder="Confirm new password">
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                        <input type="password" 
+                               name="password_confirmation" 
+                               id="password_confirmation"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent"
+                               placeholder="Confirm new password">
+                    </div>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
+            <!-- Submit Buttons -->
+            <div class="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0 pt-6 border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                     <a href="{{ route('admin.users.index') }}" 
-                       class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                       class="inline-flex justify-center items-center px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                         Cancel
                     </a>
                     <button type="submit" 
-                            class="px-6 py-3 bg-zendo-gold text-white font-medium rounded-lg hover:bg-zendo-navy transition-colors">
+                            class="inline-flex justify-center items-center px-6 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
                         Update User
                     </button>
                 </div>
@@ -129,7 +121,10 @@ Update user information and settings.
                         @csrf
                         @method('DELETE')
                         <button type="submit" 
-                                class="px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors">
+                                class="inline-flex justify-center items-center w-full sm:w-auto px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
                             Delete User
                         </button>
                     </form>

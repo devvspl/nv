@@ -28,7 +28,7 @@ class PropertyTypeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:property_types,slug',
+            'category' => 'required|in:residential,commercial',
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
             'status' => 'boolean',
@@ -37,10 +37,8 @@ class PropertyTypeController extends Controller
             'service_types.*' => 'exists:service_types,id',
         ]);
 
-        // Auto-generate slug if not provided
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
-        }
+        // Auto-generate slug from name
+        $validated['slug'] = Str::slug($validated['name']);
 
         $propertyType = PropertyType::create($validated);
 
@@ -70,7 +68,7 @@ class PropertyTypeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:property_types,slug,' . $propertyType->id,
+            'category' => 'required|in:residential,commercial',
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
             'status' => 'boolean',
@@ -79,10 +77,8 @@ class PropertyTypeController extends Controller
             'service_types.*' => 'exists:service_types,id',
         ]);
 
-        // Auto-generate slug if not provided
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
-        }
+        // Auto-generate slug from name
+        $validated['slug'] = Str::slug($validated['name']);
 
         $propertyType->update($validated);
 

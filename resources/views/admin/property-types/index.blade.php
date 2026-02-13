@@ -33,7 +33,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property Type</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Types</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sort Order</th>
@@ -58,7 +58,13 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-600 font-mono">{{ $propertyType->slug }}</div>
+                                @if($propertyType->category)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $propertyType->category === 'residential' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800' }}">
+                                        {{ ucfirst($propertyType->category) }}
+                                    </span>
+                                @else
+                                    <span class="text-sm text-gray-400">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -144,6 +150,11 @@
                         <div class="flex-1">
                             <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $propertyType->name }}</h3>
                             <p class="text-sm text-gray-600 mb-2">
+                                @if($propertyType->category)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {{ $propertyType->category === 'residential' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800' }} mr-2">
+                                        {{ ucfirst($propertyType->category) }}
+                                    </span>
+                                @endif
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     {{ $propertyType->service_types_count }} service types
                                 </span>

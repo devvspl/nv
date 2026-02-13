@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/properties', [HomeController::class, 'properties'])->name('properties.index');
+Route::get('/properties/{property:slug}', [HomeController::class, 'show'])->name('properties.show');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
 
 // Cache clearing routes

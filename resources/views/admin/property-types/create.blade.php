@@ -22,7 +22,7 @@
             @csrf
 
             <!-- Basic Information -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="space-y-6">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Property Type Name *</label>
                     <input type="text" 
@@ -38,14 +38,16 @@
                 </div>
 
                 <div>
-                    <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-                    <input type="text" 
-                           name="slug" 
-                           id="slug" 
-                           value="{{ old('slug') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('slug') border-red-500 @enderror"
-                           placeholder="house (auto-generated if empty)">
-                    @error('slug')
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Property Type Selection *</label>
+                    <select name="category" 
+                            id="category"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('category') border-red-500 @enderror"
+                            required>
+                        <option value="">Select Property Type</option>
+                        <option value="residential" {{ old('category') == 'residential' ? 'selected' : '' }}>Residential</option>
+                        <option value="commercial" {{ old('category') == 'commercial' ? 'selected' : '' }}>Commercial</option>
+                    </select>
+                    @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>

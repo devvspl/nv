@@ -9,6 +9,7 @@ class PropertyType extends Model
     protected $fillable = [
         'name',
         'slug',
+        'category',
         'description',
         'icon',
         'status',

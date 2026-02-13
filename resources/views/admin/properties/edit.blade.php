@@ -1,19 +1,30 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Property - ZendoIndia Admin')
-
-@section('page-title', 'Edit Property')
-@section('page-description', 'Update property information')
+@section('title', 'Edit Property')
 
 @section('content')
-<div class="max-w-5xl">
-    <form action="{{ route('admin.properties.update', $property) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-        @csrf
-        @method('PUT')
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-heading text-zendo-navy font-semibold">Edit Property</h2>
+                <a href="{{ route('admin.properties.index') }}" 
+                   class="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-zendo-navy transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to List
+                </a>
+            </div>
+        </div>
 
-        <!-- Basic Information -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Basic Information</h3>
+        <form action="{{ route('admin.properties.update', $property) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
+            @csrf
+            @method('PUT')
+
+            <!-- Basic Information -->
+            <div>
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Basic Information</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
@@ -115,8 +126,8 @@
         </div>
 
         <!-- Pricing & Area -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Pricing & Area</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Pricing & Area</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -152,8 +163,8 @@
         </div>
 
         <!-- Specifications -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Specifications</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Specifications</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
@@ -240,8 +251,8 @@
         </div>
 
         <!-- Location Details -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Location Details</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Location Details</h3>
             
             <div class="grid grid-cols-1 gap-6">
                 <div>
@@ -267,8 +278,8 @@
         </div>
 
         <!-- Amenities -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Amenities</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Amenities</h3>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach($amenities as $amenity)
@@ -284,8 +295,8 @@
 
         <!-- Existing Images -->
         @if($property->images->count() > 0)
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Existing Images</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Existing Images</h3>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($property->images as $image)
@@ -313,8 +324,8 @@
         @endif
 
         <!-- Add New Images -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Add New Images</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Add New Images</h3>
             
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Upload Images</label>
@@ -325,8 +336,8 @@
         </div>
 
         <!-- Status & Publishing -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-heading font-semibold text-zendo-navy mb-4">Status & Publishing</h3>
+        <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Status & Publishing</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -361,17 +372,21 @@
             </div>
         </div>
 
-        <!-- Form Actions -->
-        <div class="flex items-center justify-end space-x-4">
+        <!-- Submit Buttons -->
+        <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200">
             <a href="{{ route('admin.properties.index') }}" 
-               class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+               class="inline-flex justify-center items-center px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 Cancel
             </a>
             <button type="submit" 
-                    class="px-6 py-2 bg-zendo-gold text-white rounded-lg hover:bg-zendo-navy transition-colors">
+                    class="inline-flex justify-center items-center px-6 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
                 Update Property
             </button>
         </div>
     </form>
+</div>
 </div>
 @endsection
