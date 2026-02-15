@@ -177,141 +177,81 @@
       </div>
       <!-- Property Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid-container">
-         <!-- Property Card 1 (For Lease) -->
+         @forelse($featuredProperties as $property)
+         <!-- Property Card: {{ $property->title }} -->
          <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
             <!-- Image Container -->
             <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/morden-aparement.png') }}" alt="Renovated Apartment"
+               <img src="{{ $property->main_image_url ?? asset('main/images/properties/default.png') }}" 
+                  alt="{{ $property->title }}"
                   class="card-image w-full h-64 object-cover">
                <!-- Tags -->
                <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">For Lease</span>
+                  @if($property->propertyType)
+                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ $property->propertyType->name }}</span>
+                  @endif
+                  @if($property->is_featured)
                   <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">Featured</span>
+                  @endif
                </div>
                <!-- Price -->
                <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹1,30,000/mo</span>
+                  <span class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->formatted_price }}</span>
                </div>
             </div>
             <!-- Card Content -->
             <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Apartment</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Renovated Apartment</a>
+               @if($property->propertyType)
+               <span class="text-sm font-semibold font-body text-zendo-gold">{{ $property->propertyType->name }}</span>
+               @endif
+               <h3 class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
+                  <a href="{{ route('properties.show', $property->slug) }}">{{ $property->title }}</a>
                </h3>
                <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  1421 San Pedro St, Los Angeles, CA 90015
+                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon" class="w-4 h-4 mr-2 flex-shrink-0">
+                  @if($property->location)
+                     {{ $property->location->name }}@if($property->city), {{ $property->city->name }}@endif
+                  @elseif($property->city)
+                     {{ $property->city->name }}
+                  @else
+                     {{ $property->address }}
+                  @endif
                </p>
                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
+                  @if($property->bhk)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Beds: 4
+                     <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon" class="w-4 h-4 mr-1.5">
+                     {{ $property->bhk->name }}
                   </span>
+                  @endif
+                  @if($property->specifications && $property->specifications->bathrooms)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 2
+                     <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon" class="w-4 h-4 mr-1.5">
+                     Baths: {{ $property->specifications->bathrooms }}
                   </span>
+                  @endif
+                  @if($property->carpet_area)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Sq Ft: 5280
+                     <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon" class="w-4 h-4 mr-1.5">
+                     {{ number_format($property->carpet_area) }} Sq Ft
                   </span>
+                  @endif
                </div>
             </div>
          </div>
-         <!-- Property Card 2 (For Sale) -->
-         <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
-            <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/bg/comm.png') }}" alt="Modern Villa"
-                  class="card-image w-full h-64 object-cover">
-               <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">For
-                  Commercial</span>
-               </div>
-               <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹2,50,00,000</span>
-               </div>
-            </div>
-            <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Villa</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Commercial Properties</a>
-               </h3>
-               <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  789 Hilltop Rd, Gurgaon, HR 122001
-               </p>
-               <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Beds: 6
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 5
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Sq Ft: 8500
-                  </span>
-               </div>
-            </div>
+         @empty
+         <!-- No Featured Properties -->
+         <div class="col-span-full text-center py-12">
+            <p class="text-gray-600 font-body text-lg">No featured properties available at the moment.</p>
+            <a href="{{ route('properties.index') }}" class="mt-4 inline-block px-6 py-2 rounded-full bg-zendo-gold text-white font-semibold hover:bg-zendo-navy transition-colors">
+               View All Properties
+            </a>
          </div>
-         <!-- Property Card 3 (For Invest) -->
-         <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
-            <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/bg/gallery-2.png') }}" alt="Commercial Office Space"
-                  class="card-image w-full h-64 object-cover">
-               <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">For
-                  Warehouse</span>
-               </div>
-               <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹5,00,00,000</span>
-               </div>
-            </div>
-            <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Office Space</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Warehouse Hub</a>
-               </h3>
-               <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  456 Business Park, Sector 62, Noida, UP 201301
-               </p>
-               <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 8
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Sq Ft: 12000
-                  </span>
-               </div>
-            </div>
-         </div>
+         @endforelse
       </div>
       <!-- View Properties Button -->
       <div class="text-center mt-12">
-         <a href="#"
+         <a href="{{ route('properties.index') }}"
             class="px-8 py-3 rounded-full transition-all transform hover:scale-105 inline-block font-highlight font-semibold shadow-lg btn-anim btn-light-bg">
          View Properties
          </a>
@@ -840,134 +780,74 @@
       </div>
       <!-- Property Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid-container">
-         <!-- Property Card 1 -->
+         @forelse($popularProperties as $property)
+         <!-- Property Card: {{ $property->title }} -->
          <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
             <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/morden-aparements.png') }}" alt="Renovated Apartment"
+               <img src="{{ $property->main_image_url ?? asset('main/images/properties/default.png') }}" 
+                  alt="{{ $property->title }}"
                   class="card-image w-full h-64 object-cover">
                <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">For Lease</span>
+                  @if($property->propertyType)
+                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ $property->propertyType->name }}</span>
+                  @endif
                </div>
                <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹1,30,000/mo</span>
+                  <span class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->formatted_price }}</span>
                </div>
             </div>
             <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Apartment</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Renovated Apartment</a>
+               @if($property->propertyType)
+               <span class="text-sm font-semibold font-body text-zendo-gold">{{ $property->propertyType->name }}</span>
+               @endif
+               <h3 class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
+                  <a href="{{ route('properties.show', $property->slug) }}">{{ $property->title }}</a>
                </h3>
                <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  1421 San Pedro St, Los Angeles, CA 90015
+                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon" class="w-4 h-4 mr-2 flex-shrink-0">
+                  @if($property->location)
+                     {{ $property->location->name }}@if($property->city), {{ $property->city->name }}@endif
+                  @elseif($property->city)
+                     {{ $property->city->name }}
+                  @else
+                     {{ $property->address }}
+                  @endif
                </p>
                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
+                  @if($property->bhk)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Beds: 4
+                     <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon" class="w-4 h-4 mr-1.5">
+                     {{ $property->bhk->name }}
                   </span>
+                  @endif
+                  @if($property->specifications && $property->specifications->bathrooms)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 2
+                     <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon" class="w-4 h-4 mr-1.5">
+                     Baths: {{ $property->specifications->bathrooms }}
                   </span>
+                  @endif
+                  @if($property->carpet_area)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Sq Ft: 5280
+                     <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon" class="w-4 h-4 mr-1.5">
+                     {{ number_format($property->carpet_area) }} Sq Ft
                   </span>
+                  @endif
                </div>
             </div>
          </div>
-         <!-- Property Card 2 -->
-         <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
-            <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/morden-villa.png') }}" alt="Modern Villa"
-                  class="card-image w-full h-64 object-cover">
-               <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">For Rent</span>
-               </div>
-               <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹2,50,00,000</span>
-               </div>
-            </div>
-            <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Villa</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Luxury Villa with Pool</a>
-               </h3>
-               <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  789 Hilltop Rd, Gurgaon, HR 122001
-               </p>
-               <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Beds: 6
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 5
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Sq Ft: 8500
-                  </span>
-               </div>
-            </div>
+         @empty
+         <!-- No Popular Properties -->
+         <div class="col-span-full text-center py-12">
+            <p class="text-gray-600 font-body text-lg">No popular properties available at the moment.</p>
+            <a href="{{ route('properties.index') }}" class="mt-4 inline-block px-6 py-2 rounded-full bg-zendo-gold text-white font-semibold hover:bg-zendo-navy transition-colors">
+               View All Properties
+            </a>
          </div>
-         <!-- Property Card 3 -->
-         <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
-            <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/office.png') }}" alt="Commercial Office Space"
-                  class="card-image w-full h-64 object-cover">
-               <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">For Rent</span>
-               </div>
-               <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹5,00,00,000</span>
-               </div>
-            </div>
-            <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Office Space</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Prime Commercial Hub</a>
-               </h3>
-               <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  456 Business Park, Sector 62, Noida, UP 201301
-               </p>
-               <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 8
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Sq Ft: 12000
-                  </span>
-               </div>
-            </div>
-         </div>
+         @endforelse
       </div>
       <!-- View Properties Button -->
       <div class="text-center mt-12">
-         <a href="#"
+         <a href="{{ route('properties.index') }}"
             class="px-8 py-3 rounded-full transition-all transform hover:scale-105 inline-block font-highlight font-semibold shadow-lg btn-anim btn-light-bg">
          View Properties
          </a>
@@ -1068,132 +948,70 @@
       </div>
       <!-- Property Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid-container">
-         <!-- Rental Property Card 1 -->
+         @forelse($rentalProperties as $property)
+         <!-- Property Card: {{ $property->title }} -->
          <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
             <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/morden-aparements.png') }}" alt="Rental Apartment"
+               <img src="{{ $property->main_image_url ?? asset('main/images/properties/default.png') }}" 
+                  alt="{{ $property->title }}"
                   class="card-image w-full h-64 object-cover">
                <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-green-600 text-white">High Yield</span>
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">Rental</span>
+                  @if($property->propertyType)
+                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ $property->propertyType->name }}</span>
+                  @endif
                </div>
                <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹45,000/mo</span>
+                  <span class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->formatted_price }}</span>
                </div>
             </div>
             <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Apartment</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Premium Rental Apartment</a>
+               @if($property->propertyType)
+               <span class="text-sm font-semibold font-body text-zendo-gold">{{ $property->propertyType->name }}</span>
+               @endif
+               <h3 class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
+                  <a href="{{ route('properties.show', $property->slug) }}">{{ $property->title }}</a>
                </h3>
                <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  Sector 62, Noida, UP 201301
+                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon" class="w-4 h-4 mr-2 flex-shrink-0">
+                  @if($property->location)
+                     {{ $property->location->name }}@if($property->city), {{ $property->city->name }}@endif
+                  @elseif($property->city)
+                     {{ $property->city->name }}
+                  @else
+                     {{ $property->address }}
+                  @endif
                </p>
                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
+                  @if($property->bhk)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Beds: 3
+                     <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon" class="w-4 h-4 mr-1.5">
+                     {{ $property->bhk->name }}
                   </span>
+                  @endif
+                  @if($property->specifications && $property->specifications->bathrooms)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 2
+                     <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon" class="w-4 h-4 mr-1.5">
+                     Baths: {{ $property->specifications->bathrooms }}
                   </span>
+                  @endif
+                  @if($property->carpet_area)
                   <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  1200 Sq Ft
+                     <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon" class="w-4 h-4 mr-1.5">
+                     {{ number_format($property->carpet_area) }} Sq Ft
                   </span>
+                  @endif
                </div>
             </div>
          </div>
-         <!-- Investment Property Card 2 -->
-         <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
-            <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/office.png') }}" alt="Investment Property"
-                  class="card-image w-full h-64 object-cover">
-               <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-blue-600 text-white">Investment</span>
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">ROI 12%</span>
-               </div>
-               <div class="absolute bottom-4 left-4">
-                  <span class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹1.2
-                  Cr</span>
-               </div>
-            </div>
-            <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Commercial</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Commercial Investment Hub</a>
-               </h3>
-               <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  Cyber City, Gurgaon, HR 122002
-               </p>
-               <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/coin.svg') }}" alt="ROI Icon" class="w-4 h-4 mr-1.5">
-                  ROI: 12%
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  2500 Sq Ft
-                  </span>
-               </div>
-            </div>
+         @empty
+         <!-- No Rental Properties -->
+         <div class="col-span-full text-center py-12">
+            <p class="text-gray-600 font-body text-lg">No rental or investment properties available at the moment.</p>
+            <a href="{{ route('properties.index') }}" class="mt-4 inline-block px-6 py-2 rounded-full bg-zendo-gold text-white font-semibold hover:bg-zendo-navy transition-colors">
+               View All Properties
+            </a>
          </div>
-         <!-- Rental Property Card 3 -->
-         <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
-            <div class="relative group overflow-hidden">
-               <img src="{{ asset('main/images/properties/morden-villa.png') }}" alt="Luxury Rental"
-                  class="card-image w-full h-64 object-cover">
-               <div class="absolute top-4 left-4 flex space-x-2">
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-purple-600 text-white">Luxury</span>
-                  <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">Rental</span>
-               </div>
-               <div class="absolute bottom-4 left-4">
-                  <span
-                     class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">₹85,000/mo</span>
-               </div>
-            </div>
-            <div class="p-6">
-               <span class="text-sm font-semibold font-body text-zendo-gold">Villa</span>
-               <h3
-                  class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                  <a href="#">Luxury Villa Rental</a>
-               </h3>
-               <p class="mt-2 flex items-center text-gray-600 font-body">
-                  <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
-                     class="w-4 h-4 mr-2 flex-shrink-0">
-                  Golf Course Road, Gurgaon
-               </p>
-               <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Beds: 4
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon"
-                     class="w-4 h-4 mr-1.5">
-                  Baths: 4
-                  </span>
-                  <span class="flex items-center text-sm">
-                  <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon"
-                     class="w-4 h-4 mr-1.5">
-                  3500 Sq Ft
-                  </span>
-               </div>
-            </div>
-         </div>
+         @endforelse
       </div>
    </div>
 </section>
@@ -1919,12 +1737,24 @@
        const location = document.getElementById("location").value;
    
        const params = new URLSearchParams();
-       if (type && type !== "Select Type") params.append("type", type);
-       if (location && location !== "Select the Location") params.append("location", location);
-       params.append("purpose", purpose);
+       
+       // Add property type filter if selected
+       if (type && type !== "Select Type") {
+           params.append("property_type_slug", type);
+       }
+       
+       // Add location search if entered
+       if (location && location.trim() !== "") {
+           params.append("search", location.trim());
+       }
+       
+       // Add service type filter
+       if (purpose) {
+           params.append("service_type", purpose);
+       }
    
-       // ✅ change this URL to your listing page
-       window.location.href = `/properties/search?${params.toString()}`;
+       // Redirect to properties listing page with filters
+       window.location.href = `/properties?${params.toString()}`;
    });
    
    // ---- Global Form submit (ONLY keyword + purpose=global)

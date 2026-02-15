@@ -36,6 +36,99 @@ Manage all properties in the system. Create, edit, view, and delete property lis
     </a>
 </div>
 
+<!-- Search and Filters -->
+<div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <form method="GET" action="{{ route('admin.properties.index') }}" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Search -->
+            <div class="md:col-span-2">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <div class="relative">
+                    <input type="text" 
+                           name="search" 
+                           id="search" 
+                           value="{{ request('search') }}"
+                           placeholder="Search by title, address, or description..."
+                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- City Filter -->
+            <div>
+                <label for="city_id" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                <select name="city_id" id="city_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    <option value="">All Cities</option>
+                    @foreach(\App\Models\City::active()->ordered()->get() as $city)
+                        <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
+                            {{ $city->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Property Type Filter -->
+            <div>
+                <label for="property_type_id" class="block text-sm font-medium text-gray-700 mb-1">Property Type</label>
+                <select name="property_type_id" id="property_type_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    <option value="">All Types</option>
+                    @foreach(\App\Models\PropertyType::active()->ordered()->get() as $type)
+                        <option value="{{ $type->id }}" {{ request('property_type_id') == $type->id ? 'selected' : '' }}>
+                            {{ $type->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <!-- Status Filter -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" id="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    <option value="">All Status</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+            </div>
+
+            <!-- Featured Filter -->
+            <div>
+                <label for="featured" class="block text-sm font-medium text-gray-700 mb-1">Featured</label>
+                <select name="featured" id="featured" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    <option value="">All</option>
+                    <option value="1" {{ request('featured') == '1' ? 'selected' : '' }}>Featured Only</option>
+                    <option value="0" {{ request('featured') == '0' ? 'selected' : '' }}>Non-Featured</option>
+                </select>
+            </div>
+
+            <!-- Sort By -->
+            <div>
+                <label for="sort_by" class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                <select name="sort_by" id="sort_by" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Latest First</option>
+                    <option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                    <option value="price_high" {{ request('sort_by') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                    <option value="price_low" {{ request('sort_by') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="title" {{ request('sort_by') == 'title' ? 'selected' : '' }}>Title A-Z</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-end space-x-2">
+                <button type="submit" class="flex-1 px-4 py-2 bg-zendo-gold text-white font-medium rounded-lg hover:bg-zendo-navy transition-colors">
+                    Apply
+                </button>
+                <a href="{{ route('admin.properties.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors">
+                    Reset
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
 <!-- Properties Table -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <!-- Desktop Table View -->
@@ -55,12 +148,21 @@ Manage all properties in the system. Create, edit, view, and delete property lis
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                @if($property->mainImage)
-                                    <img src="{{ asset('storage/' . $property->mainImage->image_path) }}" 
+                                @php
+                                    $imageUrl = null;
+                                    if($property->mainImage) {
+                                        $imageUrl = asset('storage/' . $property->mainImage->image_path);
+                                    } elseif($property->images->first()) {
+                                        $imageUrl = asset('storage/' . $property->images->first()->image_path);
+                                    }
+                                @endphp
+                                
+                                @if($imageUrl)
+                                    <img src="{{ $imageUrl }}" 
                                          alt="{{ $property->title }}" 
-                                         class="w-16 h-16 object-cover rounded-lg mr-4">
+                                         class="w-16 h-16 object-cover rounded-lg mr-4 border border-gray-200">
                                 @else
-                                    <div class="w-16 h-16 bg-gray-200 rounded-lg mr-4 flex items-center justify-center">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg mr-4 flex items-center justify-center border border-gray-300">
                                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                                         </svg>
@@ -90,11 +192,6 @@ Manage all properties in the system. Create, edit, view, and delete property lis
                                 @if($property->is_featured)
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                                         Featured
-                                    </span>
-                                @endif
-                                @if($property->is_verified)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                        Verified
                                     </span>
                                 @endif
                             </div>
@@ -147,12 +244,21 @@ Manage all properties in the system. Create, edit, view, and delete property lis
         @forelse($properties as $property)
             <div class="p-4 hover:bg-gray-50 transition-colors">
                 <div class="flex items-start space-x-4">
-                    @if($property->mainImage)
-                        <img src="{{ asset('storage/' . $property->mainImage->image_path) }}" 
+                    @php
+                        $imageUrl = null;
+                        if($property->mainImage) {
+                            $imageUrl = asset('storage/' . $property->mainImage->image_path);
+                        } elseif($property->images->first()) {
+                            $imageUrl = asset('storage/' . $property->images->first()->image_path);
+                        }
+                    @endphp
+                    
+                    @if($imageUrl)
+                        <img src="{{ $imageUrl }}" 
                              alt="{{ $property->title }}" 
-                             class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+                             class="w-20 h-20 object-cover rounded-lg flex-shrink-0 border border-gray-200">
                     @else
-                        <div class="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center">
+                        <div class="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center border border-gray-300">
                             <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
@@ -172,11 +278,6 @@ Manage all properties in the system. Create, edit, view, and delete property lis
                             @if($property->is_featured)
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                                     Featured
-                                </span>
-                            @endif
-                            @if($property->is_verified)
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                    Verified
                                 </span>
                             @endif
                         </div>

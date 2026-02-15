@@ -36,28 +36,30 @@ class HomeController extends Controller
         $commercialSection = CommercialSection::getActive();
         $serviceTypes = ServiceType::active()->ordered()->with('propertyTypes')->get();
         $propertyTypes = PropertyType::active()->ordered()->get();
-        
-        // Create mapping array for JavaScript
+        $featuredProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage'])
+            ->active()
+            ->published()
+            ->featured()
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
+        $popularProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])
+            ->active()
+            ->published()
+            ->orderBy('views_count', 'desc')
+            ->limit(3)
+            ->get();
+        $rentalProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])
+            ->active()
+            ->published()
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
         $serviceTypeMapping = [];
         foreach ($serviceTypes as $serviceType) {
             $serviceTypeMapping[$serviceType->slug] = $serviceType->propertyTypes->pluck('slug')->toArray();
         }
-        
-        return view('pages.home', compact(
-            'heroSections',
-            'testimonials', 
-            'faqs', 
-            'features', 
-            'whyChooseUsFeatures', 
-            'latestPropertiesFeatures', 
-            'aboutUs', 
-            'categories', 
-            'cities',
-            'commercialSection',
-            'serviceTypes',
-            'propertyTypes',
-            'serviceTypeMapping'
-        ));
+        return view('pages.home', compact('heroSections', 'testimonials', 'faqs', 'features', 'whyChooseUsFeatures', 'latestPropertiesFeatures', 'aboutUs', 'categories', 'cities', 'commercialSection', 'serviceTypes', 'propertyTypes', 'serviceTypeMapping', 'featuredProperties', 'popularProperties', 'rentalProperties'));
     }
 
     public function search(Request $request)
@@ -67,44 +69,37 @@ class HomeController extends Controller
 
     public function properties(Request $request)
     {
-        $query = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'mainImage'])
-            ->active()
-            ->published();
-
-        // Apply filters
+        $query = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'mainImage'])->active()->published();
         if ($request->filled('city_id')) {
             $query->filterByCity($request->city_id);
         }
-
         if ($request->filled('location_id')) {
             $query->filterByLocation($request->location_id);
         }
-
         if ($request->filled('property_type_id')) {
             $query->filterByPropertyType($request->property_type_id);
         }
-
+        if ($request->filled('property_type_slug')) {
+            $propertyType = PropertyType::where('slug', $request->property_type_slug)->first();
+            if ($propertyType) {
+                $query->filterByPropertyType($propertyType->id);
+            }
+        }
         if ($request->filled('bhk_id')) {
             $query->filterByBhk($request->bhk_id);
         }
-
         if ($request->filled('project_status_id')) {
             $query->filterByProjectStatus($request->project_status_id);
         }
-
         if ($request->filled('builder_id')) {
             $query->filterByBuilder($request->builder_id);
         }
-
         if ($request->filled('min_price') || $request->filled('max_price')) {
             $query->filterByPriceRange($request->min_price, $request->max_price);
         }
-
         if ($request->filled('search')) {
             $query->search($request->search);
         }
-
-        // Sorting
         $sortBy = $request->get('sort_by', 'latest');
         switch ($sortBy) {
             case 'price_low':
@@ -121,60 +116,43 @@ class HomeController extends Controller
                 $query->orderBy('published_at', 'desc');
                 break;
         }
-
         $properties = $query->paginate(12)->withQueryString();
-
-        // Get filter options
         $cities = City::active()->ordered()->get();
         $locations = Location::active()->ordered()->get();
         $propertyTypes = PropertyType::active()->ordered()->get();
-        $bhks = \App\Models\Bhk::active()->ordered()->get();
-        $projectStatuses = \App\Models\ProjectStatus::active()->ordered()->get();
-        $builders = \App\Models\Builder::active()->verified()->ordered()->get();
-        
-        // Get work processes
+        $bhks = Bhk::active()->ordered()->get();
+        $projectStatuses = ProjectStatus::active()->ordered()->get();
+        $builders = Builder::active()->verified()->ordered()->get();
         $workProcesses = WorkProcess::active()->ordered()->get();
-
-        return view('properties.index', compact(
-            'properties',
-            'cities',
-            'locations',
-            'propertyTypes',
-            'bhks',
-            'projectStatuses',
-            'builders',
-            'workProcesses'
-        ));
+        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses'));
     }
 
     public function show(Property $property)
     {
-        // Increment view count
         $property->incrementViews();
+        $property->load(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'images', 'amenities', 'specifications', 'faqs' => function ($query) {
+            $query->active()->ordered();
+        }]);
+        $similarProperties = Property::with(['propertyType', 'bhk', 'city', 'mainImage'])->active()->published()->where('id', '!=', $property->id)->where('property_type_id', $property->property_type_id)->where('city_id', $property->city_id)->limit(3)->get();
+        return view('pages.property-detail', compact('property', 'similarProperties'));
+    }
 
-        // Load relationships
-        $property->load([
-            'propertyType',
-            'bhk',
-            'city',
-            'location',
-            'projectStatus',
-            'builder',
-            'images',
-            'amenities',
-            'specifications'
-        ]);
+    public function about()
+    {
+        $aboutPage = \App\Models\AboutPageSection::getActive();
+        $clients = \App\Models\OurClient::active()->ordered()->get();
+        $teamMembers = \App\Models\TeamMember::active()->ordered()->get();
+        
+        return view('pages.about', compact('aboutPage', 'clients', 'teamMembers'));
+    }
 
-        // Get similar properties
-        $similarProperties = Property::with(['propertyType', 'bhk', 'city', 'mainImage'])
-            ->active()
-            ->published()
-            ->where('id', '!=', $property->id)
-            ->where('property_type_id', $property->property_type_id)
-            ->where('city_id', $property->city_id)
-            ->limit(3)
-            ->get();
-
-        return view('properties.show', compact('property', 'similarProperties'));
+    public function contact()
+    {
+        $banner = \App\Models\ContactPageSection::getByKey('banner');
+        $contactSection = \App\Models\ContactPageSection::getByKey('contact_section');
+        $inquirySection = \App\Models\ContactPageSection::getByKey('inquiry_section');
+        $contactInfos = \App\Models\ContactInfo::active()->ordered()->get();
+        
+        return view('pages.contact', compact('banner', 'contactSection', 'inquirySection', 'contactInfos'));
     }
 }

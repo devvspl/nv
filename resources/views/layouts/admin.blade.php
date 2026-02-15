@@ -152,13 +152,13 @@
         input[type="checkbox"] {
             accent-color: rgb(179, 147, 89);
         }
-        
+
         input[type="checkbox"]:checked {
             background-color: rgb(179, 147, 89);
             border-color: rgb(179, 147, 89);
             background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
         }
-        
+
         input[type="checkbox"]:focus {
             --tw-ring-color: rgb(179, 147, 89);
             border-color: rgb(179, 147, 89);
@@ -214,23 +214,22 @@
 </head>
 
 <body class="bg-gray-100 font-body overflow-x-hidden">
-    <div class="min-h-screen flex" x-data="{ sidebarOpen: false, sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true' }" 
-         x-init="$watch('sidebarCollapsed', value => localStorage.setItem('sidebarCollapsed', value))">
+    <div class="min-h-screen flex" x-data="{ sidebarOpen: false, sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true' }" x-init="$watch('sidebarCollapsed', value => localStorage.setItem('sidebarCollapsed', value))">
         <!-- Mobile Sidebar Overlay -->
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-cloak></div>
         <!-- Sidebar -->
-        <div class="admin-sidebar fixed h-full z-50 lg:z-30 transition-all duration-300" 
-             :class="{ 
+        <div class="admin-sidebar fixed h-full z-50 lg:z-30 transition-all duration-300"
+            :class="{
                 'mobile-open': sidebarOpen,
                 'w-64': !sidebarCollapsed,
                 'w-20': sidebarCollapsed
-             }">
+            }">
             <!-- Logo Section -->
             <div class="admin-logo-section p-5">
                 <div class="flex items-center" :class="{ 'justify-center': sidebarCollapsed }">
-                    <div class="w-10 h-10 bg-zendo-gold rounded-lg flex items-center justify-center" 
-                         :class="{ 'mr-3': !sidebarCollapsed }">
+                    <div class="w-10 h-10 bg-zendo-gold rounded-lg flex items-center justify-center"
+                        :class="{ 'mr-3': !sidebarCollapsed }">
                         <span class="text-white font-bold text-lg">Z</span>
                     </div>
                     <div x-show="!sidebarCollapsed" x-transition>
@@ -239,12 +238,12 @@
                     </div>
                 </div>
                 <!-- Collapse Toggle Button (Desktop Only) -->
-                <button @click="sidebarCollapsed = !sidebarCollapsed" 
-                        class="hidden lg:flex absolute -right-3 top-8 w-6 h-6 bg-zendo-gold rounded-full items-center justify-center text-white hover:bg-zendo-navy transition-colors shadow-lg z-50">
-                    <svg class="w-3 h-3 transition-transform duration-300" 
-                         :class="{ 'rotate-180': sidebarCollapsed }" 
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+                <button @click="sidebarCollapsed = !sidebarCollapsed"
+                    class="hidden lg:flex absolute -right-3 top-8 w-6 h-6 bg-zendo-gold rounded-full items-center justify-center text-white hover:bg-zendo-navy transition-colors shadow-lg z-50">
+                    <svg class="w-3 h-3 transition-transform duration-300" :class="{ 'rotate-180': sidebarCollapsed }"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7">
+                        </path>
                     </svg>
                 </button>
             </div>
@@ -254,12 +253,10 @@
                     <!-- Dashboard -->
                     <a href="{{ route('dashboard') }}"
                         class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'active' : 'text-gray-300 hover:text-white' }}"
-                        :class="{ 'justify-center': sidebarCollapsed }"
-                        x-data="{ tooltip: false }"
-                        @mouseenter="tooltip = sidebarCollapsed"
-                        @mouseleave="tooltip = false">
-                        <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                        :class="{ 'justify-center': sidebarCollapsed }" x-data="{ tooltip: false }"
+                        @mouseenter="tooltip = sidebarCollapsed" @mouseleave="tooltip = false">
+                        <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -268,7 +265,7 @@
                         <span x-show="!sidebarCollapsed" x-transition>Dashboard</span>
                         <!-- Tooltip -->
                         <div x-show="tooltip" x-cloak
-                             class="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-50">
+                            class="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-50">
                             Dashboard
                         </div>
                     </a>
@@ -276,12 +273,10 @@
                     <!-- Users -->
                     <a href="{{ route('admin.users.index') }}"
                         class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.users.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
-                        :class="{ 'justify-center': sidebarCollapsed }"
-                        x-data="{ tooltip: false }"
-                        @mouseenter="tooltip = sidebarCollapsed"
-                        @mouseleave="tooltip = false">
-                        <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                        :class="{ 'justify-center': sidebarCollapsed }" x-data="{ tooltip: false }"
+                        @mouseenter="tooltip = sidebarCollapsed" @mouseleave="tooltip = false">
+                        <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
                             </path>
@@ -289,40 +284,44 @@
                         <span x-show="!sidebarCollapsed" x-transition>Users</span>
                         <!-- Tooltip -->
                         <div x-show="tooltip" x-cloak
-                             class="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-50">
+                            class="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-50">
                             Users
                         </div>
                     </a>
 
-                    <!-- Lead Management Dropdown -->
-                    <div x-data="{ open: {{ request()->routeIs('admin.inquiries.*', 'admin.consultations.*') ? 'true' : 'false' }}, showFloating: false }" 
-                         @mouseenter="showFloating = sidebarCollapsed" 
-                         @mouseleave="showFloating = false"
-                         class="relative">
+                    <!-- Lead Tracking Dropdown -->
+                    <div x-data="{ open: {{ request()->routeIs('admin.inquiries.*', 'admin.consultations.*', 'admin.property-inquiries.*') ? 'true' : 'false' }}, showFloating: false }" @mouseenter="showFloating = sidebarCollapsed"
+                        @mouseleave="showFloating = false" class="relative">
                         <!-- Dropdown Toggle -->
                         <button @click="open = !open"
-                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.inquiries.*', 'admin.consultations.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.inquiries.*', 'admin.consultations.*', 'admin.property-inquiries.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                             :class="{ 'justify-center': sidebarCollapsed }">
                             <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
-                                <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z">
                                     </path>
                                 </svg>
-                                <span x-show="!sidebarCollapsed" x-transition>Lead Management</span>
+                                <span x-show="!sidebarCollapsed" x-transition>Lead Tracking</span>
                                 @php
-                                    $totalPendingLeads = App\Models\Inquiry::pending()->count() + App\Models\Consultation::pending()->count();
+                                    $totalPendingLeads =
+                                        App\Models\Inquiry::pending()->count() +
+                                        App\Models\Consultation::pending()->count() +
+                                        App\Models\PropertyInquiry::pending()->count();
                                 @endphp
-                                @if($totalPendingLeads > 0)
-                                    <span x-show="!sidebarCollapsed" class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 min-w-[18px] h-4 justify-center">
+                                @if ($totalPendingLeads > 0)
+                                    <span x-show="!sidebarCollapsed"
+                                        class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 min-w-[18px] h-4 justify-center">
                                         {{ $totalPendingLeads }}
                                     </span>
-                                    <span x-show="sidebarCollapsed" class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500"></span>
+                                    <span x-show="sidebarCollapsed"
+                                        class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500"></span>
                                 @endif
                             </div>
-                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -330,9 +329,10 @@
 
                         <!-- Floating Menu (Collapsed State) -->
                         <div x-show="showFloating && sidebarCollapsed" x-cloak
-                             class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
-                            <div class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
-                                Lead Management
+                            class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
+                            <div
+                                class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
+                                Lead Tracking
                             </div>
                             <a href="{{ route('admin.inquiries.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.inquiries.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -342,8 +342,9 @@
                                     </path>
                                 </svg>
                                 Inquiries
-                                @if(App\Models\Inquiry::pending()->count() > 0)
-                                    <span class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                @if (App\Models\Inquiry::pending()->count() > 0)
+                                    <span
+                                        class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                         {{ App\Models\Inquiry::pending()->count() }}
                                     </span>
                                 @endif
@@ -356,9 +357,25 @@
                                     </path>
                                 </svg>
                                 Consultations
-                                @if(App\Models\Consultation::pending()->count() > 0)
-                                    <span class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                @if (App\Models\Consultation::pending()->count() > 0)
+                                    <span
+                                        class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         {{ App\Models\Consultation::pending()->count() }}
+                                    </span>
+                                @endif
+                            </a>
+                            <a href="{{ route('admin.property-inquiries.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.property-inquiries.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                                    </path>
+                                </svg>
+                                Property Inquiries
+                                @if (App\Models\PropertyInquiry::pending()->count() > 0)
+                                    <span
+                                        class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                        {{ App\Models\PropertyInquiry::pending()->count() }}
                                     </span>
                                 @endif
                             </a>
@@ -367,8 +384,9 @@
                         <!-- Dropdown Menu (Expanded State) -->
                         <div x-show="open && !sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            class="dropdown-submenu mt-1">
 
                             <!-- Inquiries -->
                             <a href="{{ route('admin.inquiries.index') }}"
@@ -380,8 +398,9 @@
                                     </path>
                                 </svg>
                                 Inquiries
-                                @if(App\Models\Inquiry::pending()->count() > 0)
-                                    <span class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 min-w-[18px] h-4 justify-center">
+                                @if (App\Models\Inquiry::pending()->count() > 0)
+                                    <span
+                                        class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 min-w-[18px] h-4 justify-center">
                                         {{ App\Models\Inquiry::pending()->count() }}
                                     </span>
                                 @endif
@@ -397,9 +416,28 @@
                                     </path>
                                 </svg>
                                 Consultations
-                                @if(App\Models\Consultation::pending()->count() > 0)
-                                    <span class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 min-w-[18px] h-4 justify-center">
+                                @if (App\Models\Consultation::pending()->count() > 0)
+                                    <span
+                                        class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 min-w-[18px] h-4 justify-center">
                                         {{ App\Models\Consultation::pending()->count() }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <!-- Property Inquiries -->
+                            <a href="{{ route('admin.property-inquiries.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.property-inquiries.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                                    </path>
+                                </svg>
+                                Property Inquiries
+                                @if (App\Models\PropertyInquiry::pending()->count() > 0)
+                                    <span
+                                        class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 min-w-[18px] h-4 justify-center">
+                                        {{ App\Models\PropertyInquiry::pending()->count() }}
                                     </span>
                                 @endif
                             </a>
@@ -407,25 +445,24 @@
                     </div>
 
                     <!-- Property Management Dropdown -->
-                    <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*', 'admin.property-inquiries.*') ? 'true' : 'false' }}, showFloating: false }" 
-                         @mouseenter="showFloating = sidebarCollapsed" 
-                         @mouseleave="showFloating = false"
-                         class="relative">
+                    <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*') ? 'true' : 'false' }}, showFloating: false }" @mouseenter="showFloating = sidebarCollapsed"
+                        @mouseleave="showFloating = false" class="relative">
                         <!-- Dropdown Toggle -->
                         <button @click="open = !open"
-                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*', 'admin.property-inquiries.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                             :class="{ 'justify-center': sidebarCollapsed }">
                             <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
-                                <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                                     </path>
                                 </svg>
                                 <span x-show="!sidebarCollapsed" x-transition>Property Management</span>
                             </div>
-                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -433,11 +470,12 @@
 
                         <!-- Floating Menu (Collapsed State) -->
                         <div x-show="showFloating && sidebarCollapsed" x-cloak
-                             class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
-                            <div class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
+                            class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
+                            <div
+                                class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
                                 Property Management
                             </div>
-                            
+
                             <a href="{{ route('admin.service-types.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.service-types.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -522,23 +560,14 @@
                                 </svg>
                                 Properties
                             </a>
-
-                            <a href="{{ route('admin.property-inquiries.index') }}"
-                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.property-inquiries.*') ? 'bg-gray-700 text-white' : '' }}">
-                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
-                                    </path>
-                                </svg>
-                                Property Inquiries
-                            </a>
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
                         <div x-show="open && !sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            class="dropdown-submenu mt-1">
 
                             <!-- Service Types -->
                             <a href="{{ route('admin.service-types.index') }}"
@@ -641,18 +670,6 @@
                                 Properties
                             </a>
 
-                            <!-- Property Inquiries -->
-                            <a href="{{ route('admin.property-inquiries.index') }}"
-                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.property-inquiries.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
-                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
-                                    </path>
-                                </svg>
-                                Property Inquiries
-                            </a>
-
                             <!-- Work Processes -->
                             <a href="{{ route('admin.work-processes.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.work-processes.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
@@ -664,31 +681,135 @@
                                 </svg>
                                 How We Work
                             </a>
-                                    </path>
-                                </svg>
-                                
+                            </path>
+                            </svg>
+
                             </a>
                         </div>
                     </div>
 
-                    <!-- Home Page Master Dropdown -->
-                    <div x-data="{ open: {{ request()->routeIs('admin.hero-sections.*', 'admin.about-us.*', 'admin.features.*', 'admin.categories.*', 'admin.cities.*', 'admin.testimonials.*', 'admin.faqs.*', 'admin.commercial-sections.*') ? 'true' : 'false' }}, showFloating: false }" 
+                    <!-- About Page Master Dropdown -->
+                    <div x-data="{ open: {{ request()->routeIs('admin.about-page.*', 'admin.our-clients.*', 'admin.team-members.*') ? 'true' : 'false' }}, showFloating: false }" @mouseenter="showFloating = sidebarCollapsed"
+                        @mouseleave="showFloating = false" class="relative">
+                        <!-- Dropdown Toggle -->
+                        <button @click="open = !open"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.about-page.*', 'admin.our-clients.*', 'admin.team-members.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            :class="{ 'justify-center': sidebarCollapsed }">
+                            <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
+                                <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span x-show="!sidebarCollapsed" x-transition>About Page Master</span>
+                            </div>
+                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Floating Menu (Collapsed State) -->
+                        <div x-show="showFloating && sidebarCollapsed" x-cloak
+                            class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
+                            <div
+                                class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
+                                About Page Master
+                            </div>
+                            <a href="{{ route('admin.about-page.edit') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.about-page.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                About Page Content
+                            </a>
+
+                            <a href="{{ route('admin.our-clients.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.our-clients.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                Our Clients
+                            </a>
+
+                            <a href="{{ route('admin.team-members.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.team-members.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
+                                </svg>
+                                Team Members
+                            </a>
+                        </div>
+
+                        <!-- Dropdown Menu (Expanded State) -->
+                        <div x-show="open && !sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            class="dropdown-submenu mt-1">
+
+                            <!-- About Page Content -->
+                            <a href="{{ route('admin.about-page.edit') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.about-page.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                About Page Content
+                            </a>
+
+                            <!-- Our Clients -->
+                            <a href="{{ route('admin.our-clients.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.our-clients.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                Our Clients
+                            </a>
+
+                            <!-- Team Members -->
+                            <a href="{{ route('admin.team-members.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.team-members.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
+                                </svg>
+                                Team Members
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Page Master Dropdown -->
+                    <div x-data="{ open: {{ request()->routeIs('admin.contact-page.*', 'admin.contact-info.*') ? 'true' : 'false' }}, showFloating: false }" 
                          @mouseenter="showFloating = sidebarCollapsed" 
                          @mouseleave="showFloating = false"
                          class="relative">
                         <!-- Dropdown Toggle -->
                         <button @click="open = !open"
-                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.hero-sections.*', 'admin.about-us.*', 'admin.features.*', 'admin.categories.*', 'admin.cities.*', 'admin.testimonials.*', 'admin.faqs.*', 'admin.commercial-sections.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.contact-page.*', 'admin.contact-info.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                             :class="{ 'justify-center': sidebarCollapsed }">
                             <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
                                 <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
-                                <span x-show="!sidebarCollapsed" x-transition>Home Master</span>
+                                <span x-show="!sidebarCollapsed" x-transition>Contact Page Master</span>
                             </div>
                             <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -701,9 +822,125 @@
                         <div x-show="showFloating && sidebarCollapsed" x-cloak
                              class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
                             <div class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
-                                Home Master
+                                Contact Page Master
                             </div>
                             
+                            <a href="{{ route('contact') }}" target="_blank"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
+                                </svg>
+                                View Contact Page
+                            </a>
+
+                            <div class="border-t border-gray-700 my-2"></div>
+                            
+                            <a href="{{ route('admin.contact-page.edit') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.contact-page.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                Contact Page Content
+                            </a>
+                            
+                            <a href="{{ route('admin.contact-info.index') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.contact-info.*') ? 'bg-gray-700 text-white' : '' }}">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                Contact Information
+                            </a>
+                        </div>
+
+                        <!-- Dropdown Menu (Expanded State) -->
+                        <div x-show="open && !sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
+
+                            <!-- View Contact Page -->
+                            <a href="{{ route('contact') }}" target="_blank"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-400 hover:text-white">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
+                                </svg>
+                                View Contact Page
+                            </a>
+
+                            <div class="border-t border-gray-700 my-2 mx-4"></div>
+
+                            <!-- Contact Page Content -->
+                            <a href="{{ route('admin.contact-page.edit') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.contact-page.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                Contact Page Content
+                            </a>
+
+                            <!-- Contact Information -->
+                            <a href="{{ route('admin.contact-info.index') }}"
+                                class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.contact-info.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                Contact Information
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Home Page Master Dropdown -->
+                    <div x-data="{ open: {{ request()->routeIs('admin.hero-sections.*', 'admin.about-us.*', 'admin.features.*', 'admin.categories.*', 'admin.cities.*', 'admin.testimonials.*', 'admin.faqs.*', 'admin.commercial-sections.*') ? 'true' : 'false' }}, showFloating: false }" @mouseenter="showFloating = sidebarCollapsed"
+                        @mouseleave="showFloating = false" class="relative">
+                        <!-- Dropdown Toggle -->
+                        <button @click="open = !open"
+                            class="admin-sidebar-link w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.hero-sections.*', 'admin.about-us.*', 'admin.features.*', 'admin.categories.*', 'admin.cities.*', 'admin.testimonials.*', 'admin.faqs.*', 'admin.commercial-sections.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                            :class="{ 'justify-center': sidebarCollapsed }">
+                            <div class="flex items-center" :class="{ 'justify-center w-full': sidebarCollapsed }">
+                                <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                                </svg>
+                                <span x-show="!sidebarCollapsed" x-transition>Home Master</span>
+                            </div>
+                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Floating Menu (Collapsed State) -->
+                        <div x-show="showFloating && sidebarCollapsed" x-cloak
+                            class="absolute left-full top-0 ml-2 w-56 bg-gray-800 rounded-lg shadow-xl py-2 z-50 border border-gray-700">
+                            <div
+                                class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
+                                Home Master
+                            </div>
+
                             <a href="{{ route('admin.hero-sections.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.hero-sections.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -713,7 +950,7 @@
                                 </svg>
                                 Hero Sections
                             </a>
-                            
+
                             <a href="{{ route('admin.about-us.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.about-us.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -788,8 +1025,9 @@
                         <!-- Dropdown Menu (Expanded State) -->
                         <div x-show="open && !sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            class="dropdown-submenu mt-1">
 
                             <!-- Hero Sections -->
                             <a href="{{ route('admin.hero-sections.index') }}"
@@ -894,11 +1132,11 @@
             </nav>
         </div>
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col min-h-screen transition-all duration-300" 
-             :class="{ 
+        <div class="flex-1 flex flex-col min-h-screen transition-all duration-300"
+            :class="{
                 'lg:ml-64': !sidebarCollapsed,
                 'lg:ml-20': sidebarCollapsed
-             }">
+            }">
             <!-- Top Header -->
             <header class="admin-header sticky top-0 z-20">
                 <div class="px-4 lg:px-6 py-4">
@@ -994,6 +1232,7 @@
         </div>
     </div>
     @yield('scripts')
+    @stack('scripts')
     <script>
         // Alpine.js cloak
         document.addEventListener('alpine:init', () => {

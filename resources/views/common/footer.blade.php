@@ -47,8 +47,8 @@
             <div>
                  <h4 class="text-lg font-medium font-heading text-white mb-4 uppercase tracking-wider">Quick Links</h4> 
                  <ul class="space-y-2">
-                     <li><a href="#" class="text-gray-400 font-body text-sm footer-link transition-colors">About Us</a></li>
-                     <li><a href="#" class="text-gray-400 font-body text-sm footer-link transition-colors">Contact Us</a></li>
+                     <li><a href="{{ route('about') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">About Us</a></li>
+                     <li><a href="{{ route('contact') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Contact Us</a></li>
                      <li><a href="#" class="text-gray-400 font-body text-sm footer-link transition-colors">Services</a></li>
                      <li><a href="#" class="text-gray-400 font-body text-sm footer-link transition-colors">Blog/News</a></li>
                      @if (Route::has('login'))

@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\AboutPageSection;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class AboutPageController extends Controller
+{
+    public function edit()
+    {
+        $aboutPage = AboutPageSection::first();
+        
+        if (!$aboutPage) {
+            $aboutPage = AboutPageSection::create([
+                'section_title' => 'Our Company',
+                'section_subtitle' => 'Lorem Ipsum Conedosvtr',
+                'is_active' => true,
+            ]);
+        }
+        
+        return view('admin.about-page.edit', compact('aboutPage'));
+    }
+
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'section_title' => 'nullable|string|max:255',
+            'section_subtitle' => 'nullable|string',
+            'who_we_are_title' => 'nullable|string|max:255',
+            'who_we_are_description' => 'nullable|string',
+            'who_we_are_icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'mission_title' => 'nullable|string|max:255',
+            'mission_description' => 'nullable|string',
+            'mission_icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'vision_title' => 'nullable|string|max:255',
+            'vision_description' => 'nullable|string',
+            'vision_icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'values_heading' => 'nullable|string|max:255',
+            'values_who_we_are' => 'nullable|string',
+            'values_mission' => 'nullable|string',
+            'values_vision' => 'nullable|string',
+            'values_teamwork' => 'nullable|string',
+            'team_section_title' => 'nullable|string|max:255',
+            'team_section_heading' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
+        ]);
+
+        $aboutPage = AboutPageSection::first();
+        
+        if (!$aboutPage) {
+            $aboutPage = new AboutPageSection();
+        }
+
+        // Handle icon uploads
+        if ($request->hasFile('who_we_are_icon')) {
+            if ($aboutPage->who_we_are_icon) {
+                Storage::disk('public')->delete($aboutPage->who_we_are_icon);
+            }
+            $validated['who_we_are_icon'] = $request->file('who_we_are_icon')->store('about-icons', 'public');
+        }
+
+        if ($request->hasFile('mission_icon')) {
+            if ($aboutPage->mission_icon) {
+                Storage::disk('public')->delete($aboutPage->mission_icon);
+            }
+            $validated['mission_icon'] = $request->file('mission_icon')->store('about-icons', 'public');
+        }
+
+        if ($request->hasFile('vision_icon')) {
+            if ($aboutPage->vision_icon) {
+                Storage::disk('public')->delete($aboutPage->vision_icon);
+            }
+            $validated['vision_icon'] = $request->file('vision_icon')->store('about-icons', 'public');
+        }
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $aboutPage->fill($validated);
+        $aboutPage->save();
+
+        return redirect()->route('admin.about-page.edit')
+            ->with('success', 'About page updated successfully!');
+    }
+}

@@ -9,8 +9,8 @@
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="#" class="header-nav-link font-highlight font-medium">About Us</a>
-                <a href="#" class="header-nav-link font-highlight font-medium">Contact Us</a>
+                <a href="{{ route('about') }}" class="header-nav-link font-highlight font-medium">About Us</a>
+                <a href="{{ route('contact') }}" class="header-nav-link font-highlight font-medium">Contact Us</a>
                 <a href="#" class="header-nav-link font-highlight font-medium">Services</a>
                 <a href="#" class="header-nav-link font-highlight font-medium">Blog/News</a>
 
@@ -42,7 +42,7 @@
     <!-- Mobile Menu (Hidden by default) -->
     <div id="mobile-menu" class="hidden md:hidden bg-zendo-light-bg shadow-xl absolute top-20 left-0 w-full z-40">
         <div class="flex flex-col space-y-4 p-5">
-            <a href="#"
+            <a href="{{ route('about') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">About
                 Us</a>
             <a href="#"

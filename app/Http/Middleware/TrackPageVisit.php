@@ -39,7 +39,7 @@ class TrackPageVisit
                 // Get page name from route
                 $pageName = $this->getPageName($request);
                 
-                PageVisit::create([
+                $pageVisit = PageVisit::create([
                     'url' => $request->fullUrl(),
                     'page_name' => $pageName,
                     'ip_address' => $request->ip(),
@@ -50,6 +50,9 @@ class TrackPageVisit
                     'platform' => $agent->platform(),
                     'visited_at' => now(),
                 ]);
+                
+                // Store the page visit ID in session for linking with inquiries
+                $request->session()->put('current_page_visit_id', $pageVisit->id);
             } catch (\Exception $e) {
                 // Silently fail - don't break the page if tracking fails
                 \Log::error('Page visit tracking failed: ' . $e->getMessage());

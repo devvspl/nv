@@ -9,6 +9,7 @@ class PropertyInquiry extends Model
 {
     protected $fillable = [
         'property_id',
+        'page_visit_id',
         'name',
         'email',
         'phone',
@@ -22,6 +23,11 @@ class PropertyInquiry extends Model
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);
+    }
+
+    public function pageVisit(): BelongsTo
+    {
+        return $this->belongsTo(PageVisit::class);
     }
 
     // Scopes
@@ -40,6 +46,31 @@ class PropertyInquiry extends Model
         return $query->where('status', 'interested');
     }
 
+    public function scopeNotInterested($query)
+    {
+        return $query->where('status', 'not_interested');
+    }
+
+    public function scopeClosed($query)
+    {
+        return $query->where('status', 'closed');
+    }
+
+    /**
+     * Get daily inquiry submissions for the last N days
+     */
+    public static function getDailySubmissions($days = 7)
+    {
+        return self::select(
+                        \DB::raw('DATE(created_at) as date'),
+                        \DB::raw('COUNT(*) as submissions')
+                    )
+                    ->where('created_at', '>=', now()->subDays($days))
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get();
+    }
+
     // Accessors
     public function getFormattedInquiryTypeAttribute(): string
     {
@@ -47,6 +78,7 @@ class PropertyInquiry extends Model
             'site_visit' => 'Site Visit',
             'call_back' => 'Call Back',
             'email_info' => 'Email Info',
+            'popup_inquiry' => 'Popup Inquiry',
             'general' => 'General',
             default => 'General',
         };

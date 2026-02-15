@@ -26,10 +26,17 @@ use App\Http\Controllers\Admin\PropertyInquiryController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ConsultationController as AdminConsultationController;
 use App\Http\Controllers\Admin\WorkProcessController;
+use App\Http\Controllers\Admin\AboutPageController;
+use App\Http\Controllers\Admin\OurClientController;
+use App\Http\Controllers\Admin\TeamMemberController;
+use App\Http\Controllers\Admin\ContactPageController;
+use App\Http\Controllers\Admin\ContactInfoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/properties', [HomeController::class, 'properties'])->name('properties.index');
 Route::get('/properties/{property:slug}', [HomeController::class, 'show'])->name('properties.show');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
@@ -55,6 +62,7 @@ Route::get('/storage-link', function() {
 
 // Public inquiry submission
 Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
+Route::post('/inquiries/check-submission', [InquiryController::class, 'checkSubmission'])->name('inquiries.checkSubmission');
 
 // Public consultation submission
 Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
@@ -151,6 +159,23 @@ Route::middleware('auth')->group(function () {
         // Work Processes (How We Work)
         Route::resource('work-processes', WorkProcessController::class);
         Route::patch('work-processes/{workProcess}/toggle-status', [WorkProcessController::class, 'toggleStatus'])->name('work-processes.toggle-status');
+        
+        // About Page Section
+        Route::get('about-page', [AboutPageController::class, 'edit'])->name('about-page.edit');
+        Route::put('about-page', [AboutPageController::class, 'update'])->name('about-page.update');
+        
+        // Our Clients
+        Route::resource('our-clients', OurClientController::class);
+        
+        // Team Members
+        Route::resource('team-members', TeamMemberController::class);
+        
+        // Contact Page Section
+        Route::get('contact-page', [ContactPageController::class, 'edit'])->name('contact-page.edit');
+        Route::put('contact-page', [ContactPageController::class, 'update'])->name('contact-page.update');
+        
+        // Contact Info
+        Route::resource('contact-info', ContactInfoController::class);
     });
 });
 

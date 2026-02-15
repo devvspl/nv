@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             HeroSectionSeeder::class,
             ServiceTypeSeeder::class,
             PropertyTypeSeeder::class,
+            AboutPageSeeder::class,
+            ContactPageSeeder::class,
         ]);
     }
 }

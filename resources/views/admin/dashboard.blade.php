@@ -321,7 +321,7 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Daily Visits Trend -->
                 <div>
-                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Daily Visits Trend (Last 7 Days)</h4>
+                    <h4 class="text-sm font-semibold text-gray-700 mb-4">Daily Visits & Inquiry Submissions (Last 7 Days)</h4>
                     <div style="height: 300px; position: relative;">
                         <canvas id="dailyVisitsChart"></canvas>
                     </div>
@@ -459,27 +459,52 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
             type: 'line',
             data: {
                 labels: chartData.labels,
-                datasets: [{
-                    label: 'Page Visits',
-                    data: chartData.data,
-                    borderColor: '#B39359',
-                    backgroundColor: 'rgba(179, 147, 89, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#B39359',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
+                datasets: [
+                    {
+                        label: 'Page Visits',
+                        data: chartData.visits,
+                        borderColor: '#B39359',
+                        backgroundColor: 'rgba(179, 147, 89, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#B39359',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Inquiry Submissions',
+                        data: chartData.inquiries,
+                        borderColor: '#0B2C3D',
+                        backgroundColor: 'rgba(11, 44, 61, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#0B2C3D',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            }
+                        }
                     },
                     tooltip: {
                         backgroundColor: '#0B2C3D',
@@ -487,10 +512,10 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
                         bodyColor: '#fff',
                         padding: 12,
                         cornerRadius: 8,
-                        displayColors: false,
+                        displayColors: true,
                         callbacks: {
                             label: function(context) {
-                                return 'Visits: ' + context.parsed.y;
+                                return context.dataset.label + ': ' + context.parsed.y;
                             }
                         }
                     }

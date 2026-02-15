@@ -84,14 +84,14 @@
                     </label>
                 </div>
 
-                @if (Route::has('password.request'))
+                {{-- @if (Route::has('password.request'))
                     <div class="text-sm">
                         <a href="{{ route('password.request') }}" 
                            class="font-semibold text-zendo-navy hover:text-zendo-gold transition-colors font-highlight">
                             Forgot password?
                         </a>
                     </div>
-                @endif
+                @endif --}}
             </div>
 
             <!-- Submit Button -->

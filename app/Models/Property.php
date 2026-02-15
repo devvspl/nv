@@ -31,6 +31,7 @@ class Property extends Model
         'address',
         'latitude',
         'longitude',
+        'map_embed_code',
         'is_featured',
         'is_verified',
         'is_active',
@@ -123,6 +124,11 @@ class Property extends Model
     public function favorites(): HasMany
     {
         return $this->hasMany(PropertyFavorite::class);
+    }
+
+    public function faqs(): HasMany
+    {
+        return $this->hasMany(PropertyFaq::class);
     }
 
     // Scopes
@@ -231,7 +237,13 @@ class Property extends Model
 
     public function getMainImageUrlAttribute(): ?string
     {
-        return $this->mainImage?->image_path ?? $this->images->first()?->image_path;
+        $imagePath = $this->mainImage?->image_path ?? $this->images->first()?->image_path;
+        
+        if ($imagePath) {
+            return asset('storage/' . $imagePath);
+        }
+        
+        return null;
     }
 
     // Helper Methods

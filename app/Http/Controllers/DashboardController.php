@@ -14,7 +14,7 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        return view('dashboard');
+        return view('admin.dashboard');
     }
 
     /**
@@ -58,11 +58,25 @@ class DashboardController extends Controller
 
         // Get chart data
         $dailyVisits = PageVisit::getDailyVisits(7);
+        $dailyInquiries = \App\Models\PropertyInquiry::getDailySubmissions(7);
+        
+        // Merge visits and inquiries data by date
+        $dates = $dailyVisits->pluck('date')->merge($dailyInquiries->pluck('date'))->unique()->sort()->values();
+        
+        $visitsData = [];
+        $inquiriesData = [];
+        
+        foreach ($dates as $date) {
+            $visitsData[] = $dailyVisits->where('date', $date)->first()->visits ?? 0;
+            $inquiriesData[] = $dailyInquiries->where('date', $date)->first()->submissions ?? 0;
+        }
+        
         $chartData = [
-            'labels' => $dailyVisits->pluck('date')->map(function($date) {
+            'labels' => $dates->map(function($date) {
                 return \Carbon\Carbon::parse($date)->format('M d');
             })->toArray(),
-            'data' => $dailyVisits->pluck('visits')->toArray()
+            'visits' => $visitsData,
+            'inquiries' => $inquiriesData
         ];
 
         // Get device chart data

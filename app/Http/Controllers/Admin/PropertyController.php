@@ -17,11 +17,62 @@ use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $properties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'mainImage'])
-            ->latest()
-            ->paginate(10);
+        $query = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'mainImage']);
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // City Filter
+        if ($request->filled('city_id')) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        // Property Type Filter
+        if ($request->filled('property_type_id')) {
+            $query->where('property_type_id', $request->property_type_id);
+        }
+
+        // Status Filter
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'active' ? 1 : 0);
+        }
+
+        // Featured Filter
+        if ($request->filled('featured')) {
+            $query->where('is_featured', $request->featured);
+        }
+
+        // Sorting
+        $sortBy = $request->get('sort_by', 'latest');
+        switch ($sortBy) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'title':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'latest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $properties = $query->paginate(10)->withQueryString();
 
         return view('admin.properties.index', compact('properties'));
     }
@@ -66,6 +117,7 @@ class PropertyController extends Controller
             'address' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'map_embed_code' => 'nullable|string',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
@@ -85,6 +137,12 @@ class PropertyController extends Controller
             'age_of_property' => 'nullable|integer|min:0',
             'possession_date' => 'nullable|date',
             'rera_id' => 'nullable|string|max:100',
+            // FAQs
+            'faqs' => 'nullable|array',
+            'faqs.*.question' => 'required_with:faqs|string|max:500',
+            'faqs.*.answer' => 'required_with:faqs|string|max:2000',
+            'faqs.*.display_order' => 'nullable|integer|min:0',
+            'faqs.*.is_active' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -124,6 +182,16 @@ class PropertyController extends Controller
             }
         }
 
+        // Handle FAQs
+        if ($request->has('faqs')) {
+            foreach ($request->faqs as $faqData) {
+                if (!empty($faqData['question']) && !empty($faqData['answer'])) {
+                    $faqData['is_active'] = isset($faqData['is_active']) ? true : false;
+                    $property->faqs()->create($faqData);
+                }
+            }
+        }
+
         return redirect()->route('admin.properties.index')
             ->with('success', 'Property created successfully.');
     }
@@ -148,7 +216,7 @@ class PropertyController extends Controller
 
     public function edit(Property $property)
     {
-        $property->load(['amenities', 'specifications', 'images']);
+        $property->load(['amenities', 'specifications', 'images', 'faqs']);
         
         $propertyTypes = PropertyType::active()->ordered()->get();
         $bhks = Bhk::active()->ordered()->get();
@@ -189,6 +257,7 @@ class PropertyController extends Controller
             'address' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'map_embed_code' => 'nullable|string',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
@@ -250,6 +319,35 @@ class PropertyController extends Controller
                     'display_order' => $lastOrder + $index + 1,
                 ]);
             }
+        }
+
+        // Handle FAQs
+        if ($request->has('faqs')) {
+            $existingFaqIds = [];
+            foreach ($request->faqs as $faqData) {
+                if (!empty($faqData['question']) && !empty($faqData['answer'])) {
+                    $faqData['is_active'] = isset($faqData['is_active']) ? true : false;
+                    
+                    if (!empty($faqData['id'])) {
+                        // Update existing FAQ
+                        $faq = $property->faqs()->find($faqData['id']);
+                        if ($faq) {
+                            $faq->update($faqData);
+                            $existingFaqIds[] = $faq->id;
+                        }
+                    } else {
+                        // Create new FAQ
+                        $newFaq = $property->faqs()->create($faqData);
+                        $existingFaqIds[] = $newFaq->id;
+                    }
+                }
+            }
+            
+            // Delete FAQs that were removed
+            $property->faqs()->whereNotIn('id', $existingFaqIds)->delete();
+        } else {
+            // Delete all FAQs if none provided
+            $property->faqs()->delete();
         }
 
         return redirect()->route('admin.properties.index')

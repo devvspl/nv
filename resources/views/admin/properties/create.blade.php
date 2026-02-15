@@ -285,22 +285,26 @@
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                        <textarea name="address" rows="2"
+                        <textarea name="address" rows="2" id="address"
                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">{{ old('address') }}</textarea>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
-                            <input type="number" name="latitude" value="{{ old('latitude') }}" step="any"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
-                        </div>
+                    <!-- Embed Code Method -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Map Embed Code</label>
+                        <textarea name="map_embed_code" id="map_embed_code" rows="6"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent font-mono text-sm"
+                                  placeholder='<iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'>{{ old('map_embed_code') }}</textarea>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Paste the embed code from Google Maps. 
+                            <a href="https://www.google.com/maps" target="_blank" class="text-zendo-gold hover:underline">Get embed code from Google Maps</a>
+                        </p>
+                    </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
-                            <input type="number" name="longitude" value="{{ old('longitude') }}" step="any"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
-                        </div>
+                    <!-- Preview -->
+                    <div id="embed-preview" style="display: none;">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
+                        <div class="w-full h-96 rounded-lg border-2 border-gray-300 overflow-hidden" id="embed-preview-container"></div>
                     </div>
                 </div>
             </div>
@@ -331,6 +335,23 @@
                 </div>
             </div>
 
+            <!-- FAQs -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Frequently Asked Questions</h3>
+                
+                <div id="faqs-container">
+                    <p class="text-sm text-gray-500 mb-4">No FAQs added yet. Click "Add FAQ" to create one.</p>
+                </div>
+                
+                <button type="button" onclick="addFaq()" 
+                        class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add FAQ
+                </button>
+            </div>
+
             <!-- Status & Publishing -->
             <div class="pt-6 border-t border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900 mb-4">Status & Publishing</h3>
@@ -348,14 +369,6 @@
                             <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}
                                    class="rounded border-gray-300 text-zendo-gold focus:ring-zendo-gold">
                             <span class="text-sm font-medium text-gray-700">Featured</span>
-                        </label>
-                    </div>
-
-                    <div>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" name="is_verified" value="1" {{ old('is_verified') ? 'checked' : '' }}
-                                   class="rounded border-gray-300 text-zendo-gold focus:ring-zendo-gold">
-                            <span class="text-sm font-medium text-gray-700">Verified</span>
                         </label>
                     </div>
 
@@ -385,3 +398,98 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+let faqIndex = 0;
+
+// Preview embed code
+document.addEventListener('DOMContentLoaded', function() {
+    const embedInput = document.getElementById('map_embed_code');
+    const previewContainer = document.getElementById('embed-preview-container');
+    const previewSection = document.getElementById('embed-preview');
+    
+    if (embedInput) {
+        embedInput.addEventListener('input', function() {
+            const embedCode = this.value.trim();
+            if (embedCode) {
+                previewContainer.innerHTML = embedCode;
+                previewSection.style.display = 'block';
+            } else {
+                previewContainer.innerHTML = '';
+                previewSection.style.display = 'none';
+            }
+        });
+    }
+});
+
+function addFaq() {
+    const container = document.getElementById('faqs-container');
+    const emptyMessage = container.querySelector('p.text-gray-500');
+    if (emptyMessage) emptyMessage.remove();
+    
+    const faqHtml = `
+        <div class="faq-item border border-gray-200 rounded-lg p-4 mb-4">
+            <div class="flex justify-between items-start mb-3">
+                <h4 class="text-sm font-medium text-gray-700">FAQ #${faqIndex + 1}</h4>
+                <button type="button" onclick="removeFaq(this)" class="text-red-600 hover:text-red-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Question</label>
+                    <input type="text" name="faqs[${faqIndex}][question]"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Answer</label>
+                    <textarea name="faqs[${faqIndex}][answer]" rows="3"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
+                        <input type="number" name="faqs[${faqIndex}][display_order]" value="${faqIndex}" min="0"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                    </div>
+                    
+                    <div class="flex items-end">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="faqs[${faqIndex}][is_active]" value="1" checked
+                                   class="rounded border-gray-300 text-zendo-gold focus:ring-zendo-gold">
+                            <span class="text-sm text-gray-700">Active</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', faqHtml);
+    faqIndex++;
+}
+
+function removeFaq(button) {
+    if (confirm('Are you sure you want to remove this FAQ?')) {
+        button.closest('.faq-item').remove();
+        
+        // Update FAQ numbers
+        document.querySelectorAll('.faq-item').forEach((item, index) => {
+            item.querySelector('h4').textContent = `FAQ #${index + 1}`;
+        });
+        
+        // Show empty message if no FAQs
+        const container = document.getElementById('faqs-container');
+        if (container.querySelectorAll('.faq-item').length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-500 mb-4">No FAQs added yet. Click "Add FAQ" to create one.</p>';
+        }
+    }
+}
+</script>
+@endpush
