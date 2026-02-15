@@ -141,12 +141,75 @@ Manage all properties in the system. Create, edit, view, and delete property lis
             </tbody>
         </table>
     </div>
+
+    <!-- Mobile Card View -->
+    <div class="lg:hidden divide-y divide-gray-200">
+        @forelse($properties as $property)
+            <div class="p-4 hover:bg-gray-50 transition-colors">
+                <div class="flex items-start space-x-4">
+                    @if($property->mainImage)
+                        <img src="{{ asset('storage/' . $property->mainImage->image_path) }}" 
+                             alt="{{ $property->title }}" 
+                             class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+                    @else
+                        <div class="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                        </div>
+                    @endif
+                    
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-sm font-medium text-gray-900 truncate">{{ $property->title }}</h3>
+                        <p class="text-xs text-gray-500 mt-1">{{ $property->propertyType->name ?? 'N/A' }} • {{ $property->bhk->name ?? 'N/A' }}</p>
+                        <p class="text-xs text-gray-500">{{ $property->location->name ?? 'N/A' }}, {{ $property->city->name ?? 'N/A' }}</p>
+                        <p class="text-sm font-semibold text-gray-900 mt-2">₹{{ number_format($property->price) }}</p>
+                        
+                        <div class="flex flex-wrap gap-1 mt-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $property->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                {{ $property->is_active ? 'Active' : 'Inactive' }}
+                            </span>
+                            @if($property->is_featured)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    Featured
+                                </span>
+                            @endif
+                            @if($property->is_verified)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                    Verified
+                                </span>
+                            @endif
+                        </div>
+                        
+                        <div class="flex items-center space-x-3 mt-3">
+                            <a href="{{ route('admin.properties.show', $property) }}" 
+                               class="text-blue-600 hover:text-blue-900 text-xs font-medium">View</a>
+                            <a href="{{ route('admin.properties.edit', $property) }}" 
+                               class="text-indigo-600 hover:text-indigo-900 text-xs font-medium">Edit</a>
+                            <form action="{{ route('admin.properties.destroy', $property) }}" method="POST" class="inline"
+                                  onsubmit="return confirm('Are you sure you want to delete this property?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900 text-xs font-medium">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="p-12 text-center text-gray-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <p class="text-lg font-medium">No properties found</p>
+                <p class="mt-1">Get started by creating your first property.</p>
+            </div>
+        @endforelse
+    </div>
 </div>
 
 <!-- Pagination -->
-@if($properties->hasPages())
-    <div class="mt-6 flex justify-center">
-        {{ $properties->links() }}
-    </div>
-@endif
+<div class="mt-6">
+    {{ $properties->links() }}
+</div>
 @endsection

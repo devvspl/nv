@@ -17,6 +17,7 @@ use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
 use App\Models\Testimonial;
+use App\Models\WorkProcess;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -130,6 +131,9 @@ class HomeController extends Controller
         $bhks = \App\Models\Bhk::active()->ordered()->get();
         $projectStatuses = \App\Models\ProjectStatus::active()->ordered()->get();
         $builders = \App\Models\Builder::active()->verified()->ordered()->get();
+        
+        // Get work processes
+        $workProcesses = WorkProcess::active()->ordered()->get();
 
         return view('properties.index', compact(
             'properties',
@@ -138,7 +142,8 @@ class HomeController extends Controller
             'propertyTypes',
             'bhks',
             'projectStatuses',
-            'builders'
+            'builders',
+            'workProcesses'
         ));
     }
 

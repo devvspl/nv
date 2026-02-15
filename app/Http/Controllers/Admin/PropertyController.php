@@ -21,7 +21,7 @@ class PropertyController extends Controller
     {
         $properties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'mainImage'])
             ->latest()
-            ->paginate(20);
+            ->paginate(10);
 
         return view('admin.properties.index', compact('properties'));
     }

@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.properties.update', $property) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
+        <form action="{{ route('admin.properties.update', $property) }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
             @method('PUT')
 
@@ -26,7 +26,7 @@
             <div>
                 <h3 class="text-base font-semibold text-gray-900 mb-4">Basic Information</h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Property Title *</label>
                     <input type="text" name="title" value="{{ old('title', $property->title) }}" required
@@ -126,7 +126,7 @@
         </div>
 
         <!-- Pricing & Area -->
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Pricing & Area</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -163,7 +163,7 @@
         </div>
 
         <!-- Specifications -->
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Specifications</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -238,7 +238,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Possession Date</label>
-                    <input type="date" name="possession_date" value="{{ old('possession_date', $property->specifications->possession_date ? $property->specifications->possession_date->format('Y-m-d') : '') }}"
+                    <input type="date" name="possession_date" value="{{ old('possession_date', $property->specifications && $property->specifications->possession_date ? $property->specifications->possession_date->format('Y-m-d') : '') }}"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
                 </div>
 
@@ -251,7 +251,7 @@
         </div>
 
         <!-- Location Details -->
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Location Details</h3>
             
             <div class="grid grid-cols-1 gap-6">
@@ -278,7 +278,7 @@
         </div>
 
         <!-- Amenities -->
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Amenities</h3>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -295,7 +295,7 @@
 
         <!-- Existing Images -->
         @if($property->images->count() > 0)
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Existing Images</h3>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -324,7 +324,7 @@
         @endif
 
         <!-- Add New Images -->
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Add New Images</h3>
             
             <div>
@@ -336,7 +336,7 @@
         </div>
 
         <!-- Status & Publishing -->
-        <div class="pt-6 border-t border-gray-200">
+        <div class="pt-4 border-t border-gray-200">
             <h3 class="text-base font-semibold text-gray-900 mb-4">Status & Publishing</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -373,7 +373,7 @@
         </div>
 
         <!-- Submit Buttons -->
-        <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200">
+        <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4 mt-4 border-t border-gray-200">
             <a href="{{ route('admin.properties.index') }}" 
                class="inline-flex justify-center items-center px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 Cancel

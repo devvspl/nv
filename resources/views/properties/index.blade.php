@@ -711,6 +711,35 @@
     filter: brightness(1.02);
 }
 
+/* BHK Chips */
+.apw-chipRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.apw-chip {
+    border-radius: 999px;
+    padding: 9px 12px;
+    border: 1px solid rgba(251,248,242,0.22);
+    background: rgba(251,248,242,0.08);
+    color: #fbf8f2;
+    cursor: pointer;
+    font-weight: 750;
+    font-size: 13px;
+    transition: background .15s ease, transform .15s ease, border-color .15s ease;
+}
+
+.apw-chip:hover {
+    transform: translateY(-1px);
+    background: rgba(251,248,242,0.12);
+}
+
+.apw-chip.is-active {
+    background: rgba(179,147,89,0.22);
+    border-color: rgba(179,147,89,0.70);
+}
+
 @media (max-width: 1100px) {
     .apw-cardGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .apw-resiGrid { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); }
@@ -1036,6 +1065,9 @@
     z-index: 10;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
+.apw-selectWrap select li{
+  background-color: #0b2c3d !important;
+}
 </style>
 @endsection
 
@@ -1224,22 +1256,14 @@
 
           <!-- BHK -->
           <div class="apw-field">
-            <label class="apw-label" for="bhk_id">BHK</label>
-            <div class="apw-selectWrap">
-              <select id="bhk_id" name="bhk_id" class="apw-select">
-                <option value="">All BHK</option>
-                @foreach($bhks as $bhk)
-                  <option value="{{ $bhk->id }}" {{ request('bhk_id') == $bhk->id ? 'selected' : '' }}>
-                    {{ $bhk->name }}
-                  </option>
-                @endforeach
-              </select>
-              <span class="apw-selectSvg" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-                  <path d="M7 10l5 5 5-5" stroke="#b39359" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
+            <label class="apw-label">BHK</label>
+            <div class="apw-chipRow" role="group" aria-label="BHK filter">
+              <button type="button" class="apw-chip {{ !request('bhk_id') ? 'is-active' : '' }}" data-bhk="">All</button>
+              @foreach($bhks as $bhk)
+                <button type="button" class="apw-chip {{ request('bhk_id') == $bhk->id ? 'is-active' : '' }}" data-bhk="{{ $bhk->id }}">{{ $bhk->name }}</button>
+              @endforeach
             </div>
+            <input type="hidden" name="bhk_id" id="apw-bhkHidden" value="{{ request('bhk_id') }}">
           </div>
 
           <!-- Project Status -->
@@ -1550,42 +1574,20 @@
             <span class="section-subheading">Our Process</span>
             <h2 class="font-heading text-zendo-navy">How We Work</h2>
             <p class="text-lg text-gray-600 font-body max-w-2xl mx-auto">
-                We break down the complexities of real estate into four simple, transparent steps.
+                We break down the complexities of real estate into simple, transparent steps.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 card-grid-container">
-            <div class="relative text-center step-card card-item rounded-lg shadow-md p-8 pt-16">
-                <div class="step-number">1</div>
-                <h3 class="text-xl font-semibold font-heading text-zendo-navy mb-3">Initial Consultation</h3>
-                <p class="text-gray-600 font-body leading-relaxed">
-                    We start by understanding your exact requirements, budget, and long-term goals.
-                </p>
-            </div>
-
-            <div class="relative text-center step-card card-item rounded-lg shadow-md p-8 pt-16">
-                <div class="step-number">2</div>
-                <h3 class="text-xl font-semibold font-heading text-zendo-navy mb-3">Search & Vetting</h3>
-                <p class="text-gray-600 font-body leading-relaxed">
-                    Our team curates a shortlist of verified properties that precisely match your criteria.
-                </p>
-            </div>
-
-            <div class="relative text-center step-card card-item rounded-lg shadow-md p-8 pt-16">
-                <div class="step-number">3</div>
-                <h3 class="text-xl font-semibold font-heading text-zendo-navy mb-3">Viewings & Negotiation</h3>
-                <p class="text-gray-600 font-body leading-relaxed">
-                    We arrange viewings and handle all negotiations to secure the best possible deal for you.
-                </p>
-            </div>
-
-            <div class="relative text-center step-card card-item rounded-lg shadow-md p-8 pt-16">
-                <div class="step-number">4</div>
-                <h3 class="text-xl font-semibold font-heading text-zendo-navy mb-3">Final Closing & Handover</h3>
-                <p class="text-gray-600 font-body leading-relaxed">
-                    Seamless execution of legal documentation and final property handover with full support.
-                </p>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ min($workProcesses->count(), 4) }} gap-12 card-grid-container">
+            @foreach($workProcesses as $process)
+                <div class="relative text-center step-card card-item rounded-lg shadow-md p-8 pt-16">
+                    <div class="step-number">{{ $process->step_number }}</div>
+                    <h3 class="text-xl font-semibold font-heading text-zendo-navy mb-3">{{ $process->title }}</h3>
+                    <p class="text-gray-600 font-body leading-relaxed">
+                        {{ $process->description }}
+                    </p>
+                </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -1679,6 +1681,24 @@
     goTo(0);
     startAutoplay();
   })();
+
+// BHK Chip Buttons
+document.querySelectorAll('.apw-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+        // Remove active class from all chips
+        document.querySelectorAll('.apw-chip').forEach(c => c.classList.remove('is-active'));
+        
+        // Add active class to clicked chip
+        this.classList.add('is-active');
+        
+        // Update hidden input value
+        const bhkValue = this.getAttribute('data-bhk');
+        document.getElementById('apw-bhkHidden').value = bhkValue;
+        
+        // Submit form
+        document.getElementById('apw-resiFilterForm').submit();
+    });
+});
 
 // Auto-submit form on filter change
 document.querySelectorAll('#apw-resiFilterForm select').forEach(select => {

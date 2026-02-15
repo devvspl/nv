@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\PropertyInquiryController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ConsultationController as AdminConsultationController;
+use App\Http\Controllers\Admin\WorkProcessController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -146,6 +147,10 @@ Route::middleware('auth')->group(function () {
         Route::get('consultations/{consultation}', [AdminConsultationController::class, 'show'])->name('consultations.show');
         Route::patch('consultations/{consultation}/status', [AdminConsultationController::class, 'updateStatus'])->name('consultations.update-status');
         Route::delete('consultations/{consultation}', [AdminConsultationController::class, 'destroy'])->name('consultations.destroy');
+        
+        // Work Processes (How We Work)
+        Route::resource('work-processes', WorkProcessController::class);
+        Route::patch('work-processes/{workProcess}/toggle-status', [WorkProcessController::class, 'toggleStatus'])->name('work-processes.toggle-status');
     });
 });
 
