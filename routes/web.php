@@ -31,15 +31,20 @@ use App\Http\Controllers\Admin\OurClientController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\ContactInfoController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\PrivacyPolicyController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/blogs', [HomeController::class, 'blogs'])->name('blogs.index');
+Route::get('/blog/{blog:slug}', [HomeController::class, 'blogShow'])->name('blogs.show');
 Route::get('/properties', [HomeController::class, 'properties'])->name('properties.index');
 Route::get('/properties/{property:slug}', [HomeController::class, 'show'])->name('properties.show');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
 
 // Cache clearing routes
 Route::get('/clear-cache', function() {
@@ -176,6 +181,13 @@ Route::middleware('auth')->group(function () {
         
         // Contact Info
         Route::resource('contact-info', ContactInfoController::class);
+        
+        // Blog/News
+        Route::resource('blogs', BlogController::class);
+        
+        // Privacy Policy (Single Page)
+        Route::get('privacy-policy', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');
+        Route::put('privacy-policy', [PrivacyPolicyController::class, 'update'])->name('privacy-policy.update');
     });
 });
 

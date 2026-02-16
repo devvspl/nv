@@ -1,21 +1,29 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\AboutPageSection;
 use App\Models\AboutUs;
 use App\Models\Amenity;
 use App\Models\Bhk;
+use App\Models\Blog;
 use App\Models\Builder;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\CommercialSection;
+use App\Models\ContactInfo;
+use App\Models\ContactPageSection;
 use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\HeroSection;
 use App\Models\Location;
+use App\Models\OurClient;
+use App\Models\PrivacyPolicy;
 use App\Models\ProjectStatus;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
+use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\WorkProcess;
 use Illuminate\Http\Request;
@@ -36,30 +44,15 @@ class HomeController extends Controller
         $commercialSection = CommercialSection::getActive();
         $serviceTypes = ServiceType::active()->ordered()->with('propertyTypes')->get();
         $propertyTypes = PropertyType::active()->ordered()->get();
-        $featuredProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage'])
-            ->active()
-            ->published()
-            ->featured()
-            ->latest('published_at')
-            ->limit(3)
-            ->get();
-        $popularProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])
-            ->active()
-            ->published()
-            ->orderBy('views_count', 'desc')
-            ->limit(3)
-            ->get();
-        $rentalProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])
-            ->active()
-            ->published()
-            ->latest('published_at')
-            ->limit(3)
-            ->get();
+        $featuredProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage'])->active()->published()->featured()->latest('published_at')->limit(3)->get();
+        $popularProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])->active()->published()->orderBy('views_count', 'desc')->limit(3)->get();
+        $rentalProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])->active()->published()->latest('published_at')->limit(3)->get();
+        $blogs = Blog::active()->published()->ordered()->limit(4)->get();
         $serviceTypeMapping = [];
         foreach ($serviceTypes as $serviceType) {
             $serviceTypeMapping[$serviceType->slug] = $serviceType->propertyTypes->pluck('slug')->toArray();
         }
-        return view('pages.home', compact('heroSections', 'testimonials', 'faqs', 'features', 'whyChooseUsFeatures', 'latestPropertiesFeatures', 'aboutUs', 'categories', 'cities', 'commercialSection', 'serviceTypes', 'propertyTypes', 'serviceTypeMapping', 'featuredProperties', 'popularProperties', 'rentalProperties'));
+        return view('pages.home', compact('heroSections', 'testimonials', 'faqs', 'features', 'whyChooseUsFeatures', 'latestPropertiesFeatures', 'aboutUs', 'categories', 'cities', 'commercialSection', 'serviceTypes', 'propertyTypes', 'serviceTypeMapping', 'featuredProperties', 'popularProperties', 'rentalProperties', 'blogs'));
     }
 
     public function search(Request $request)
@@ -139,20 +132,39 @@ class HomeController extends Controller
 
     public function about()
     {
-        $aboutPage = \App\Models\AboutPageSection::getActive();
-        $clients = \App\Models\OurClient::active()->ordered()->get();
-        $teamMembers = \App\Models\TeamMember::active()->ordered()->get();
-        
+        $aboutPage = AboutPageSection::getActive();
+        $clients = OurClient::active()->ordered()->get();
+        $teamMembers = TeamMember::active()->ordered()->get();
         return view('pages.about', compact('aboutPage', 'clients', 'teamMembers'));
     }
 
     public function contact()
     {
-        $banner = \App\Models\ContactPageSection::getByKey('banner');
-        $contactSection = \App\Models\ContactPageSection::getByKey('contact_section');
-        $inquirySection = \App\Models\ContactPageSection::getByKey('inquiry_section');
-        $contactInfos = \App\Models\ContactInfo::active()->ordered()->get();
-        
+        $banner = ContactPageSection::getByKey('banner');
+        $contactSection = ContactPageSection::getByKey('contact_section');
+        $inquirySection = ContactPageSection::getByKey('inquiry_section');
+        $contactInfos = ContactInfo::active()->ordered()->get();
         return view('pages.contact', compact('banner', 'contactSection', 'inquirySection', 'contactInfos'));
+    }
+
+    public function blogs()
+    {
+        $blogs = Blog::active()->published()->ordered()->paginate(12);
+        return view('pages.blogs', compact('blogs'));
+    }
+
+    public function blogShow(Blog $blog)
+    {
+        $blog->increment('views');
+        $relatedBlogs = Blog::active()->published()->where('id', '!=', $blog->id)->when($blog->category, function ($query) use ($blog) {
+            $query->where('category', $blog->category);
+        })->ordered()->limit(3)->get();
+        return view('pages.blog-detail', compact('blog', 'relatedBlogs'));
+    }
+
+    public function privacyPolicy()
+    {
+        $policy = PrivacyPolicy::getActive();
+        return view('pages.privacy-policy', compact('policy'));
     }
 }

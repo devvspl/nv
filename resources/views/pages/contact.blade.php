@@ -204,3 +204,106 @@
         </div>
     </section>
 @endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('form[action*="inquiries"]');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit via AJAX
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showMessage('success', data.message || 'Thank you for your inquiry! We will get back to you soon.');
+                    
+                    // Reset form
+                    this.reset();
+                } else {
+                    // Show error message
+                    let errorMsg = data.message || 'Something went wrong. Please try again.';
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors).flat().join('<br>');
+                    }
+                    showMessage('error', errorMsg);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('error', 'Something went wrong. Please try again later.');
+            })
+            .finally(() => {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+    });
+    
+    function showMessage(type, message) {
+        // Remove existing messages
+        const existingMsg = document.querySelector('.inquiry-message');
+        if (existingMsg) {
+            existingMsg.remove();
+        }
+        
+        // Create message element
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `inquiry-message fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg max-w-md ${
+            type === 'success' 
+                ? 'bg-green-50 border border-green-200 text-green-800' 
+                : 'bg-red-50 border border-red-200 text-red-800'
+        }`;
+        msgDiv.innerHTML = `
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    ${type === 'success' 
+                        ? '<svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
+                        : '<svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>'
+                    }
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm font-medium">${message}</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 flex-shrink-0">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(msgDiv);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            msgDiv.style.transition = 'opacity 0.5s';
+            msgDiv.style.opacity = '0';
+            setTimeout(() => msgDiv.remove(), 500);
+        }, 5000);
+    }
+});
+</script>
+@endsection

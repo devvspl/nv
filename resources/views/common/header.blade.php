@@ -10,9 +10,9 @@
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="{{ route('about') }}" class="header-nav-link font-highlight font-medium">About Us</a>
-                <a href="{{ route('contact') }}" class="header-nav-link font-highlight font-medium">Contact Us</a>
                 <a href="#" class="header-nav-link font-highlight font-medium">Services</a>
-                <a href="#" class="header-nav-link font-highlight font-medium">Blog/News</a>
+                <a href="{{ route('blogs.index') }}" class="header-nav-link font-highlight font-medium">Blog/News</a>
+                <a href="{{ route('contact') }}" class="header-nav-link font-highlight font-medium">Contact Us</a>
 
                 <a href="tel:+919990186086"
                     class="header-button btn-anim ml-4 px-5 py-2.5 rounded-full font-highlight font-medium shadow-lg transform hover:scale-105">
@@ -45,12 +45,12 @@
             <a href="{{ route('about') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">About
                 Us</a>
-            <a href="#"
+            <a href="{{ route('contact') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Contact
                 Us</a>
             <a href="#"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Services</a>
-            <a href="#"
+            <a href="{{ route('blogs.index') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Blog/News</a>
 
             @if (Route::has('login'))

@@ -243,9 +243,6 @@
          <!-- No Featured Properties -->
          <div class="col-span-full text-center py-12">
             <p class="text-gray-600 font-body text-lg">No featured properties available at the moment.</p>
-            <a href="{{ route('properties.index') }}" class="mt-4 inline-block px-6 py-2 rounded-full bg-zendo-gold text-white font-semibold hover:bg-zendo-navy transition-colors">
-               View All Properties
-            </a>
          </div>
          @endforelse
       </div>
@@ -1188,100 +1185,41 @@
       </div>
       <!-- Blog Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 card-grid-container">
-         <!-- Blog Card 1 -->
+         @forelse($blogs as $blog)
+         <!-- Blog Card: {{ $blog->title }} -->
          <div class="blog-card card-item bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
-            <a href="#">
+            <a href="{{ route('blogs.show', $blog->slug) }}">
                <div class="overflow-hidden">
-                  <img src="{{ asset('main/images/blog/blog1.png') }}" alt="Blog post image 1"
+                  <img src="{{ $blog->featured_image_url }}" alt="{{ $blog->title }}"
                      class="card-image w-full h-48 object-cover">
                </div>
                <div class="p-6">
                   <h3
                      class="text-xl font-semibold font-heading text-zendo-navy hover:text-zendo-gold transition-colors mb-3">
-                     Benefits of Real Estate Template
+                     {{ $blog->title }}
                   </h3>
-                  <p class="text-gray-600 font-body text-sm leading-relaxed mb-4 line-clamp-3">Using real estate
-                     templates can offer several benefits to real estate professionals, whether they are
-                     agents...
+                  <p class="text-gray-600 font-body text-sm leading-relaxed mb-4 line-clamp-3">
+                     {{ $blog->excerpt }}
                   </p>
                   <div class="flex items-center text-xs text-gray-500 font-body">
-                     <span>BY ROBERT HAVEN</span>
+                     <span>BY {{ strtoupper($blog->author ?? 'ADMIN') }}</span>
                      <span class="mx-2">|</span>
-                     <span>JULY 30, 2025</span>
+                     <span>{{ $blog->published_date ? $blog->published_date->format('F d, Y') : 'DRAFT' }}</span>
                   </div>
                </div>
             </a>
          </div>
-         <!-- Blog Card 2 -->
-         <div class="blog-card card-item bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
-            <a href="#">
-               <div class="overflow-hidden">
-                  <img src="{{ asset('main/images/blog/blog2.png') }}" alt="Blog post image 2"
-                     class="card-image w-full h-48 object-cover">
-               </div>
-               <div class="p-6">
-                  <h3
-                     class="text-xl font-semibold font-heading text-zendo-navy hover:text-zendo-gold transition-colors mb-3">
-                     Important of Real Estate Developer
-                  </h3>
-                  <p class="text-gray-600 font-body text-sm leading-relaxed mb-4 line-clamp-3">Real estate
-                     development involves numerous tasks, including creating project proposals, contracts...
-                  </p>
-                  <div class="flex items-center text-xs text-gray-500 font-body">
-                     <span>BY ROBERT HAVEN</span>
-                     <span class="mx-2">|</span>
-                     <span>JUNE 12, 2025</span>
-                  </div>
-               </div>
-            </a>
-         </div>
-         <!-- Blog Card 3 -->
-         <div class="blog-card card-item bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
-            <a href="#">
-               <div class="overflow-hidden">
-                  <img src="{{ asset('main/images/blog/blog3.png') }}" alt="Blog post image 3"
-                     class="card-image w-full h-48 object-cover">
-               </div>
-               <div class="p-6">
-                  <h3
-                     class="text-xl font-semibold font-heading text-zendo-navy hover:text-zendo-gold transition-colors mb-3">
-                     What Are Good Template Features?
-                  </h3>
-                  <p class="text-gray-600 font-body text-sm leading-relaxed mb-4 line-clamp-3">A good template
-                     should have a clean and intuitive design, making it easy for users to navigate...
-                  </p>
-                  <div class="flex items-center text-xs text-gray-500 font-body">
-                     <span>BY ROBERT HAVEN</span>
-                     <span class="mx-2">|</span>
-                     <span>MAY 30, 2025</span>
-                  </div>
-               </div>
-            </a>
-         </div>
-         <!-- Blog Card 4 -->
-         <div class="blog-card card-item bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
-            <a href="#">
-               <div class="overflow-hidden">
-                  <img src="{{ asset('main/images/blog/blog4.png') }}" alt="Blog post image 4"
-                     class="card-image w-full h-48 object-cover">
-               </div>
-               <div class="p-6">
-                  <h3
-                     class="text-xl font-semibold font-heading text-zendo-navy hover:text-zendo-gold transition-colors mb-3">
-                     Benefits of Real Estate Template
-                  </h3>
-                  <p class="text-gray-600 font-body text-sm leading-relaxed mb-4 line-clamp-3">Using real estate
-                     templates can offer several benefits to real estate professionals, whether they are
-                     agents...
-                  </p>
-                  <div class="flex items-center text-xs text-gray-500 font-body">
-                     <span>BY ROBERT HAVEN</span>
-                     <span class="mx-2">|</span>
-                     <span>JULY 30, 2025</span>
-                  </div>
-               </div>
-            </a>
-         </div>
+         @empty
+
+         @endforelse
+      </div>
+      
+      <!-- View All Blogs Button -->
+      <div class="text-center mt-12">
+         <a href="{{ route('blogs.index') }}"
+            class="px-8 py-3 rounded-full transition-all transform hover:scale-105 inline-block font-highlight font-semibold shadow-lg btn-anim btn-light-bg">
+         View All Blogs
+         </a>
       </div>
    </div>
 </section>

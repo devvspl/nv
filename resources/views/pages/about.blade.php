@@ -331,7 +331,7 @@
     <!-- CLIENTS SECTION -->
     <section class="clients-section">
         <div class="clients-container">
-            <h2 class="clients-headings">Our clients</h2>
+            <h2 class="clients-headings">Our Clients</h2>
             <div class="clients-grid">
                 @forelse($clients as $client)
                     <div class="client-item">
@@ -445,7 +445,7 @@
                         <a href="{{ $member->linkedin_url ?? '#' }}" target="_blank">
                             <div class="overflow-hidden">
                                 <img src="{{ $member->photo_url }}" alt="{{ $member->name }}"
-                                    class="card-image w-full h-48 object-cover">
+                                    class="card-image w-full h-80 object-cover">
                             </div>
                             <div class="p-6">
                                 <h3
@@ -475,48 +475,61 @@
     <!-- cta button -->
     <section id="inquiry-section" class="py-24 animate-on-scroll fade-in-up">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <!-- CHANGED -->
             <!-- Left Content -->
             <div>
-                <!-- REMOVED grid classes -->
                 <span class="section-subheading-dark-bg">Get Inquiry</span>
-                <!-- REMOVED text-4xl, md:text-5xl, font-medium, mb-6 -->
                 <h2 class="md:text-5xl font-heading text-white">Your Luxurious Escape Awaits — Reserve Today</h2>
                 <p class="text-lg text-gray-300 font-body max-w-2xl mx-auto">
-                    <!-- Centered text -->
                     Step into a world of refined elegance and timeless comfort. Secure your unforgettable stay at our luxury
                     hotel – it's just an inquiry away.
                 </p>
             </div>
+
+            <!-- Success/Error Messages -->
+            @if (session('success'))
+                <div class="max-w-2xl mx-auto mt-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="max-w-2xl mx-auto mt-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                    <ul class="list-disc list-inside text-left">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Right Form -->
             <div class="w-full max-w-6xl mx-auto mt-12">
-                <form action="#" method="POST"
+                <form action="{{ route('inquiries.store') }}" method="POST"
                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
-                    <!-- CHANGED -->
+                    @csrf
                     <div>
                         <label for="name-2" class="sr-only">Name</label>
-                        <input type="text" name="name-2" id="name-2" class="inquiry-form-input w-full"
-                            placeholder="Name">
+                        <input type="text" name="name" id="name-2" class="inquiry-form-input w-full"
+                            placeholder="Name" required>
                     </div>
                     <div>
                         <label for="email-2" class="sr-only">Email</label>
-                        <input type="email" name="email-2" id="email-2" class="inquiry-form-input w-full"
-                            placeholder="Email">
+                        <input type="email" name="email" id="email-2" class="inquiry-form-input w-full"
+                            placeholder="Email" required>
                     </div>
                     <div>
                         <label for="phone-2" class="sr-only">Phone number</label>
-                        <input type="tel" name="phone-2" id="phone-2" class="inquiry-form-input w-full"
-                            placeholder="Phone number">
+                        <input type="tel" name="phone" id="phone-2" class="inquiry-form-input w-full"
+                            placeholder="Phone number" required>
                     </div>
                     <div>
                         <label for="requirement-2" class="sr-only">Requirement</label>
-                        <input type="text" name="requirement-2" id="requirement-2" class="inquiry-form-input w-full"
-                            placeholder="Requirement"> <!-- CHANGED from textarea -->
+                        <input type="text" name="message" id="requirement-2" class="inquiry-form-input w-full"
+                            placeholder="Requirement" required>
                     </div>
                     <div>
                         <button type="submit"
                             class="w-full h-[56px] px-6 py-3 rounded-full font-highlight font-semibold shadow-lg transition-all transform hover:scale-105 btn-anim btn-dark-bg">
-                            <!-- Set height -->
                             Get Inquiry
                         </button>
                     </div>
@@ -525,4 +538,108 @@
         </div>
     </section>
     <!-- ended-->
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inquiryForm = document.querySelector('form[action*="inquiries"]');
+    
+    if (inquiryForm) {
+        inquiryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit via AJAX
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showMessage('success', data.message || 'Thank you for your inquiry! We will get back to you soon.');
+                    
+                    // Reset form
+                    this.reset();
+                } else {
+                    // Show error message
+                    let errorMsg = data.message || 'Something went wrong. Please try again.';
+                    if (data.errors) {
+                        errorMsg = Object.values(data.errors).flat().join('<br>');
+                    }
+                    showMessage('error', errorMsg);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('error', 'Something went wrong. Please try again later.');
+            })
+            .finally(() => {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+    }
+    
+    function showMessage(type, message) {
+        // Remove existing messages
+        const existingMsg = document.querySelector('.inquiry-message');
+        if (existingMsg) {
+            existingMsg.remove();
+        }
+        
+        // Create message element
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `inquiry-message fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg max-w-md ${
+            type === 'success' 
+                ? 'bg-green-50 border border-green-200 text-green-800' 
+                : 'bg-red-50 border border-red-200 text-red-800'
+        }`;
+        msgDiv.innerHTML = `
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    ${type === 'success' 
+                        ? '<svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
+                        : '<svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>'
+                    }
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm font-medium">${message}</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 flex-shrink-0">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(msgDiv);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            msgDiv.style.transition = 'opacity 0.5s';
+            msgDiv.style.opacity = '0';
+            setTimeout(() => msgDiv.remove(), 500);
+        }, 5000);
+    }
+});
+</script>
 @endsection
