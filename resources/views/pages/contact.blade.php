@@ -141,7 +141,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('inquiry.store') }}" method="POST" class="space-y-5">
+                    <form action="{{ route('inquiries.store') }}" method="POST" class="space-y-5">
                         @csrf
                         <input type="text" name="name" placeholder="Your Name" value="{{ old('name') }}" required
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-zendo-gold">
@@ -170,7 +170,7 @@
                 </p>
             </div>
             <div class="w-full max-w-6xl mx-auto mt-12">
-                <form action="{{ route('inquiry.store') }}" method="POST"
+                <form action="{{ route('inquiries.store') }}" method="POST"
                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
                     @csrf
                     <div>
