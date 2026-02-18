@@ -184,6 +184,7 @@ Route::middleware('auth')->group(function () {
         
         // Blog/News
         Route::resource('blogs', BlogController::class);
+        Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
         
         // Privacy Policy (Single Page)
         Route::get('privacy-policy', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');

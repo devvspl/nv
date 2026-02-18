@@ -49,7 +49,7 @@
                  <ul class="space-y-2">
                      <li><a href="{{ route('about') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">About Us</a></li>
                      <li><a href="{{ route('contact') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Contact Us</a></li>
-                     <li><a href="#" class="text-gray-400 font-body text-sm footer-link transition-colors">Services</a></li>
+                     <li><a href="{{ route('properties.index') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Services</a></li>
                      <li><a href="{{ route('blogs.index') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Blog/News</a></li>
                      @if (Route::has('login'))
                          @guest

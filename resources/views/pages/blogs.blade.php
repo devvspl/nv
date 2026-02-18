@@ -3,16 +3,89 @@
 @section('title', 'Blog & News - ZendoIndia')
 
 @section('content')
-<!-- BLOG HERO -->
-<section class="relative bg-zendo-navy py-20 pt-32">
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-heading text-white font-bold mb-6">
-                Blog & News
-            </h1>
-            <p class="text-lg text-gray-300 font-body max-w-2xl mx-auto">
-                Stay updated with the latest real estate trends, market insights, and property news.
-            </p>
+<!-- BLOG BANNER -->
+<style>
+    .blog-banner-section {
+        position: relative;
+        background-image: url('https://zendoindia.com/new-home/zendo/assets/images/bg/cta-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        padding: 160px 0 80px;
+        color: #fff;
+    }
+
+    .blog-banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgb(0 0 0 / 62%);
+    }
+
+    .blog-banner-container {
+        position: relative;
+        max-width: 1250px;
+        margin: auto;
+        padding: 0 20px;
+    }
+
+    .blog-banner-left {
+        max-width: 600px;
+    }
+
+    .blog-banner-heading {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .blog-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+    }
+
+    .blog-breadcrumb a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .blog-breadcrumb span {
+        color: #ffffff;
+    }
+
+    .blog-breadcrumb p {
+        margin: 0;
+        opacity: 0.8;
+    }
+
+    @media (max-width: 767px) {
+        .blog-banner-heading {
+            font-size: 32px;
+        }
+
+        .blog-breadcrumb {
+            font-size: 14px;
+        }
+
+        .blog-banner-section {
+            padding: 130px 0 60px;
+        }
+    }
+</style>
+<section class="blog-banner-section">
+    <div class="blog-banner-overlay"></div>
+    <div class="blog-banner-container">
+        <div class="blog-banner-left">
+            <h1 class="blog-banner-heading">Blog & News</h1>
+            <div class="blog-breadcrumb">
+                <a href="{{ route('home') }}">Home</a>
+                <span>/</span>
+                <p>Blog & News</p>
+            </div>
         </div>
     </div>
 </section>

@@ -836,9 +836,6 @@
          <!-- No Popular Properties -->
          <div class="col-span-full text-center py-12">
             <p class="text-gray-600 font-body text-lg">No popular properties available at the moment.</p>
-            <a href="{{ route('properties.index') }}" class="mt-4 inline-block px-6 py-2 rounded-full bg-zendo-gold text-white font-semibold hover:bg-zendo-navy transition-colors">
-               View All Properties
-            </a>
          </div>
          @endforelse
       </div>

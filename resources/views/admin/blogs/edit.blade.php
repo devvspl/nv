@@ -175,8 +175,73 @@
 tinymce.init({
     selector: '#editor1',
     height: 450,
-    plugins: 'advlist lists link image table preview fullscreen charmap paste codesample',
-    toolbar: `bold italic underline | alignleft aligncenter alignright alignjustify | fontsizeselect | forecolor backcolor | numlist bullist | indent outdent | link image | increasefontsize decreasefontsize | print table | preview fullscreen | charmap | importword exportpdf exportword`,
+    plugins: 'advlist lists link image table preview fullscreen charmap paste codesample code',
+    toolbar: `bold italic underline | alignleft aligncenter alignright alignjustify | fontsizeselect | forecolor backcolor | numlist bullist | indent outdent | link image | increasefontsize decreasefontsize | print table | preview fullscreen | charmap code | importword exportpdf exportword`,
+    
+    // Enable automatic uploads of images
+    automatic_uploads: true,
+    
+    // URL of our upload handler
+    images_upload_url: '{{ route("admin.blogs.upload-image") }}',
+    
+    // Add CSRF token to upload requests
+    images_upload_handler: function (blobInfo, success, failure) {
+        var xhr, formData;
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open('POST', '{{ route("admin.blogs.upload-image") }}');
+        
+        // Add CSRF token
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        
+        xhr.onload = function() {
+            var json;
+            if (xhr.status != 200) {
+                failure('HTTP Error: ' + xhr.status);
+                return;
+            }
+            json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != 'string') {
+                failure('Invalid JSON: ' + xhr.responseText);
+                return;
+            }
+            success(json.location);
+        };
+        
+        formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+        xhr.send(formData);
+    },
+    
+    // Allow file picker for images
+    file_picker_types: 'image',
+    file_picker_callback: function(callback, value, meta) {
+        if (meta.filetype === 'image') {
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            
+            input.onchange = function() {
+                var file = this.files[0];
+                var reader = new FileReader();
+                
+                reader.onload = function() {
+                    var id = 'blobid' + (new Date()).getTime();
+                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                    var base64 = reader.result.split(',')[1];
+                    var blobInfo = blobCache.create(id, file, base64);
+                    blobCache.add(blobInfo);
+                    
+                    // Call the callback and populate the Title field with the file name
+                    callback(blobInfo.blobUri(), { title: file.name });
+                };
+                reader.readAsDataURL(file);
+            };
+            
+            input.click();
+        }
+    },
+    
     setup: function(editor) {
         // Increase Font Size
         editor.ui.registry.addButton('increasefontsize', {

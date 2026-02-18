@@ -3,38 +3,116 @@
 @section('title', 'Privacy Policy - ZendoIndia')
 
 @section('content')
-    <!-- PRIVACY POLICY HERO -->
-    <section class="relative bg-zendo-navy py-20 pt-32">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-heading text-white font-bold mb-6">
-                    {{ $policy->title ?? 'Privacy Policy' }}
-                </h1>
-                @if($policy && $policy->last_updated)
-                    <p class="text-gray-300 text-lg">
-                        Last Updated: {{ $policy->last_updated->format('F d, Y') }}
-                    </p>
-                @endif
-                @if($policy && $policy->effective_date)
-                    <p class="text-gray-300 text-sm mt-2">
-                        Effective Date: {{ $policy->effective_date->format('F d, Y') }}
-                    </p>
+    <!-- PRIVACY POLICY BANNER -->
+    <style>
+        .privacy-banner-section {
+            position: relative;
+            background-image: url('https://zendoindia.com/new-home/zendo/assets/images/bg/cta-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 160px 0 80px;
+            color: #fff;
+        }
+
+        .privacy-banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(0 0 0 / 62%);
+        }
+
+        .privacy-banner-container {
+            position: relative;
+            max-width: 1250px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .privacy-banner-left {
+            max-width: 600px;
+        }
+
+        .privacy-banner-heading {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .privacy-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .privacy-breadcrumb a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .privacy-breadcrumb span {
+            color: #ffffff;
+        }
+
+        .privacy-breadcrumb p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .privacy-meta {
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 767px) {
+            .privacy-banner-heading {
+                font-size: 32px;
+            }
+
+            .privacy-breadcrumb {
+                font-size: 14px;
+            }
+
+            .privacy-banner-section {
+                padding: 130px 0 60px;
+            }
+        }
+    </style>
+    <section class="privacy-banner-section">
+        <div class="privacy-banner-overlay"></div>
+        <div class="privacy-banner-container">
+            <div class="privacy-banner-left">
+                <h1 class="privacy-banner-heading">{{ $policy->title ?? 'Privacy Policy' }}</h1>
+                <div class="privacy-breadcrumb">
+                    <a href="{{ route('home') }}">Home</a>
+                    <span>/</span>
+                    <p>Privacy Policy</p>
+                </div>
+                @if($policy)
+                    <div class="privacy-meta">
+                        @if($policy->last_updated)
+                            <p>Last Updated: {{ $policy->last_updated->format('F d, Y') }}</p>
+                        @endif
+                        @if($policy->effective_date)
+                            <p>Effective Date: {{ $policy->effective_date->format('F d, Y') }}</p>
+                        @endif
+                    </div>
                 @endif
             </div>
         </div>
     </section>
 
     <!-- PRIVACY POLICY CONTENT -->
-    <section class="bg-pattern-white py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="bg-pattern-white py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 privacy-content">
             @if($policy)
-                <div class="bg-white rounded-lg shadow-xl p-8 md:p-12">
-                    <div class="prose prose-lg max-w-none privacy-content">
-                        {!! $policy->content !!}
-                    </div>
-                </div>
+                {!! $policy->content !!}
             @else
-                <div class="bg-white rounded-lg shadow-xl p-8 md:p-12 text-center">
+                <div class="bg-white rounded-lg shadow-xl p-8 md:p-12 text-center border border-gray-100">
                     <div class="mb-6">
                         <svg class="w-20 h-20 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -64,92 +142,3 @@
     </section>
 @endsection
 
-@section('styles')
-<style>
-    .privacy-content h1,
-    .privacy-content h2,
-    .privacy-content h3,
-    .privacy-content h4,
-    .privacy-content h5,
-    .privacy-content h6 {
-        font-family: var(--font-heading);
-        color: #0b2c3d;
-        font-weight: 700;
-        margin-top: 1.5em;
-        margin-bottom: 0.75em;
-    }
-
-    .privacy-content h1 {
-        font-size: 2.25em;
-    }
-
-    .privacy-content h2 {
-        font-size: 1.875em;
-    }
-
-    .privacy-content h3 {
-        font-size: 1.5em;
-    }
-
-    .privacy-content h4 {
-        font-size: 1.25em;
-    }
-
-    .privacy-content p {
-        margin-bottom: 1.25em;
-        line-height: 1.8;
-        color: #4b5563;
-    }
-
-    .privacy-content ul,
-    .privacy-content ol {
-        margin-bottom: 1.25em;
-        padding-left: 2em;
-    }
-
-    .privacy-content li {
-        margin-bottom: 0.5em;
-        line-height: 1.7;
-    }
-
-    .privacy-content a {
-        color: #b39359;
-        text-decoration: underline;
-    }
-
-    .privacy-content a:hover {
-        color: #0b2c3d;
-    }
-
-    .privacy-content strong {
-        font-weight: 600;
-        color: #0b2c3d;
-    }
-
-    .privacy-content blockquote {
-        border-left: 4px solid #b39359;
-        padding-left: 1.5em;
-        margin: 1.5em 0;
-        font-style: italic;
-        color: #4b5563;
-    }
-
-    .privacy-content table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1.5em 0;
-    }
-
-    .privacy-content table th,
-    .privacy-content table td {
-        border: 1px solid #e5e7eb;
-        padding: 0.75em;
-        text-align: left;
-    }
-
-    .privacy-content table th {
-        background-color: #f3f4f6;
-        font-weight: 600;
-    }
-</style>
-@endsection
