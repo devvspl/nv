@@ -265,7 +265,6 @@ class PropertyController extends Controller
             'amenities' => 'nullable|array',
             'amenities.*' => 'exists:amenities,id',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            // Specifications
             'total_floors' => 'nullable|integer|min:1',
             'floor_number' => 'nullable|integer|min:0',
             'bedrooms' => 'nullable|integer|min:0',
@@ -321,8 +320,8 @@ class PropertyController extends Controller
             }
         }
 
-        // Handle FAQs
-        if ($request->has('faqs')) {
+        // Handle FAQs - only if explicitly provided in request
+        if ($request->has('faqs') && is_array($request->faqs)) {
             $existingFaqIds = [];
             foreach ($request->faqs as $faqData) {
                 if (!empty($faqData['question']) && !empty($faqData['answer'])) {
@@ -343,11 +342,10 @@ class PropertyController extends Controller
                 }
             }
             
-            // Delete FAQs that were removed
-            $property->faqs()->whereNotIn('id', $existingFaqIds)->delete();
-        } else {
-            // Delete all FAQs if none provided
-            $property->faqs()->delete();
+            // Only delete FAQs that were removed if we have FAQ data
+            if (!empty($existingFaqIds)) {
+                $property->faqs()->whereNotIn('id', $existingFaqIds)->delete();
+            }
         }
 
         return redirect()->route('admin.properties.index')
