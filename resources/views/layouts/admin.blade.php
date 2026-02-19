@@ -1154,19 +1154,8 @@
                                 </p>
                             </div>
                         </div>
-                        <!-- Right side - User menu and notifications -->
+                        <!-- Right side - User menu -->
                         <div class="flex items-center space-x-3">
-                            <!-- Notifications -->
-                            <button
-                                class="p-2 text-gray-400 hover:text-zendo-navy transition-colors relative rounded-lg hover:bg-gray-100">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 17h5l-5 5v-5z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span class="absolute -top-1 -right-1 block h-3 w-3 rounded-full bg-red-400"></span>
-                            </button>
                             <!-- User Profile Dropdown -->
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open"

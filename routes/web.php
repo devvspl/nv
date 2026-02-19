@@ -45,6 +45,11 @@ Route::get('/properties', [HomeController::class, 'properties'])->name('properti
 Route::get('/properties/{property:slug}', [HomeController::class, 'show'])->name('properties.show');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+// Calculator Routes
+Route::get('/calculators/acre-to-bigha', [HomeController::class, 'acreToBigha'])->name('calculators.acre-to-bigha');
+Route::get('/calculators/acre-to-hectare', [HomeController::class, 'acreToHectare'])->name('calculators.acre-to-hectare');
+Route::get('/calculators/emi-calculator', [HomeController::class, 'emiCalculator'])->name('calculators.emi-calculator');
+Route::get('/calculators/length-calculator', [HomeController::class, 'lengthCalculator'])->name('calculators.length-calculator');
 
 // Cache clearing routes
 Route::get('/clear-cache', function() {

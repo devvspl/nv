@@ -51,14 +51,6 @@
                      <li><a href="{{ route('contact') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Contact Us</a></li>
                      <li><a href="{{ route('properties.index') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Services</a></li>
                      <li><a href="{{ route('blogs.index') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Blog/News</a></li>
-                     @if (Route::has('login'))
-                         @guest
-                             <li><a href="{{ route('login') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Login</a></li>
-                             @if (Route::has('register'))
-                                 <li><a href="{{ route('register') }}" class="text-gray-400 font-body text-sm footer-link transition-colors">Register</a></li>
-                             @endif
-                         @endguest
-                     @endif
                  </ul>
             </div>
 

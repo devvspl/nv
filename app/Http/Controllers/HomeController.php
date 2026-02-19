@@ -167,4 +167,24 @@ class HomeController extends Controller
         $policy = PrivacyPolicy::getActive();
         return view('pages.privacy-policy', compact('policy'));
     }
+
+    public function acreToBigha()
+    {
+        return view('pages.calculators.acre-to-bigha');
+    }
+
+    public function acreToHectare()
+    {
+        return view('pages.calculators.acre-to-hectare');
+    }
+
+    public function emiCalculator()
+    {
+        return view('pages.calculators.emi-calculator');
+    }
+
+    public function lengthCalculator()
+    {
+        return view('pages.calculators.length-calculator');
+    }
 }

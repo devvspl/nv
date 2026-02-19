@@ -11,6 +11,33 @@
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="{{ route('about') }}" class="header-nav-link font-highlight font-medium">About Us</a>
                 <a href="{{ route('properties.index') }}" class="header-nav-link font-highlight font-medium">Services</a>
+                
+                <!-- Calculators Dropdown -->
+                <div class="relative group">
+                    <button class="header-nav-link font-highlight font-medium flex items-center">
+                        Calculators
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2">
+                        <div class="py-2">
+                            <a href="{{ route('calculators.emi-calculator') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
+                                EMI Calculator
+                            </a>
+                            <a href="{{ route('calculators.acre-to-bigha') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
+                                Acre to Bigha
+                            </a>
+                            <a href="{{ route('calculators.acre-to-hectare') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
+                                Acre to Hectare
+                            </a>
+                            <a href="{{ route('calculators.length-calculator') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
+                                Length Calculator
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
                 <a href="{{ route('blogs.index') }}" class="header-nav-link font-highlight font-medium">Blog/News</a>
                 <a href="{{ route('contact') }}" class="header-nav-link font-highlight font-medium">Contact Us</a>
 
@@ -45,13 +72,42 @@
             <a href="{{ route('about') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">About
                 Us</a>
+            <a href="{{ route('properties.index') }}"
+                class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Services</a>
+            
+            <!-- Mobile Calculators Dropdown -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open" class="w-full text-left px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy flex items-center justify-between">
+                    Calculators
+                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div x-show="open" x-transition class="ml-4 mt-2 space-y-2">
+                    <a href="{{ route('calculators.emi-calculator') }}"
+                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
+                        EMI Calculator
+                    </a>
+                    <a href="{{ route('calculators.acre-to-bigha') }}"
+                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
+                        Acre to Bigha
+                    </a>
+                    <a href="{{ route('calculators.acre-to-hectare') }}"
+                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
+                        Acre to Hectare
+                    </a>
+                    <a href="{{ route('calculators.length-calculator') }}"
+                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
+                        Length Calculator
+                    </a>
+                </div>
+            </div>
+            
+            <a href="{{ route('blogs.index') }}"
+                class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Blog/News</a>
             <a href="{{ route('contact') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Contact
                 Us</a>
-            <a href="{{ route('properties.index') }}"
-                class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Services</a>
-            <a href="{{ route('blogs.index') }}"
-                class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Blog/News</a>
 
             @if (Route::has('login'))
                 @auth
