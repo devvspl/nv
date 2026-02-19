@@ -93,7 +93,7 @@ class HomeController extends Controller
         if ($request->filled('search')) {
             $query->search($request->search);
         }
-        $sortBy = $request->get('sort_by', 'latest');
+        $sortBy = $request->input('sort_by', 'latest');
         switch ($sortBy) {
             case 'price_low':
                 $query->orderBy('price', 'asc');

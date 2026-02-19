@@ -52,7 +52,7 @@ class PropertyController extends Controller
         }
 
         // Sorting
-        $sortBy = $request->get('sort_by', 'latest');
+        $sortBy = $request->input('sort_by', 'latest');
         switch ($sortBy) {
             case 'oldest':
                 $query->oldest();
@@ -124,7 +124,8 @@ class PropertyController extends Controller
             'published_at' => 'nullable|date',
             'amenities' => 'nullable|array',
             'amenities.*' => 'exists:amenities,id',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             // Specifications
             'total_floors' => 'nullable|integer|min:1',
             'floor_number' => 'nullable|integer|min:0',
@@ -171,13 +172,24 @@ class PropertyController extends Controller
         ]);
 
         // Handle image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
+        // Upload main image
+        if ($request->hasFile('main_image')) {
+            $path = $request->file('main_image')->store('properties', 'public');
+            $property->images()->create([
+                'image_path' => $path,
+                'image_type' => 'main',
+                'display_order' => 0,
+            ]);
+        }
+
+        // Upload gallery images
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $index => $image) {
                 $path = $image->store('properties', 'public');
                 $property->images()->create([
                     'image_path' => $path,
-                    'image_type' => $index === 0 ? 'main' : 'gallery',
-                    'display_order' => $index,
+                    'image_type' => 'gallery',
+                    'display_order' => $index + 1,
                 ]);
             }
         }
@@ -264,7 +276,8 @@ class PropertyController extends Controller
             'published_at' => 'nullable|date',
             'amenities' => 'nullable|array',
             'amenities.*' => 'exists:amenities,id',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'total_floors' => 'nullable|integer|min:1',
             'floor_number' => 'nullable|integer|min:0',
             'bedrooms' => 'nullable|integer|min:0',
@@ -308,9 +321,29 @@ class PropertyController extends Controller
         );
 
         // Handle new image uploads
-        if ($request->hasFile('images')) {
-            $lastOrder = $property->images()->max('display_order') ?? -1;
-            foreach ($request->file('images') as $index => $image) {
+        // Upload new main image (replace existing if any)
+        if ($request->hasFile('main_image')) {
+            // Delete old main image if exists
+            $oldMainImage = $property->images()->where('image_type', 'main')->first();
+            if ($oldMainImage) {
+                Storage::disk('public')->delete($oldMainImage->image_path);
+                $oldMainImage->delete();
+            }
+            
+            // Upload new main image
+            $path = $request->file('main_image')->store('properties', 'public');
+            $property->images()->create([
+                'image_path' => $path,
+                'image_type' => 'main',
+                'display_order' => 0,
+            ]);
+        }
+
+        // Upload new gallery images
+        if ($request->hasFile('gallery_images')) {
+            $lastOrder = $property->images()->where('image_type', 'gallery')->max('display_order') ?? 0;
+            
+            foreach ($request->file('gallery_images') as $index => $image) {
                 $path = $image->store('properties', 'public');
                 $property->images()->create([
                     'image_path' => $path,

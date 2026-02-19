@@ -312,19 +312,21 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Map Embed Code</label>
                                 <textarea name="map_embed_code" id="map_embed_code" rows="6"
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent font-mono text-sm"
-                                          placeholder='<iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'>{{ old('map_embed_code', $property->map_embed_code) }}</textarea>
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent font-mono text-sm"
+                                    placeholder='<iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'>{{ old('map_embed_code', $property->map_embed_code) }}</textarea>
                                 <p class="mt-2 text-sm text-gray-500">
-                                    Paste the embed code from Google Maps. 
-                                    <a href="https://www.google.com/maps" target="_blank" class="text-zendo-gold hover:underline">Get embed code from Google Maps</a>
+                                    Paste the embed code from Google Maps.
+                                    <a href="https://www.google.com/maps" target="_blank"
+                                        class="text-zendo-gold hover:underline">Get embed code from Google Maps</a>
                                 </p>
                             </div>
 
                             <!-- Preview -->
                             <div id="embed-preview" style="{{ $property->map_embed_code ? '' : 'display: none;' }}">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
-                                <div class="w-full h-96 rounded-lg border-2 border-gray-300 overflow-hidden" id="embed-preview-container">
-                                    @if($property->map_embed_code)
+                                <div class="w-full h-96 rounded-lg border-2 border-gray-300 overflow-hidden"
+                                    id="embed-preview-container">
+                                    @if ($property->map_embed_code)
                                         {!! $property->map_embed_code !!}
                                     @endif
                                 </div>
@@ -351,45 +353,92 @@
                     @if ($property->images->count() > 0)
                         <div class="pt-6 border-t border-gray-200">
                             <h3 class="text-base font-semibold text-gray-900 mb-4">Existing Images</h3>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                @foreach ($property->images as $image)
-                                    <div class="relative group">
-                                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Property Image"
-                                            class="w-full h-32 object-cover rounded-lg">
-                                        @if ($image->image_type === 'main')
-                                            <span
-                                                class="absolute top-2 left-2 bg-zendo-gold text-white text-xs px-2 py-1 rounded">Main</span>
-                                        @endif
-                                        <form action="{{ route('admin.properties.delete-image', $image->id) }}"
-                                            method="POST"
-                                            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                            onsubmit="return confirm('Delete this image?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="bg-red-600 text-white p-1 rounded hover:bg-red-700">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M6 18L18 6M6 6l12 12"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
+
+                            <!-- Main Image -->
+                            @php
+                                $mainImage = $property->images->where('image_type', 'main')->first();
+                                $galleryImages = $property->images->where('image_type', 'gallery');
+                            @endphp
+
+                            @if ($mainImage)
+                                <div class="mb-6">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Main Image</h4>
+                                    <div class="relative group inline-block">
+                                        <img src="{{ asset('storage/' . $mainImage->image_path) }}" alt="Main Image"
+                                            class="w-48 h-32 object-cover rounded-lg border-2 border-zendo-gold">
+                                        <span
+                                            class="absolute top-2 left-2 bg-zendo-gold text-white text-xs px-2 py-1 rounded">Main</span>
+                                        <button type="button" onclick="deleteImage({{ $mainImage->id }})"
+                                            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 text-white p-1 rounded hover:bg-red-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endif
+
+                            <!-- Gallery Images -->
+                            @if ($galleryImages->count() > 0)
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Gallery Images</h4>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        @foreach ($galleryImages as $image)
+                                            <div class="relative group">
+                                                <img src="{{ asset('storage/' . $image->image_path) }}"
+                                                    alt="Gallery Image" class="w-full h-32 object-cover rounded-lg">
+                                                <button type="button" onclick="deleteImage({{ $image->id }})"
+                                                    class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 text-white p-1 rounded hover:bg-red-700">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     @endif
 
                     <!-- Add New Images -->
                     <div class="pt-6 border-t border-gray-200">
                         <h3 class="text-base font-semibold text-gray-900 mb-4">Add New Images</h3>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Images</label>
-                            <input type="file" name="images[]" multiple accept="image/*"
+
+                        <!-- Upload New Main Image -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ $property->images->where('image_type', 'main')->count() > 0 ? 'Replace Main Image' : 'Upload Main Image' }}
+                            </label>
+                            <input type="file" name="main_image" accept="image/*"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
-                            <p class="mt-1 text-sm text-gray-500">Accepted formats: JPEG, PNG, JPG, WEBP. Max size: 2MB per
-                                image.</p>
+                            <p class="mt-1 text-sm text-gray-500">
+                                @if ($property->images->where('image_type', 'main')->count() > 0)
+                                    Upload a new image to replace the current main image.
+                                @else
+                                    Upload the primary image for this property.
+                                @endif
+                                Accepted formats: JPEG, PNG, JPG, WEBP. Max size: 2MB.
+                            </p>
+                            @error('main_image')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Upload Gallery Images -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Add Gallery Images</label>
+                            <input type="file" name="gallery_images[]" multiple accept="image/*"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                            <p class="mt-1 text-sm text-gray-500">Upload additional images for the property gallery.
+                                Accepted formats: JPEG, PNG, JPG, WEBP. Max size: 2MB per image.</p>
+                            @error('gallery_images.*')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
@@ -527,7 +576,7 @@
                 const embedInput = document.getElementById('map_embed_code');
                 const previewContainer = document.getElementById('embed-preview-container');
                 const previewSection = document.getElementById('embed-preview');
-                
+
                 if (embedInput) {
                     embedInput.addEventListener('input', function() {
                         const embedCode = this.value.trim();
@@ -611,6 +660,33 @@
                         container.innerHTML =
                             '<p class="text-sm text-gray-500 mb-4">No FAQs added yet. Click "Add FAQ" to create one.</p>';
                     }
+                }
+            }
+
+            function deleteImage(imageId) {
+                if (confirm('Are you sure you want to delete this image?')) {
+                    // Create a form dynamically
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/admin/properties/images/${imageId}`;
+
+                    // Add CSRF token
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfInput);
+
+                    // Add DELETE method
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+                    form.appendChild(methodInput);
+
+                    // Submit the form
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             }
         </script>
