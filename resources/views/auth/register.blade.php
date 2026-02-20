@@ -137,9 +137,9 @@
                 <div class="ml-3 text-sm">
                     <label for="terms" class="text-gray-700 font-body">
                         I agree to the 
-                        <a href="#" class="font-semibold text-zendo-navy hover:text-zendo-gold transition-colors">Terms of Service</a> 
+                        <a href="{{ route('terms-and-conditions') }}" class="font-semibold text-zendo-navy hover:text-zendo-gold transition-colors">Terms of Service</a> 
                         and 
-                        <a href="#" class="font-semibold text-zendo-navy hover:text-zendo-gold transition-colors">Privacy Policy</a>
+                        <a href="{{ route('privacy-policy') }}" class="font-semibold text-zendo-navy hover:text-zendo-gold transition-colors">Privacy Policy</a>
                     </label>
                 </div>
             </div>

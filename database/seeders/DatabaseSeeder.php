@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             PropertyTypeSeeder::class,
             AboutPageSeeder::class,
             ContactPageSeeder::class,
+            TermsConditionSeeder::class,
         ]);
     }
 }

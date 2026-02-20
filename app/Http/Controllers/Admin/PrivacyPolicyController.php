@@ -14,7 +14,8 @@ class PrivacyPolicyController extends Controller
      */
     public function edit()
     {
-        $privacyPolicy = PrivacyPolicy::first();
+        // always grab the single policy record using helper to satisfy static analysis
+        $privacyPolicy = PrivacyPolicy::getActive();
         
         // If no record exists, create a default one
         if (!$privacyPolicy) {
@@ -45,17 +46,17 @@ class PrivacyPolicyController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $privacyPolicy = PrivacyPolicy::first();
+        $privacyPolicy = PrivacyPolicy::getActive();
         
         if (!$privacyPolicy) {
             $privacyPolicy = new PrivacyPolicy();
         }
 
         $privacyPolicy->update([
-            'title' => $request->title,
-            'content' => $request->content,
-            'effective_date' => $request->effective_date,
-            'last_updated' => $request->last_updated ?? now()
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'effective_date' => $request->input('effective_date'),
+            'last_updated' => $request->input('last_updated') ?? now()
         ]);
 
         return redirect()->route('admin.privacy-policy.edit')

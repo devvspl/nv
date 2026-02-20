@@ -70,6 +70,7 @@
         <div class="border-t border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-sm">
             <p class="text-gray-500 font-body mb-4 md:mb-0">&copy; {{ date('Y') }} ZENDO . All rights reserved.</p>
             <div class="flex space-x-6">
+                <a href="{{ route('terms-and-conditions') }}" class="text-gray-500 hover:text-zendo-gold font-body transition-colors footer-link">Terms & Conditions</a> 
                 <a href="{{ route('privacy-policy') }}" class="text-gray-500 hover:text-zendo-gold font-body transition-colors footer-link">Privacy & Policy</a> 
                 <a href="https://apwebworld.com/" target="_blank" class="text-gray-500 hover:text-zendo-gold font-body transition-colors footer-link">Design And Develop By Ap Web World</a> 
             </div>

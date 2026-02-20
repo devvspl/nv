@@ -468,7 +468,7 @@ h1,h2,h5,h6{
             </button>
 
             <p class="popup-privacy-text">
-                🔒 Your information is safe with us. By submitting, you agree to our <a href="{{ route('home') }}#privacy" target="_blank" style="color: var(--zendo-gold); text-decoration: underline;">Privacy Policy</a>. Our team will contact you for consultation within 24 hours.
+                🔒 Your information is safe with us. By submitting, you agree to our <a href="{{ route('home') }}#privacy" target="_blank" style="color: var(--zendo-gold); text-decoration: underline;">Privacy Policy</a> and <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--zendo-gold); text-decoration: underline;">Terms &amp; Conditions</a>. Our team will contact you for consultation within 24 hours.
             </p>
         </form>
     </div>
@@ -960,10 +960,12 @@ document.addEventListener('DOMContentLoaded', function() {
             popupOverlay.classList.add('hidden');
             document.body.style.overflow = 'auto';
         } else if (data.success && !data.has_submitted) {
-            // Show popup if user hasn't submitted inquiry yet
-            console.log('Not submitted yet, showing popup');
-            document.body.style.overflow = 'hidden';
-            popupOverlay.classList.remove('hidden');
+            // Show popup if user hasn't submitted inquiry yet (after 5s delay)
+            console.log('Not submitted yet, scheduling popup');
+            setTimeout(() => {
+                document.body.style.overflow = 'hidden';
+                popupOverlay.classList.remove('hidden');
+            }, 5000);
         }
     })
     .catch(error => {

@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\ContactInfoController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\PrivacyPolicyController;
+use App\Http\Controllers\Admin\TermsConditionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -45,6 +46,7 @@ Route::get('/properties', [HomeController::class, 'properties'])->name('properti
 Route::get('/properties/{property:slug}', [HomeController::class, 'show'])->name('properties.show');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/terms-and-conditions', [HomeController::class, 'termsAndConditions'])->name('terms-and-conditions');
 // Calculator Routes
 Route::get('/calculators/acre-to-bigha', [HomeController::class, 'acreToBigha'])->name('calculators.acre-to-bigha');
 Route::get('/calculators/acre-to-hectare', [HomeController::class, 'acreToHectare'])->name('calculators.acre-to-hectare');
@@ -194,6 +196,10 @@ Route::middleware('auth')->group(function () {
         // Privacy Policy (Single Page)
         Route::get('privacy-policy', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');
         Route::put('privacy-policy', [PrivacyPolicyController::class, 'update'])->name('privacy-policy.update');
+
+        // Terms & Conditions (Single Page)
+        Route::get('terms-and-conditions', [TermsConditionController::class, 'edit'])->name('terms-and-conditions.edit');
+        Route::put('terms-and-conditions', [TermsConditionController::class, 'update'])->name('terms-and-conditions.update');
     });
 });
 

@@ -19,6 +19,7 @@ use App\Models\HeroSection;
 use App\Models\Location;
 use App\Models\OurClient;
 use App\Models\PrivacyPolicy;
+use App\Models\TermsAndCondition;
 use App\Models\ProjectStatus;
 use App\Models\Property;
 use App\Models\PropertyType;
@@ -166,6 +167,15 @@ class HomeController extends Controller
     {
         $policy = PrivacyPolicy::getActive();
         return view('pages.privacy-policy', compact('policy'));
+    }
+
+    /**
+     * Display the terms and conditions page.
+     */
+    public function termsAndConditions()
+    {
+        $terms = TermsAndCondition::getActive();
+        return view('pages.terms-and-conditions', compact('terms'));
     }
 
     public function acreToBigha()
