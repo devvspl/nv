@@ -12,6 +12,7 @@ class ProjectStatus extends Model
         'description',
         'status',
         'sort_order',
+        'tag_color',
     ];
 
     protected $casts = [

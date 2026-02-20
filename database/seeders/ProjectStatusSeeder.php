@@ -19,6 +19,7 @@ class ProjectStatusSeeder extends Seeder
                 'description' => 'Properties that are completed and ready for immediate occupancy',
                 'status' => true,
                 'sort_order' => 1,
+                'tag_color' => '#28a745', // green
             ],
             [
                 'name' => 'Under Construction',
@@ -26,6 +27,7 @@ class ProjectStatusSeeder extends Seeder
                 'description' => 'Properties currently under development',
                 'status' => true,
                 'sort_order' => 2,
+                'tag_color' => '#ff9800', // orange
             ],
             [
                 'name' => 'New Launch',
@@ -33,6 +35,7 @@ class ProjectStatusSeeder extends Seeder
                 'description' => 'Newly launched projects available for booking',
                 'status' => true,
                 'sort_order' => 3,
+                'tag_color' => '#007bff', // blue
             ],
         ];
 

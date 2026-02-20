@@ -542,6 +542,12 @@
     position: relative;
 }
 
+.apw-tagAlt {
+    background: rgba(179, 147, 89, 0.90);
+    color: white;
+    border-color: rgba(11, 44, 61, 0.10);
+}
+
 .apw-tag {
     position: absolute;
     left: 12px;
@@ -604,22 +610,27 @@
 }
 
 .apw-priceVal {
-    font-size: 21px;
+    display: block;
+    font-size: 16px;
     font-weight: 950;
-    color: #b39359;
-    letter-spacing: -0.3px;
+    color: #0b2c3d;
+    letter-spacing: -0.1px;
 }
 
 .apw-btnOutline {
-    padding: 10px 16px;
-    border-radius: 999px;
-    border: 2px solid #b39359;
-    color: #b39359;
-    font-weight: 800;
-    font-size: 13.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 50px;
+    border: 1px solid rgba(179, 147, 89, 0.60);
+    color: white;
     text-decoration: none;
-    transition: all .18s ease;
+    /* font-weight: 900; */
+    background: #b39359;
+    transition: transform .15s ease, background .15s ease;
     white-space: nowrap;
+    font-size: 15px;
 }
 
 .apw-btnOutline:hover {
@@ -1065,8 +1076,9 @@
     z-index: 10;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
-.apw-selectWrap select li{
+.apw-resiFilter select option{
   background-color: #0b2c3d !important;
+  color: #fbf8f2 !important;
 }
 </style>
 @endsection
@@ -1352,7 +1364,9 @@
               <article class="apw-card">
                 <div class="apw-cardMedia" style="background-image:url('{{ $property->main_image_url ?? 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=70' }}');">
                   @if($property->projectStatus)
-                    <span class="apw-tag">{{ $property->projectStatus->name }}</span>
+                    <span class="apw-tag" style="background: {{ $property->projectStatus->tag_color ?? 'rgba(11,44,61,0.78)' }};">
+                      {{ $property->projectStatus->name }}
+                    </span>
                   @endif
                 </div>
                 <div class="apw-cardBody">
