@@ -62,6 +62,11 @@ Route::get('/clear-cache', function() {
     return 'Cache cleared successfully!';
 });
 
+Route::get('/key-generate', function () {
+    Artisan::call('key:generate');
+    return 'APP_KEY generated';
+});
+
 Route::get('/optimize', function() {
     Artisan::call('optimize:clear');
     return 'Optimization cache cleared!';
