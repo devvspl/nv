@@ -22,6 +22,7 @@ use App\Models\PrivacyPolicy;
 use App\Models\TermsAndCondition;
 use App\Models\ProjectStatus;
 use App\Models\Property;
+use App\Models\PropertyPageSection;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
 use App\Models\TeamMember;
@@ -118,7 +119,12 @@ class HomeController extends Controller
         $projectStatuses = ProjectStatus::active()->ordered()->get();
         $builders = Builder::active()->verified()->ordered()->get();
         $workProcesses = WorkProcess::active()->ordered()->get();
-        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses'));
+        
+        // Get property page sections
+        $carouselSection = PropertyPageSection::getByKey('carousel_section');
+        $perspectiveSection = PropertyPageSection::getByKey('perspective_section');
+        
+        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses', 'carouselSection', 'perspectiveSection'));
     }
 
     public function show(Property $property)

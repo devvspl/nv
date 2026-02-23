@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
+class PropertyPageSection extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'section_key',
+        'title',
+        'subtitle',
+        'description',
+        'button_text',
+        'button_link',
+        'secondary_button_text',
+        'secondary_button_link',
+        'images',
+        'features',
+        'is_active',
+        'order',
+    ];
+
+    protected $casts = [
+        'images' => 'array',
+        'features' => 'array',
+        'is_active' => 'boolean',
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order', 'asc');
+    }
+
+    public static function getByKey($key)
+    {
+        return static::where('section_key', $key)->where('is_active', true)->first();
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->images && isset($this->images[0])) {
+            return Storage::url($this->images[0]);
+        }
+        return null;
+    }
+
+    public function getImagesUrlsAttribute()
+    {
+        if ($this->images && is_array($this->images)) {
+            return array_map(function($image) {
+                return Storage::url($image);
+            }, $this->images);
+        }
+        return [];
+    }
+}

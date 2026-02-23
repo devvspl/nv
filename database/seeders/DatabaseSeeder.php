@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             AboutPageSeeder::class,
             ContactPageSeeder::class,
             TermsConditionSeeder::class,
+            PropertyPageSectionSeeder::class,
         ]);
     }
 }

@@ -1100,23 +1100,17 @@
 </section>
 
 <!-- Carousel Section -->
+@if($carouselSection && $carouselSection->images && count($carouselSection->images) > 0)
 <section id="resi-listing-content">
   <div class="resi-lc-wrap">
     <div class="leftMedia">
       <div class="carousel" data-carousel>
         <div class="track" data-track>
-          <div class="slide">
-            <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1400&q=80" alt="Residence 1" loading="lazy" />
-          </div>
-          <div class="slide">
-            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80" alt="Residence 2" loading="lazy" />
-          </div>
-          <div class="slide">
-            <img src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1400&q=80" alt="Residence 3" loading="lazy" />
-          </div>
-          <div class="slide">
-            <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1400&q=80" alt="Residence 4" loading="lazy" />
-          </div>
+          @foreach($carouselSection->images_urls as $index => $imageUrl)
+            <div class="slide">
+              <img src="{{ $imageUrl }}" alt="{{ $carouselSection->title }} {{ $index + 1 }}" loading="lazy" />
+            </div>
+          @endforeach
         </div>
         <button class="nav prev" type="button" aria-label="Previous image" data-prev>‹</button>
         <button class="nav next" type="button" aria-label="Next image" data-next>›</button>
@@ -1125,21 +1119,17 @@
     </div>
 
     <div class="resi-lc-content">
-      <span class="resi-lc-subtitle">Residential Living</span>
-      <h2 class="resi-lc-title">Homes Designed for Comfort, Space & Lifestyle</h2>
-      <p class="resi-lc-text">
-        Every residence listed above is selected with a clear focus on location,
-        design quality, and everyday livability. Whether you are looking for a
-        modern apartment or a spacious independent home, the right options are
-        curated to match different lifestyle needs.
-      </p>
+      <span class="resi-lc-subtitle">{{ $carouselSection->subtitle }}</span>
+      <h2 class="resi-lc-title">{{ $carouselSection->title }}</h2>
+      <p class="resi-lc-text">{{ $carouselSection->description }}</p>
       <div class="resi-lc-actions">
-        <a href="#enquiry" class="resi-lc-btn primary">Get Expert Advice</a>
-        <a href="#projects" class="resi-lc-btn secondary">View More Projects</a>
+        <a href="{{ $carouselSection->button_link }}" class="resi-lc-btn primary">{{ $carouselSection->button_text }}</a>
+        <a href="{{ $carouselSection->secondary_button_link }}" class="resi-lc-btn secondary">{{ $carouselSection->secondary_button_text }}</a>
       </div>
     </div>
   </div>
 </section>
+@endif
 
 <!-- Property Listing Section -->
 <section id="apw-resiPage" class="apw-resiPage">
@@ -1437,110 +1427,62 @@
 </section>
 
 <!-- Perspective Section -->
+@if($perspectiveSection && $perspectiveSection->images && count($perspectiveSection->images) >= 4)
 <section id="apw-propPerspective" class="apw-propPerspective">
   <div class="apw-propPerspective__wrap">
     <div class="apw-propPerspective__content">
-      <span class="apw-propPerspective__badge">Residential Properties</span>
+      <span class="apw-propPerspective__badge">{{ $perspectiveSection->subtitle }}</span>
 
-      <h2 class="apw-propPerspective__title">
-        Choose the Right Home with Clear, Practical Insights
-      </h2>
+      <h2 class="apw-propPerspective__title">{{ $perspectiveSection->title }}</h2>
 
-      <p class="apw-propPerspective__text">
-        Explore residential projects with a simple view of location, connectivity, amenities, safety, and long-term comfort.
-        Use these quick pointers to compare options faster and shortlist the best fit for your family.
-      </p>
+      <p class="apw-propPerspective__text">{{ $perspectiveSection->description }}</p>
 
-      <ul class="apw-propPerspective__list">
-        <li class="apw-propPerspective__item">
-          <span class="apw-propPerspective__tick" aria-hidden="true"></span>
-          <div class="apw-propPerspective__itemText">
-            <strong>Connectivity:</strong> Main roads, expressways, office hubs & public transport access.
-          </div>
-        </li>
-
-        <li class="apw-propPerspective__item">
-          <span class="apw-propPerspective__tick" aria-hidden="true"></span>
-          <div class="apw-propPerspective__itemText">
-            <strong>Project Amenities:</strong> Clubhouse, gym, kids play, green spaces, parking & power backup.
-          </div>
-        </li>
-
-        <li class="apw-propPerspective__item">
-          <span class="apw-propPerspective__tick" aria-hidden="true"></span>
-          <div class="apw-propPerspective__itemText">
-            <strong>Floor Plan Fit:</strong> Layout flow, ventilation, balcony use, storage & usable carpet area.
-          </div>
-        </li>
-      </ul>
+      @if($perspectiveSection->features && count($perspectiveSection->features) > 0)
+        <ul class="apw-propPerspective__list">
+          @foreach($perspectiveSection->features as $feature)
+            <li class="apw-propPerspective__item">
+              <span class="apw-propPerspective__tick" aria-hidden="true"></span>
+              <div class="apw-propPerspective__itemText">
+                {!! $feature !!}
+              </div>
+            </li>
+          @endforeach
+        </ul>
+      @endif
 
       <div class="apw-propPerspective__ctaRow">
-        <a class="apw-propPerspective__btn apw-propPerspective__btn--primary" href="#enquiry">
-          Get Project List
+        <a class="apw-propPerspective__btn apw-propPerspective__btn--primary" href="{{ $perspectiveSection->button_link }}">
+          {{ $perspectiveSection->button_text }}
         </a>
-        <a class="apw-propPerspective__btn apw-propPerspective__btn--ghost" href="#contact">
-          Request a Call
+        <a class="apw-propPerspective__btn apw-propPerspective__btn--ghost" href="{{ $perspectiveSection->secondary_button_link }}">
+          {{ $perspectiveSection->secondary_button_text }}
         </a>
       </div>
     </div>
 
     <div class="apw-propPerspective__media" aria-label="Property images">
       <div class="apw-propPerspective__grid">
-        <a class="apw-propPerspective__card" href="#" aria-label="Open property image 1">
-          <img
-            class="apw-propPerspective__img"
-            src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=70"
-            alt="Modern residential building exterior"
-            loading="lazy"
-          />
-          <div class="apw-propPerspective__cap">
-            <div class="apw-propPerspective__capTitle">Exterior View</div>
-            <div class="apw-propPerspective__capSub">Modern elevation & entry</div>
-          </div>
-        </a>
-
-        <a class="apw-propPerspective__card" href="#" aria-label="Open property image 2">
-          <img
-            class="apw-propPerspective__img"
-            src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=70"
-            alt="Bright living room in residential apartment"
-            loading="lazy"
-          />
-          <div class="apw-propPerspective__cap">
-            <div class="apw-propPerspective__capTitle">Living Area</div>
-            <div class="apw-propPerspective__capSub">Light, space & layout</div>
-          </div>
-        </a>
-
-        <a class="apw-propPerspective__card" href="#" aria-label="Open property image 3">
-          <img
-            class="apw-propPerspective__img"
-            src="https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1200&q=70"
-            alt="Residential amenities with green area and seating"
-            loading="lazy"
-          />
-          <div class="apw-propPerspective__cap">
-            <div class="apw-propPerspective__capTitle">Amenities</div>
-            <div class="apw-propPerspective__capSub">Green zone & lifestyle</div>
-          </div>
-        </a>
-
-        <a class="apw-propPerspective__card" href="#" aria-label="Open property image 4">
-          <img
-            class="apw-propPerspective__img"
-            src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=70"
-            alt="Bedroom interior in residential apartment"
-            loading="lazy"
-          />
-          <div class="apw-propPerspective__cap">
-            <div class="apw-propPerspective__capTitle">Interior View</div>
-            <div class="apw-propPerspective__capSub">Comfort & finish</div>
-          </div>
-        </a>
+        @foreach($perspectiveSection->images_urls as $index => $imageUrl)
+          @if($index < 4)
+            <a class="apw-propPerspective__card" href="#" aria-label="Open property image {{ $index + 1 }}">
+              <img
+                class="apw-propPerspective__img"
+                src="{{ $imageUrl }}"
+                alt="Property view {{ $index + 1 }}"
+                loading="lazy"
+              />
+              <div class="apw-propPerspective__cap">
+                <div class="apw-propPerspective__capTitle">Property View {{ $index + 1 }}</div>
+                <div class="apw-propPerspective__capSub">Premium quality</div>
+              </div>
+            </a>
+          @endif
+        @endforeach
       </div>
     </div>
   </div>
 </section>
+@endif
 
 <!-- Inquiry Form Section -->
 <section id="inquiry-section" class="py-24 animate-on-scroll fade-in-up is-visible">

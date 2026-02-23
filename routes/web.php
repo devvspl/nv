@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\BuilderController;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\PropertyInquiryController;
+use App\Http\Controllers\Admin\PropertyPageSectionController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ConsultationController as AdminConsultationController;
 use App\Http\Controllers\Admin\WorkProcessController;
@@ -154,6 +155,11 @@ Route::middleware('auth')->group(function () {
         Route::patch('properties/{property}/toggle-featured', [PropertyController::class, 'toggleFeatured'])->name('properties.toggle-featured');
         Route::patch('properties/{property}/toggle-verified', [PropertyController::class, 'toggleVerified'])->name('properties.toggle-verified');
         Route::delete('properties/images/{image}', [PropertyController::class, 'deleteImage'])->name('properties.delete-image');
+        
+        // Property Page Sections
+        Route::resource('property-page-sections', PropertyPageSectionController::class);
+        Route::patch('property-page-sections/{propertyPageSection}/toggle-status', [PropertyPageSectionController::class, 'toggleStatus'])->name('property-page-sections.toggle-status');
+        Route::delete('property-page-sections/{propertyPageSection}/delete-image', [PropertyPageSectionController::class, 'deleteImage'])->name('property-page-sections.delete-image');
         
         // Property Inquiries
         Route::get('property-inquiries', [PropertyInquiryController::class, 'index'])->name('property-inquiries.index');
