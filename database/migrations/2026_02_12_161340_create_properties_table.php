@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->foreignId('property_type_id')->constrained()->restrictOnDelete();
-            $table->foreignId('bhk_id')->constrained()->restrictOnDelete();
+            $table->foreignId('bhk_id')->nullable()->constrained()->restrictOnDelete();
             $table->foreignId('city_id')->constrained()->restrictOnDelete();
             $table->foreignId('location_id')->constrained()->restrictOnDelete();
             $table->foreignId('project_status_id')->constrained()->restrictOnDelete();

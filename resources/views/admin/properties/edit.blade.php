@@ -61,8 +61,8 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">BHK *</label>
-                            <select name="bhk_id" required
+                            <label class="block text-sm font-medium text-gray-700 mb-2">BHK</label>
+                            <select name="bhk_id"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
                                 <option value="">Select BHK</option>
                                 @foreach ($bhks as $bhk)
