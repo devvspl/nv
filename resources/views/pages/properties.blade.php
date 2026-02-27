@@ -1134,46 +1134,43 @@
 <!-- Property Listing Section -->
 <section id="apw-resiPage" class="apw-resiPage">
   <div class="apw-resiWrap">
+    @if($introSection)
     <div class="apw-resiIntro">
-      <p class="apw-resiKicker">Residential Properties</p>
-      <h1 class="apw-resiTitle">Find Your Premium Home in Top Locations</h1>
+      <p class="apw-resiKicker">{{ $introSection->kicker }}</p>
+      <h1 class="apw-resiTitle">{{ $introSection->title }}</h1>
       <p class="apw-resiDesc">
-        Explore handpicked apartments, builder floors, villas, and plots across prime residential areas.
-        Use the filters to shortlist the right home faster.
+        {{ $introSection->description }}
       </p>
 
+      @if($introSection->badges && count($introSection->badges) > 0)
       <div class="apw-resiBadges">
+        @foreach($introSection->badges as $badge)
         <div class="apw-resiBadge">
           <span class="apw-resiBadgeSvg" aria-hidden="true">
+            @if($loop->index == 0)
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
               <path d="M12 2.5l7 3.2v6.4c0 5.2-3.3 8.8-7 9.9-3.7-1.1-7-4.7-7-9.9V5.7L12 2.5z" stroke="#b39359" stroke-width="1.7"/>
               <path d="M9.2 12l1.9 2 3.8-4.2" stroke="#b39359" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </span>
-          Verified Listings
-        </div>
-
-        <div class="apw-resiBadge">
-          <span class="apw-resiBadgeSvg" aria-hidden="true">
+            @elseif($loop->index == 1)
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
               <circle cx="12" cy="12" r="8.5" stroke="#b39359" stroke-width="1.7"/>
               <path d="M12 7.8v4.6l3.2 1.8" stroke="#b39359" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </span>
-          Fast Shortlisting
-        </div>
-
-        <div class="apw-resiBadge">
-          <span class="apw-resiBadgeSvg" aria-hidden="true">
+            @else
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
               <path d="M12 21s7-5.2 7-11A7 7 0 1 0 5 10c0 5.8 7 11 7 11z" stroke="#b39359" stroke-width="1.7"/>
               <circle cx="12" cy="10" r="2.3" stroke="#b39359" stroke-width="1.7"/>
             </svg>
+            @endif
           </span>
-          Prime Locations
+          {{ $badge }}
         </div>
+        @endforeach
       </div>
+      @endif
     </div>
+    @endif
 
     <div class="apw-resiGrid">
       <!-- Filter Sidebar -->
@@ -1196,6 +1193,11 @@
         </div>
 
         <form method="GET" action="{{ route('properties.index') }}" id="apw-resiFilterForm">
+          <!-- Preserve property_type_slug if present -->
+          @if(request('property_type_slug'))
+            <input type="hidden" name="property_type_slug" value="{{ request('property_type_slug') }}">
+          @endif
+          
           <!-- City -->
           <div class="apw-field">
             <label class="apw-label" for="city_id">City</label>

@@ -82,6 +82,21 @@
                         <p class="text-base font-medium text-gray-900">{{ $propertyType->sort_order }}</p>
                     </div>
                     <div>
+                        <p class="text-sm text-gray-600 mb-1">Show in Header Menu</p>
+                        @if($propertyType->show_in_header)
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Yes
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                No
+                            </span>
+                        @endif
+                    </div>
+                    <div>
                         <p class="text-sm text-gray-600 mb-1">Service Types Mapped</p>
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {{ $propertyType->serviceTypes->count() }} mapped
@@ -97,6 +112,120 @@
                 <p class="text-gray-700 leading-relaxed">{{ $propertyType->description }}</p>
             </div>
             @endif
+
+            <!-- Property Page Sections -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Property Page Sections</h3>
+                
+                <!-- Intro Section -->
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-zendo-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        </svg>
+                        Intro Section (Top Banner)
+                    </h4>
+                    @if($propertyType->introSection)
+                        <div class="space-y-2 text-sm">
+                            @if($propertyType->introSection->kicker)
+                                <div><span class="font-medium text-gray-700">Kicker:</span> <span class="text-gray-600">{{ $propertyType->introSection->kicker }}</span></div>
+                            @endif
+                            @if($propertyType->introSection->title)
+                                <div><span class="font-medium text-gray-700">Title:</span> <span class="text-gray-600">{{ $propertyType->introSection->title }}</span></div>
+                            @endif
+                            @if($propertyType->introSection->description)
+                                <div><span class="font-medium text-gray-700">Description:</span> <span class="text-gray-600">{{ Str::limit($propertyType->introSection->description, 100) }}</span></div>
+                            @endif
+                            @if($propertyType->introSection->badges && count($propertyType->introSection->badges) > 0)
+                                <div>
+                                    <span class="font-medium text-gray-700">Badges:</span>
+                                    <div class="flex flex-wrap gap-2 mt-1">
+                                        @foreach($propertyType->introSection->badges as $badge)
+                                            <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-white border border-gray-300 text-gray-700">{{ $badge }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500 italic">Not configured</p>
+                    @endif
+                </div>
+
+                <!-- Carousel Section -->
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-zendo-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Carousel Section
+                    </h4>
+                    @if($propertyType->carouselSection)
+                        <div class="space-y-2 text-sm">
+                            @if($propertyType->carouselSection->subtitle)
+                                <div><span class="font-medium text-gray-700">Subtitle:</span> <span class="text-gray-600">{{ $propertyType->carouselSection->subtitle }}</span></div>
+                            @endif
+                            @if($propertyType->carouselSection->title)
+                                <div><span class="font-medium text-gray-700">Title:</span> <span class="text-gray-600">{{ $propertyType->carouselSection->title }}</span></div>
+                            @endif
+                            @if($propertyType->carouselSection->images && count($propertyType->carouselSection->images) > 0)
+                                <div>
+                                    <span class="font-medium text-gray-700">Images:</span>
+                                    <div class="grid grid-cols-4 gap-2 mt-2">
+                                        @foreach($propertyType->carouselSection->images as $image)
+                                            <img src="{{ Storage::url($image) }}" alt="Carousel" class="w-full h-20 object-cover rounded border border-gray-300">
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500 italic">Not configured</p>
+                    @endif
+                </div>
+
+                <!-- Perspective Section -->
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-zendo-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Perspective Section
+                    </h4>
+                    @if($propertyType->perspectiveSection)
+                        <div class="space-y-2 text-sm">
+                            @if($propertyType->perspectiveSection->subtitle)
+                                <div><span class="font-medium text-gray-700">Subtitle:</span> <span class="text-gray-600">{{ $propertyType->perspectiveSection->subtitle }}</span></div>
+                            @endif
+                            @if($propertyType->perspectiveSection->title)
+                                <div><span class="font-medium text-gray-700">Title:</span> <span class="text-gray-600">{{ $propertyType->perspectiveSection->title }}</span></div>
+                            @endif
+                            @if($propertyType->perspectiveSection->images && count($propertyType->perspectiveSection->images) > 0)
+                                <div>
+                                    <span class="font-medium text-gray-700">Images:</span>
+                                    <div class="grid grid-cols-4 gap-2 mt-2">
+                                        @foreach($propertyType->perspectiveSection->images as $image)
+                                            <img src="{{ Storage::url($image) }}" alt="Perspective" class="w-full h-20 object-cover rounded border border-gray-300">
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                            @if($propertyType->perspectiveSection->features && count($propertyType->perspectiveSection->features) > 0)
+                                <div>
+                                    <span class="font-medium text-gray-700">Features:</span>
+                                    <ul class="list-disc list-inside mt-1 space-y-1 text-gray-600">
+                                        @foreach($propertyType->perspectiveSection->features as $feature)
+                                            <li>{!! $feature !!}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500 italic">Not configured</p>
+                    @endif
+                </div>
+            </div>
 
             <!-- Mapped Service Types -->
             <div class="pt-6 border-t border-gray-200">

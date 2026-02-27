@@ -11,9 +11,11 @@ class PropertyPageSection extends Model
     use HasFactory;
 
     protected $fillable = [
+        'property_type_id',
         'section_key',
         'title',
         'subtitle',
+        'kicker',
         'description',
         'button_text',
         'button_link',
@@ -21,6 +23,7 @@ class PropertyPageSection extends Model
         'secondary_button_link',
         'images',
         'features',
+        'badges',
         'is_active',
         'order',
     ];
@@ -28,6 +31,7 @@ class PropertyPageSection extends Model
     protected $casts = [
         'images' => 'array',
         'features' => 'array',
+        'badges' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -39,6 +43,11 @@ class PropertyPageSection extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('order', 'asc');
+    }
+
+    public function propertyType()
+    {
+        return $this->belongsTo(PropertyType::class);
     }
 
     public static function getByKey($key)

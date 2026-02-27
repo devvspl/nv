@@ -15,7 +15,16 @@ class PropertyPageSectionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Download and store images
+        // Get property types
+        $residentialType = \App\Models\PropertyType::where('category', 'residential')->first();
+        $commercialType = \App\Models\PropertyType::where('category', 'commercial')->first();
+
+        if (!$residentialType) {
+            $this->command->warn('No residential property type found. Please create property types first.');
+            return;
+        }
+
+        // Download and store images for residential
         $carouselImages = $this->downloadImages([
             'https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1400&q=80',
             'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80',
@@ -30,8 +39,20 @@ class PropertyPageSectionSeeder extends Seeder
             'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=70',
         ], 'perspective');
 
-        $sections = [
+        // Residential sections
+        $residentialSections = [
             [
+                'property_type_id' => $residentialType->id,
+                'section_key' => 'intro_section',
+                'kicker' => 'Residential Properties',
+                'title' => 'Find Your Premium Home in Top Locations',
+                'description' => 'Explore handpicked apartments, builder floors, villas, and plots across prime residential areas. Use the filters to shortlist the right home faster.',
+                'badges' => ['Verified Listings', 'Fast Shortlisting', 'Prime Locations'],
+                'is_active' => true,
+                'order' => 0,
+            ],
+            [
+                'property_type_id' => $residentialType->id,
                 'section_key' => 'carousel_section',
                 'title' => 'Homes Designed for Comfort, Space & Lifestyle',
                 'subtitle' => 'Residential Living',
@@ -46,6 +67,7 @@ class PropertyPageSectionSeeder extends Seeder
                 'order' => 1,
             ],
             [
+                'property_type_id' => $residentialType->id,
                 'section_key' => 'perspective_section',
                 'title' => 'Choose the Right Home with Clear, Practical Insights',
                 'subtitle' => 'Residential Properties',
@@ -65,14 +87,81 @@ class PropertyPageSectionSeeder extends Seeder
             ],
         ];
 
-        foreach ($sections as $section) {
+        foreach ($residentialSections as $section) {
             PropertyPageSection::updateOrCreate(
-                ['section_key' => $section['section_key']],
+                [
+                    'property_type_id' => $section['property_type_id'],
+                    'section_key' => $section['section_key']
+                ],
                 $section
             );
         }
 
-        $this->command->info('Property page sections seeded successfully with images!');
+        $this->command->info('Residential property page sections seeded successfully!');
+
+        // Commercial sections (if commercial type exists)
+        if ($commercialType) {
+            $commercialSections = [
+                [
+                    'property_type_id' => $commercialType->id,
+                    'section_key' => 'intro_section',
+                    'kicker' => 'Commercial Properties',
+                    'title' => 'Premium Commercial Spaces for Your Business',
+                    'description' => 'Discover office spaces, retail shops, warehouses, and commercial plots in strategic business locations. Find the perfect space to grow your business.',
+                    'badges' => ['Prime Locations', 'High ROI', 'Ready to Move'],
+                    'is_active' => true,
+                    'order' => 0,
+                ],
+                [
+                    'property_type_id' => $commercialType->id,
+                    'section_key' => 'carousel_section',
+                    'title' => 'Strategic Commercial Spaces for Business Growth',
+                    'subtitle' => 'Commercial Properties',
+                    'description' => 'Every commercial property is selected based on location advantage, connectivity, and business potential. Whether you need office space, retail outlet, or warehouse, find options that match your business requirements.',
+                    'button_text' => 'Schedule Site Visit',
+                    'button_link' => '#enquiry',
+                    'secondary_button_text' => 'View All Properties',
+                    'secondary_button_link' => '#projects',
+                    'images' => $carouselImages,
+                    'features' => [],
+                    'is_active' => true,
+                    'order' => 1,
+                ],
+                [
+                    'property_type_id' => $commercialType->id,
+                    'section_key' => 'perspective_section',
+                    'title' => 'Make Informed Commercial Property Decisions',
+                    'subtitle' => 'Commercial Properties',
+                    'description' => 'Evaluate commercial properties with key business metrics. Compare locations, accessibility, infrastructure, and investment potential to choose the right space for your business.',
+                    'button_text' => 'Get Investment Guide',
+                    'button_link' => '#enquiry',
+                    'secondary_button_text' => 'Talk to Expert',
+                    'secondary_button_link' => '#contact',
+                    'images' => $perspectiveImages,
+                    'features' => [
+                        '<strong>Location Advantage:</strong> Business districts, main roads, metro connectivity & parking.',
+                        '<strong>Infrastructure:</strong> Power backup, elevators, security systems & modern amenities.',
+                        '<strong>Investment Potential:</strong> Rental yield, appreciation rate & business footfall.',
+                    ],
+                    'is_active' => true,
+                    'order' => 2,
+                ],
+            ];
+
+            foreach ($commercialSections as $section) {
+                PropertyPageSection::updateOrCreate(
+                    [
+                        'property_type_id' => $section['property_type_id'],
+                        'section_key' => $section['section_key']
+                    ],
+                    $section
+                );
+            }
+
+            $this->command->info('Commercial property page sections seeded successfully!');
+        }
+
+        $this->command->info('All property page sections seeded successfully with images!');
     }
 
     /**

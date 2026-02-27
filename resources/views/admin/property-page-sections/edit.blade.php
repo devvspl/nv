@@ -8,29 +8,6 @@
     <p class="text-gray-600 mt-1">Update section details for <span class="font-semibold text-zendo-gold">{{ ucwords(str_replace('_', ' ', $propertyPageSection->section_key)) }}</span></p>
 </div>
 
-<div class="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-    <div class="flex items-start">
-        <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-        </svg>
-        <div>
-            <h3 class="font-semibold text-yellow-900 mb-1">Tips for {{ $propertyPageSection->section_key == 'carousel_section' ? 'Carousel Section' : 'Perspective Section' }}</h3>
-            @if($propertyPageSection->section_key == 'carousel_section')
-                <ul class="text-sm text-yellow-800 list-disc list-inside space-y-1">
-                    <li>Upload multiple images for the carousel (recommended: 4-6 images)</li>
-                    <li>Images will auto-rotate every 3.5 seconds</li>
-                    <li>Keep title concise and impactful (max 60 characters recommended)</li>
-                </ul>
-            @else
-                <ul class="text-sm text-yellow-800 list-disc list-inside space-y-1">
-                    <li>Upload exactly 4 images for the best grid layout</li>
-                    <li>Add 3-5 features with HTML formatting (use &lt;strong&gt; for bold)</li>
-                    <li>Features should highlight key property benefits</li>
-                </ul>
-            @endif
-        </div>
-    </div>
-</div>
 
 <div class="bg-white rounded-lg shadow-md p-6">
     <form action="{{ route('admin.property-page-sections.update', $propertyPageSection) }}" method="POST" enctype="multipart/form-data">

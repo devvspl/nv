@@ -10,7 +10,34 @@
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="{{ route('about') }}" class="header-nav-link font-highlight font-medium">About Us</a>
-                <a href="{{ route('properties.index') }}" class="header-nav-link font-highlight font-medium">Services</a>
+                
+                <!-- Services Dropdown -->
+                <div class="relative group">
+                    <button class="header-nav-link font-highlight font-medium flex items-center">
+                        Services
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2">
+                        <div class="py-2">
+                            <a href="{{ route('properties.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors font-semibold">
+                                All Properties
+                            </a>
+                            @php
+                                $headerPropertyTypes = \App\Models\PropertyType::where('status', true)
+                                    ->where('show_in_header', true)
+                                    ->orderBy('sort_order', 'asc')
+                                    ->get();
+                            @endphp
+                            @foreach($headerPropertyTypes as $propertyType)
+                                <a href="{{ route('properties.index', ['property_type_slug' => $propertyType->slug]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
+                                    {{ $propertyType->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Calculators Dropdown -->
                 <div class="relative group">
@@ -72,8 +99,32 @@
             <a href="{{ route('about') }}"
                 class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">About
                 Us</a>
-            <a href="{{ route('properties.index') }}"
-                class="block px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy">Services</a>
+            
+            <!-- Mobile Services Dropdown -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open" class="w-full text-left px-3 py-2 rounded-md font-highlight font-semibold text-gray-700 hover:bg-gray-100 hover:text-zendo-navy flex items-center justify-between">
+                    <span>Services</span>
+                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div x-show="open" x-transition class="pl-4 mt-2 space-y-2">
+                    <a href="{{ route('properties.index') }}" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy rounded-md font-semibold">
+                        All Properties
+                    </a>
+                    @php
+                        $headerPropertyTypes = \App\Models\PropertyType::where('status', true)
+                            ->where('show_in_header', true)
+                            ->orderBy('sort_order', 'asc')
+                            ->get();
+                    @endphp
+                    @foreach($headerPropertyTypes as $propertyType)
+                        <a href="{{ route('properties.index', ['property_type_slug' => $propertyType->slug]) }}" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy rounded-md">
+                            {{ $propertyType->name }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
             
             <!-- Mobile Calculators Dropdown -->
             <div x-data="{ open: false }">

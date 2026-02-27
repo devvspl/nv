@@ -3,6 +3,7 @@
 @section('title', 'Property Page Sections')
 
 @section('content')
+
 <div class="mb-6 flex justify-between items-center">
     <div>
         <h1 class="text-3xl font-heading text-zendo-navy font-bold">Property Page Sections</h1>
@@ -27,21 +28,6 @@
         <span class="block sm:inline">{{ session('error') }}</span>
     </div>
 @endif
-
-<div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-    <div class="flex items-start">
-        <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-        </svg>
-        <div>
-            <h3 class="font-semibold text-blue-900 mb-1">About Property Page Sections</h3>
-            <p class="text-sm text-blue-800">
-                These sections are automatically created and cannot be deleted. You can edit their content, upload images, and toggle their visibility. 
-                The sections will appear on the properties listing page.
-            </p>
-        </div>
-    </div>
-</div>
 
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <table class="min-w-full divide-y divide-gray-200">
@@ -98,19 +84,5 @@
             @endforelse
         </tbody>
     </table>
-</div>
-
-<div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-    <h3 class="font-semibold text-blue-900 mb-2">Section Details:</h3>
-    <div class="space-y-3 text-sm text-blue-800">
-        <div>
-            <code class="bg-blue-100 px-2 py-1 rounded font-semibold">carousel_section</code>
-            <p class="mt-1 ml-2">Displays a carousel with multiple images and content on the left side. Ideal for showcasing property highlights.</p>
-        </div>
-        <div>
-            <code class="bg-blue-100 px-2 py-1 rounded font-semibold">perspective_section</code>
-            <p class="mt-1 ml-2">Shows a grid of 4 images with features list. Perfect for highlighting key property aspects and benefits.</p>
-        </div>
-    </div>
 </div>
 @endsection

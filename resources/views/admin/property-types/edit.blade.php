@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.property-types.update', $propertyType) }}" method="POST" class="p-6 space-y-6">
+        <form action="{{ route('admin.property-types.update', $propertyType) }}" method="POST" class="p-6 space-y-6" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -113,17 +113,268 @@
 
             <!-- Status -->
             <div class="pt-6 border-t border-gray-200">
-                <div class="flex items-center">
-                    <input type="hidden" name="status" value="0">
-                    <input type="checkbox" 
-                           name="status" 
-                           id="status" 
-                           value="1"
-                           {{ old('status', $propertyType->status) ? 'checked' : '' }}
-                           class="h-4 w-4 text-zendo-gold focus:ring-zendo-gold border-gray-300 rounded">
-                    <label for="status" class="ml-2 block text-sm text-gray-700">
-                        Active (visible on website)
-                    </label>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <input type="hidden" name="status" value="0">
+                        <input type="checkbox" 
+                               name="status" 
+                               id="status" 
+                               value="1"
+                               {{ old('status', $propertyType->status) ? 'checked' : '' }}
+                               class="h-4 w-4 text-zendo-gold focus:ring-zendo-gold border-gray-300 rounded">
+                        <label for="status" class="ml-2 block text-sm text-gray-700">
+                            Active (visible on website)
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="hidden" name="show_in_header" value="0">
+                        <input type="checkbox" 
+                               name="show_in_header" 
+                               id="show_in_header" 
+                               value="1"
+                               {{ old('show_in_header', $propertyType->show_in_header) ? 'checked' : '' }}
+                               class="h-4 w-4 text-zendo-gold focus:ring-zendo-gold border-gray-300 rounded">
+                        <label for="show_in_header" class="ml-2 block text-sm text-gray-700">
+                            Show in Header Menu (Services dropdown)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intro Section (Top Banner) -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Intro Section (Top Banner)</h3>
+                <p class="text-sm text-gray-600 mb-4">Configure the intro banner that appears at the top of the property listing page</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="intro_kicker" class="block text-sm font-medium text-gray-700 mb-2">Kicker Text</label>
+                        <input type="text" name="intro_kicker" id="intro_kicker" 
+                               value="{{ old('intro_kicker', $propertyType->introSection->kicker ?? '') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                               placeholder="e.g., Residential Properties">
+                        <p class="mt-1 text-sm text-gray-500">Small text above the main title</p>
+                    </div>
+                    
+                    <div>
+                        <label for="intro_title" class="block text-sm font-medium text-gray-700 mb-2">Main Title</label>
+                        <input type="text" name="intro_title" id="intro_title" 
+                               value="{{ old('intro_title', $propertyType->introSection->title ?? '') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                               placeholder="e.g., Find Your Premium Home in Top Locations">
+                    </div>
+                    
+                    <div>
+                        <label for="intro_description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea name="intro_description" id="intro_description" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                  placeholder="Brief description...">{{ old('intro_description', $propertyType->introSection->description ?? '') }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Badges (3 items)</label>
+                        <div class="space-y-2">
+                            @php
+                                $badges = old('intro_badges', $propertyType->introSection->badges ?? ['Verified Listings', 'Fast Shortlisting', 'Prime Locations']);
+                            @endphp
+                            <input type="text" name="intro_badges[]" value="{{ $badges[0] ?? '' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="Badge 1">
+                            <input type="text" name="intro_badges[]" value="{{ $badges[1] ?? '' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="Badge 2">
+                            <input type="text" name="intro_badges[]" value="{{ $badges[2] ?? '' }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="Badge 3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Section -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Carousel Section (Property Page)</h3>
+                <p class="text-sm text-gray-600 mb-4">Configure the carousel section that appears on the property listing page</p>
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="carousel_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                            <input type="text" name="carousel_subtitle" id="carousel_subtitle" 
+                                   value="{{ old('carousel_subtitle', $propertyType->carouselSection->subtitle ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Residential Living">
+                        </div>
+                        <div>
+                            <label for="carousel_title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                            <input type="text" name="carousel_title" id="carousel_title" 
+                                   value="{{ old('carousel_title', $propertyType->carouselSection->title ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Homes Designed for Comfort">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="carousel_description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea name="carousel_description" id="carousel_description" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                  placeholder="Describe the carousel section...">{{ old('carousel_description', $propertyType->carouselSection->description ?? '') }}</textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="carousel_button_text" class="block text-sm font-medium text-gray-700 mb-2">Primary Button Text</label>
+                            <input type="text" name="carousel_button_text" id="carousel_button_text" 
+                                   value="{{ old('carousel_button_text', $propertyType->carouselSection->button_text ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Get Expert Advice">
+                        </div>
+                        <div>
+                            <label for="carousel_button_link" class="block text-sm font-medium text-gray-700 mb-2">Primary Button Link</label>
+                            <input type="text" name="carousel_button_link" id="carousel_button_link" 
+                                   value="{{ old('carousel_button_link', $propertyType->carouselSection->button_link ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., #enquiry">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="carousel_secondary_button_text" class="block text-sm font-medium text-gray-700 mb-2">Secondary Button Text</label>
+                            <input type="text" name="carousel_secondary_button_text" id="carousel_secondary_button_text" 
+                                   value="{{ old('carousel_secondary_button_text', $propertyType->carouselSection->secondary_button_text ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., View More Projects">
+                        </div>
+                        <div>
+                            <label for="carousel_secondary_button_link" class="block text-sm font-medium text-gray-700 mb-2">Secondary Button Link</label>
+                            <input type="text" name="carousel_secondary_button_link" id="carousel_secondary_button_link" 
+                                   value="{{ old('carousel_secondary_button_link', $propertyType->carouselSection->secondary_button_link ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., #projects">
+                        </div>
+                    </div>
+                    
+                    @if($propertyType->carouselSection && $propertyType->carouselSection->images)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                            @foreach($propertyType->carouselSection->images as $index => $image)
+                            <div class="relative group">
+                                <img src="{{ Storage::url($image) }}" alt="Carousel {{ $index + 1 }}" class="w-full h-24 object-cover rounded-lg">
+                                <label class="absolute top-1 right-1 bg-red-500 text-white p-1 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <input type="checkbox" name="carousel_remove_images[]" value="{{ $image }}" class="hidden">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </label>
+                                <input type="hidden" name="carousel_existing_images[]" value="{{ $image }}">
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                    
+                    <div>
+                        <label for="carousel_images" class="block text-sm font-medium text-gray-700 mb-2">Add New Carousel Images</label>
+                        <input type="file" name="carousel_images[]" id="carousel_images" multiple accept="image/*"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold">
+                        <p class="mt-1 text-sm text-gray-500">Upload multiple images for the carousel (JPEG, PNG, WebP, max 2MB each)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perspective Section -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Perspective Section (Property Page)</h3>
+                <p class="text-sm text-gray-600 mb-4">Configure the perspective section with property insights</p>
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="perspective_subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                            <input type="text" name="perspective_subtitle" id="perspective_subtitle" 
+                                   value="{{ old('perspective_subtitle', $propertyType->perspectiveSection->subtitle ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Residential Properties">
+                        </div>
+                        <div>
+                            <label for="perspective_title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                            <input type="text" name="perspective_title" id="perspective_title" 
+                                   value="{{ old('perspective_title', $propertyType->perspectiveSection->title ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Choose the Right Home">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="perspective_description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea name="perspective_description" id="perspective_description" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                  placeholder="Describe the perspective section...">{{ old('perspective_description', $propertyType->perspectiveSection->description ?? '') }}</textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="perspective_button_text" class="block text-sm font-medium text-gray-700 mb-2">Primary Button Text</label>
+                            <input type="text" name="perspective_button_text" id="perspective_button_text" 
+                                   value="{{ old('perspective_button_text', $propertyType->perspectiveSection->button_text ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Get Project List">
+                        </div>
+                        <div>
+                            <label for="perspective_button_link" class="block text-sm font-medium text-gray-700 mb-2">Primary Button Link</label>
+                            <input type="text" name="perspective_button_link" id="perspective_button_link" 
+                                   value="{{ old('perspective_button_link', $propertyType->perspectiveSection->button_link ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., #enquiry">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="perspective_secondary_button_text" class="block text-sm font-medium text-gray-700 mb-2">Secondary Button Text</label>
+                            <input type="text" name="perspective_secondary_button_text" id="perspective_secondary_button_text" 
+                                   value="{{ old('perspective_secondary_button_text', $propertyType->perspectiveSection->secondary_button_text ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., Request a Call">
+                        </div>
+                        <div>
+                            <label for="perspective_secondary_button_link" class="block text-sm font-medium text-gray-700 mb-2">Secondary Button Link</label>
+                            <input type="text" name="perspective_secondary_button_link" id="perspective_secondary_button_link" 
+                                   value="{{ old('perspective_secondary_button_link', $propertyType->perspectiveSection->secondary_button_link ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold"
+                                   placeholder="e.g., #contact">
+                        </div>
+                    </div>
+                    
+                    @if($propertyType->perspectiveSection && $propertyType->perspectiveSection->images)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                            @foreach($propertyType->perspectiveSection->images as $index => $image)
+                            <div class="relative group">
+                                <img src="{{ Storage::url($image) }}" alt="Perspective {{ $index + 1 }}" class="w-full h-24 object-cover rounded-lg">
+                                <label class="absolute top-1 right-1 bg-red-500 text-white p-1 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <input type="checkbox" name="perspective_remove_images[]" value="{{ $image }}" class="hidden">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </label>
+                                <input type="hidden" name="perspective_existing_images[]" value="{{ $image }}">
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                    
+                    <div>
+                        <label for="perspective_images" class="block text-sm font-medium text-gray-700 mb-2">Add New Perspective Images</label>
+                        <input type="file" name="perspective_images[]" id="perspective_images" multiple accept="image/*"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold">
+                        <p class="mt-1 text-sm text-gray-500">Upload 4 images for the perspective grid (JPEG, PNG, WebP, max 2MB each)</p>
+                    </div>
                 </div>
             </div>
 

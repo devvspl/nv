@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
+use App\Models\PropertyPageSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyTypeController extends Controller
 {
@@ -32,9 +34,37 @@ class PropertyTypeController extends Controller
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
             'status' => 'boolean',
+            'show_in_header' => 'boolean',
             'sort_order' => 'integer|min:0',
             'service_types' => 'nullable|array',
             'service_types.*' => 'exists:service_types,id',
+            
+            // Carousel section fields
+            'carousel_title' => 'nullable|string|max:255',
+            'carousel_subtitle' => 'nullable|string|max:255',
+            'carousel_description' => 'nullable|string',
+            'carousel_button_text' => 'nullable|string|max:100',
+            'carousel_button_link' => 'nullable|string|max:255',
+            'carousel_secondary_button_text' => 'nullable|string|max:100',
+            'carousel_secondary_button_link' => 'nullable|string|max:255',
+            'carousel_images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            
+            // Perspective section fields
+            'perspective_title' => 'nullable|string|max:255',
+            'perspective_subtitle' => 'nullable|string|max:255',
+            'perspective_description' => 'nullable|string',
+            'perspective_button_text' => 'nullable|string|max:100',
+            'perspective_button_link' => 'nullable|string|max:255',
+            'perspective_secondary_button_text' => 'nullable|string|max:100',
+            'perspective_secondary_button_link' => 'nullable|string|max:255',
+            'perspective_images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'perspective_features' => 'nullable|array',
+            
+            // Intro section fields
+            'intro_kicker' => 'nullable|string|max:255',
+            'intro_title' => 'nullable|string|max:255',
+            'intro_description' => 'nullable|string',
+            'intro_badges' => 'nullable|array',
         ]);
 
         // Auto-generate slug from name
@@ -47,20 +77,29 @@ class PropertyTypeController extends Controller
             $propertyType->serviceTypes()->sync($request->service_types);
         }
 
+        // Handle carousel section
+        $this->handleSection($propertyType, $request, 'carousel');
+        
+        // Handle perspective section
+        $this->handleSection($propertyType, $request, 'perspective');
+        
+        // Handle intro section
+        $this->handleIntroSection($propertyType, $request);
+
         return redirect()->route('admin.property-types.index')
             ->with('success', 'Property Type created successfully.');
     }
 
     public function show(PropertyType $propertyType): View
     {
-        $propertyType->load('serviceTypes');
+        $propertyType->load(['serviceTypes', 'introSection', 'carouselSection', 'perspectiveSection']);
         return view('admin.property-types.show', compact('propertyType'));
     }
 
     public function edit(PropertyType $propertyType): View
     {
         $serviceTypes = ServiceType::active()->ordered()->get();
-        $propertyType->load('serviceTypes');
+        $propertyType->load(['serviceTypes', 'carouselSection', 'perspectiveSection', 'introSection']);
         return view('admin.property-types.edit', compact('propertyType', 'serviceTypes'));
     }
 
@@ -72,9 +111,39 @@ class PropertyTypeController extends Controller
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
             'status' => 'boolean',
+            'show_in_header' => 'boolean',
             'sort_order' => 'integer|min:0',
             'service_types' => 'nullable|array',
             'service_types.*' => 'exists:service_types,id',
+            
+            // Carousel section fields
+            'carousel_title' => 'nullable|string|max:255',
+            'carousel_subtitle' => 'nullable|string|max:255',
+            'carousel_description' => 'nullable|string',
+            'carousel_button_text' => 'nullable|string|max:100',
+            'carousel_button_link' => 'nullable|string|max:255',
+            'carousel_secondary_button_text' => 'nullable|string|max:100',
+            'carousel_secondary_button_link' => 'nullable|string|max:255',
+            'carousel_images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'carousel_existing_images' => 'nullable|array',
+            
+            // Perspective section fields
+            'perspective_title' => 'nullable|string|max:255',
+            'perspective_subtitle' => 'nullable|string|max:255',
+            'perspective_description' => 'nullable|string',
+            'perspective_button_text' => 'nullable|string|max:100',
+            'perspective_button_link' => 'nullable|string|max:255',
+            'perspective_secondary_button_text' => 'nullable|string|max:100',
+            'perspective_secondary_button_link' => 'nullable|string|max:255',
+            'perspective_images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'perspective_existing_images' => 'nullable|array',
+            'perspective_features' => 'nullable|array',
+            
+            // Intro section fields
+            'intro_kicker' => 'nullable|string|max:255',
+            'intro_title' => 'nullable|string|max:255',
+            'intro_description' => 'nullable|string',
+            'intro_badges' => 'nullable|array',
         ]);
 
         // Auto-generate slug from name
@@ -84,6 +153,15 @@ class PropertyTypeController extends Controller
 
         // Sync service types
         $propertyType->serviceTypes()->sync($request->service_types ?? []);
+
+        // Handle carousel section
+        $this->handleSection($propertyType, $request, 'carousel', true);
+        
+        // Handle perspective section
+        $this->handleSection($propertyType, $request, 'perspective', true);
+        
+        // Handle intro section
+        $this->handleIntroSection($propertyType, $request, true);
 
         return redirect()->route('admin.property-types.index')
             ->with('success', 'Property Type updated successfully.');
@@ -105,5 +183,117 @@ class PropertyTypeController extends Controller
         $status = $propertyType->status ? 'activated' : 'deactivated';
         return redirect()->back()
             ->with('success', "Property Type {$status} successfully.");
+    }
+
+    /**
+     * Handle section creation/update with image uploads
+     */
+    private function handleSection(PropertyType $propertyType, Request $request, string $sectionType, bool $isUpdate = false): void
+    {
+        $prefix = $sectionType;
+        $sectionKey = $sectionType . '_section';
+        
+        // Check if any section data is provided
+        $hasData = $request->filled("{$prefix}_title") || 
+                   $request->hasFile("{$prefix}_images") ||
+                   ($isUpdate && $request->has("{$prefix}_existing_images"));
+        
+        if (!$hasData) {
+            return;
+        }
+
+        // Get or create section
+        $section = $isUpdate 
+            ? $propertyType->propertyPageSections()->where('section_key', $sectionKey)->first()
+            : null;
+
+        // Handle images
+        $images = [];
+        
+        // Keep existing images if updating (only those not marked for removal)
+        if ($isUpdate && $request->has("{$prefix}_existing_images")) {
+            $existingImages = $request->input("{$prefix}_existing_images", []);
+            $removeImages = $request->input("{$prefix}_remove_images", []);
+            
+            // Delete images marked for removal
+            if ($section && $section->images) {
+                foreach ($section->images as $oldImage) {
+                    if (in_array($oldImage, $removeImages)) {
+                        Storage::disk('public')->delete($oldImage);
+                    } elseif (in_array($oldImage, $existingImages)) {
+                        $images[] = $oldImage;
+                    }
+                }
+            }
+        }
+        
+        // Upload new images
+        if ($request->hasFile("{$prefix}_images")) {
+            foreach ($request->file("{$prefix}_images") as $image) {
+                $path = $image->store('property-page-sections', 'public');
+                $images[] = $path;
+            }
+        }
+
+        // Prepare section data
+        $sectionData = [
+            'property_type_id' => $propertyType->id,
+            'section_key' => $sectionKey,
+            'title' => $request->input("{$prefix}_title"),
+            'subtitle' => $request->input("{$prefix}_subtitle"),
+            'description' => $request->input("{$prefix}_description"),
+            'button_text' => $request->input("{$prefix}_button_text"),
+            'button_link' => $request->input("{$prefix}_button_link"),
+            'secondary_button_text' => $request->input("{$prefix}_secondary_button_text"),
+            'secondary_button_link' => $request->input("{$prefix}_secondary_button_link"),
+            'images' => $images,
+            'features' => $request->input("{$prefix}_features", []),
+            'is_active' => true,
+            'order' => $sectionType === 'carousel' ? 1 : 2,
+        ];
+
+        if ($section) {
+            $section->update($sectionData);
+        } else {
+            PropertyPageSection::create($sectionData);
+        }
+    }
+
+    /**
+     * Handle intro section creation/update
+     */
+    private function handleIntroSection(PropertyType $propertyType, Request $request, bool $isUpdate = false): void
+    {
+        // Check if any intro data is provided
+        $hasData = $request->filled('intro_kicker') || 
+                   $request->filled('intro_title') ||
+                   $request->filled('intro_description');
+        
+        if (!$hasData) {
+            return;
+        }
+
+        // Get or create section
+        $section = $isUpdate 
+            ? $propertyType->propertyPageSections()->where('section_key', 'intro_section')->first()
+            : null;
+
+        // Prepare section data
+        $sectionData = [
+            'property_type_id' => $propertyType->id,
+            'section_key' => 'intro_section',
+            'kicker' => $request->input('intro_kicker'),
+            'title' => $request->input('intro_title'),
+            'description' => $request->input('intro_description'),
+            'badges' => $request->input('intro_badges', []),
+            'is_active' => true,
+            'order' => 0, // First section
+        ];
+
+        if ($section) {
+            $section->update($sectionData);
+        } else {
+            PropertyPageSection::create($sectionData);
+        }
     }
 }

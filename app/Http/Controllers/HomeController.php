@@ -65,6 +65,9 @@ class HomeController extends Controller
     public function properties(Request $request)
     {
         $query = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'mainImage'])->active()->published();
+        
+        $selectedPropertyType = null;
+        
         if ($request->filled('city_id')) {
             $query->filterByCity($request->city_id);
         }
@@ -73,11 +76,13 @@ class HomeController extends Controller
         }
         if ($request->filled('property_type_id')) {
             $query->filterByPropertyType($request->property_type_id);
+            $selectedPropertyType = PropertyType::find($request->property_type_id);
         }
         if ($request->filled('property_type_slug')) {
             $propertyType = PropertyType::where('slug', $request->property_type_slug)->first();
             if ($propertyType) {
                 $query->filterByPropertyType($propertyType->id);
+                $selectedPropertyType = $propertyType;
             }
         }
         if ($request->filled('bhk_id')) {
@@ -120,11 +125,38 @@ class HomeController extends Controller
         $builders = Builder::active()->verified()->ordered()->get();
         $workProcesses = WorkProcess::active()->ordered()->get();
         
-        // Get property page sections
-        $carouselSection = PropertyPageSection::getByKey('carousel_section');
-        $perspectiveSection = PropertyPageSection::getByKey('perspective_section');
+        // Get property page sections based on selected property type
+        $carouselSection = null;
+        $perspectiveSection = null;
+        $introSection = null;
         
-        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses', 'carouselSection', 'perspectiveSection'));
+        if ($selectedPropertyType) {
+            // Load sections for the specific property type
+            $carouselSection = $selectedPropertyType->carouselSection()->active()->first();
+            $perspectiveSection = $selectedPropertyType->perspectiveSection()->active()->first();
+            $introSection = $selectedPropertyType->introSection()->active()->first();
+        } else {
+            // Default: try to load residential sections first, then any available
+            $residentialType = PropertyType::where('category', 'residential')->active()->first();
+            if ($residentialType) {
+                $carouselSection = $residentialType->carouselSection()->active()->first();
+                $perspectiveSection = $residentialType->perspectiveSection()->active()->first();
+                $introSection = $residentialType->introSection()->active()->first();
+            }
+            
+            // Fallback to any available sections if residential not found
+            if (!$carouselSection) {
+                $carouselSection = PropertyPageSection::where('section_key', 'carousel_section')->active()->first();
+            }
+            if (!$perspectiveSection) {
+                $perspectiveSection = PropertyPageSection::where('section_key', 'perspective_section')->active()->first();
+            }
+            if (!$introSection) {
+                $introSection = PropertyPageSection::where('section_key', 'intro_section')->active()->first();
+            }
+        }
+        
+        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses', 'carouselSection', 'perspectiveSection', 'introSection'));
     }
 
     public function show(Property $property)

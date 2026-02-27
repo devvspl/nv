@@ -13,11 +13,13 @@ class PropertyType extends Model
         'description',
         'icon',
         'status',
+        'show_in_header',
         'sort_order',
     ];
 
     protected $casts = [
         'status' => 'boolean',
+        'show_in_header' => 'boolean',
     ];
 
     /**
@@ -43,5 +45,37 @@ class PropertyType extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('sort_order', 'asc');
+    }
+
+    /**
+     * Get the property page sections for this property type.
+     */
+    public function propertyPageSections()
+    {
+        return $this->hasMany(PropertyPageSection::class);
+    }
+
+    /**
+     * Get carousel section for this property type.
+     */
+    public function carouselSection()
+    {
+        return $this->hasOne(PropertyPageSection::class)->where('section_key', 'carousel_section');
+    }
+
+    /**
+     * Get perspective section for this property type.
+     */
+    public function perspectiveSection()
+    {
+        return $this->hasOne(PropertyPageSection::class)->where('section_key', 'perspective_section');
+    }
+
+    /**
+     * Get intro section for this property type.
+     */
+    public function introSection()
+    {
+        return $this->hasOne(PropertyPageSection::class)->where('section_key', 'intro_section');
     }
 }
