@@ -37,7 +37,7 @@
                     @enderror
                 </div>
 
-                <div>
+                {{-- <div>
                     <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Property Type Selection *</label>
                     <select name="category" 
                             id="category"
@@ -50,7 +50,7 @@
                     @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </div>
+                </div> --}}
             </div>
 
             <!-- Description -->

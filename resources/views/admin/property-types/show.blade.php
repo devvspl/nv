@@ -67,7 +67,7 @@
                         <p class="text-sm text-gray-600 mb-1">Property Type Name</p>
                         <p class="text-base font-medium text-gray-900">{{ $propertyType->name }}</p>
                     </div>
-                    <div>
+                    {{-- <div>
                         <p class="text-sm text-gray-600 mb-1">Category</p>
                         @if($propertyType->category)
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $propertyType->category === 'residential' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800' }}">
@@ -76,7 +76,7 @@
                         @else
                             <p class="text-base font-medium text-gray-400">Not specified</p>
                         @endif
-                    </div>
+                    </div> --}}
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Sort Order</p>
                         <p class="text-base font-medium text-gray-900">{{ $propertyType->sort_order }}</p>

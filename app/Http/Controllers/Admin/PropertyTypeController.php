@@ -30,7 +30,7 @@ class PropertyTypeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|in:residential,commercial',
+            // 'category' => 'required|in:residential,commercial',
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
             'status' => 'boolean',
@@ -107,7 +107,7 @@ class PropertyTypeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|in:residential,commercial',
+            // 'category' => 'required|in:residential,commercial',
             'description' => 'nullable|string',
             'icon' => 'nullable|string|max:255',
             'status' => 'boolean',
