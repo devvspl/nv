@@ -13,13 +13,14 @@
             <p class="text-gray-600 mt-1">Manage your about us content and mission statements</p>
         </div>
         @canDo('about-us.create')
-<a href="{{ route('admin.about-us.create') }}" 
+        <a href="{{ route('admin.about-us.create') }}" 
            class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             Add New Entry
         </a>
+        @endCanDo
     </div>
 
     <!-- Success Message -->
@@ -53,8 +54,8 @@
                                 <div class="text-sm text-gray-600">{{ Str::limit($entry->subtitle, 40) }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @canDo('about-us.delete')
-<form action="{{ route('admin.about-us.toggle-status', $entry) }}" method="POST" class="inline">
+                                @canDo('about-us.edit')
+                                <form action="{{ route('admin.about-us.toggle-status', $entry) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" 
@@ -62,6 +63,7 @@
                                         {{ $entry->status ? 'Active' : 'Inactive' }}
                                     </button>
                                 </form>
+                                @endCanDo
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                 {{ $entry->sort_order }}
@@ -79,12 +81,14 @@
                                         </svg>
                                     </a>
                                     @canDo('about-us.edit')
-<a href="{{ route('admin.about-us.edit', $entry) }}" 
+                                    <a href="{{ route('admin.about-us.edit', $entry) }}" 
                                        class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </a>
+                                    @endCanDo
+                                    @canDo('about-us.delete')
                                     <form action="{{ route('admin.about-us.destroy', $entry) }}" method="POST" class="inline"
                                           onsubmit="return confirm('Are you sure you want to delete this entry?')">
                                         @csrf
@@ -95,6 +99,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endCanDo
                                 </div>
                             </td>
                         </tr>
@@ -134,6 +139,7 @@
                             <span>{{ $entry->created_at->format('M d, Y') }}</span>
                         </div>
                     </div>
+                    @canDo('about-us.edit')
                     <form action="{{ route('admin.about-us.toggle-status', $entry) }}" method="POST" class="inline">
                         @csrf
                         @method('PATCH')
@@ -142,6 +148,7 @@
                             {{ $entry->status ? 'Active' : 'Inactive' }}
                         </button>
                     </form>
+                    @endCanDo
                 </div>
                 
                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
@@ -153,6 +160,7 @@
                         </svg>
                         View
                     </a>
+                    @canDo('about-us.edit')
                     <a href="{{ route('admin.about-us.edit', $entry) }}" 
                        class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,6 +168,8 @@
                         </svg>
                         Edit
                     </a>
+                    @endCanDo
+                    @canDo('about-us.delete')
                     <form action="{{ route('admin.about-us.destroy', $entry) }}" method="POST" class="inline"
                           onsubmit="return confirm('Are you sure you want to delete this entry?')">
                         @csrf
@@ -171,7 +181,7 @@
                             Delete
                         </button>
                     </form>
-@endCanDo
+                    @endCanDo
                 </div>
             </div>
         @empty
@@ -188,8 +198,6 @@
                     </svg>
                     Add First Entry
                 </a>
-@endCanDo
-@endCanDo
             </div>
         @endforelse
     </div>

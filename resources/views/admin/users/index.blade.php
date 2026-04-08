@@ -19,6 +19,7 @@
                 </svg>
                 Add User
             </a>
+            @endCanDo
         </div>
 
         <!-- Success/Error Messages -->
@@ -149,6 +150,7 @@
                                                     </svg>
                                                 </button>
                                             </form>
+                                            @endCanDo
                                         @endif
                                     </div>
                                 </td>
@@ -243,6 +245,7 @@
                             </svg>
                             View
                         </a>
+                        @canDo('users.edit')
                         <a href="{{ route('admin.users.edit', $user) }}"
                             class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +255,9 @@
                             </svg>
                             Edit
                         </a>
+                        @endCanDo
                         @if ($user->id !== auth()->id())
+                            @canDo('users.delete')
                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline"
                                 onsubmit="return confirm('Are you sure you want to delete this user?')">
                                 @csrf
@@ -289,7 +294,6 @@
                         </svg>
                         Add First User
                     </a>
-                    @endCanDo
                 </div>
             @endforelse
         </div>

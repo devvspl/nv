@@ -11,13 +11,14 @@
             <p class="text-gray-600 mt-1">Manage property types and their service mappings</p>
         </div>
         @canDo('property-types.create')
-<a href="{{ route('admin.property-types.create') }}" 
-           class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+        <a href="{{ route('admin.property-types.create') }}"
+            class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             Add Property Type
         </a>
+        @endCanDo
     </div>
 
     <!-- Success Message -->
@@ -34,7 +35,6 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property Type</th>
-                        {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th> --}}
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Types</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Header</th>
@@ -59,30 +59,22 @@
                                     </div>
                                 </div>
                             </td>
-                            {{-- <td class="px-6 py-4 whitespace-nowrap">
-                                @if($propertyType->category)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $propertyType->category === 'residential' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800' }}">
-                                        {{ ucfirst($propertyType->category) }}
-                                    </span>
-                                @else
-                                    <span class="text-sm text-gray-400">-</span>
-                                @endif
-                            </td> --}}
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     {{ $propertyType->service_types_count }} mapped
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @canDo('property-types.delete')
-<form action="{{ route('admin.property-types.toggle-status', $propertyType) }}" method="POST" class="inline">
+                                @canDo('property-types.edit')
+                                <form action="{{ route('admin.property-types.toggle-status', $propertyType) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" 
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $propertyType->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
+                                    <button type="submit"
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $propertyType->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
                                         {{ $propertyType->status ? 'Active' : 'Inactive' }}
                                     </button>
                                 </form>
+                                @endCanDo
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($propertyType->show_in_header)
@@ -106,22 +98,24 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('admin.property-types.show', $propertyType) }}" 
-                                       class="text-blue-600 hover:text-blue-900 transition-colors">
+                                    <a href="{{ route('admin.property-types.show', $propertyType) }}"
+                                        class="text-blue-600 hover:text-blue-900 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
                                     </a>
                                     @canDo('property-types.edit')
-<a href="{{ route('admin.property-types.edit', $propertyType) }}" 
-                                       class="text-indigo-600 hover:text-indigo-900 transition-colors">
+                                    <a href="{{ route('admin.property-types.edit', $propertyType) }}"
+                                        class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </a>
+                                    @endCanDo
+                                    @canDo('property-types.delete')
                                     <form action="{{ route('admin.property-types.destroy', $propertyType) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Are you sure you want to delete this property type? This will also remove all service type mappings.')">
+                                        onsubmit="return confirm('Are you sure you want to delete this property type? This will also remove all service type mappings.')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900 transition-colors">
@@ -130,19 +124,20 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endCanDo
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                                 <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                                 </svg>
                                 <p class="text-lg font-medium">No property types found</p>
                                 <p class="mt-1">Get started by creating your first property type.</p>
-                                <a href="{{ route('admin.property-types.create') }}" 
-                                   class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
+                                <a href="{{ route('admin.property-types.create') }}"
+                                    class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
@@ -183,34 +178,39 @@
                             </div>
                         </div>
                     </div>
+                    @canDo('property-types.edit')
                     <form action="{{ route('admin.property-types.toggle-status', $propertyType) }}" method="POST" class="inline">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" 
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $propertyType->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
+                        <button type="submit"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $propertyType->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
                             {{ $propertyType->status ? 'Active' : 'Inactive' }}
                         </button>
                     </form>
+                    @endCanDo
                 </div>
-                
+
                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                    <a href="{{ route('admin.property-types.show', $propertyType) }}" 
-                       class="inline-flex items-center px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                    <a href="{{ route('admin.property-types.show', $propertyType) }}"
+                        class="inline-flex items-center px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 transition-colors">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
                         View
                     </a>
-                    <a href="{{ route('admin.property-types.edit', $propertyType) }}" 
-                       class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
+                    @canDo('property-types.edit')
+                    <a href="{{ route('admin.property-types.edit', $propertyType) }}"
+                        class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                         Edit
                     </a>
+                    @endCanDo
+                    @canDo('property-types.delete')
                     <form action="{{ route('admin.property-types.destroy', $propertyType) }}" method="POST" class="inline"
-                          onsubmit="return confirm('Are you sure you want to delete this property type?')">
+                        onsubmit="return confirm('Are you sure you want to delete this property type?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:text-red-800 transition-colors">
@@ -220,7 +220,7 @@
                             Delete
                         </button>
                     </form>
-@endCanDo
+                    @endCanDo
                 </div>
             </div>
         @empty
@@ -230,15 +230,13 @@
                 </svg>
                 <p class="text-lg font-medium text-gray-900">No property types found</p>
                 <p class="mt-1 text-gray-600">Get started by creating your first property type.</p>
-                <a href="{{ route('admin.property-types.create') }}" 
-                   class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
+                <a href="{{ route('admin.property-types.create') }}"
+                    class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     Add First Property Type
                 </a>
-@endCanDo
-@endCanDo
             </div>
         @endforelse
     </div>

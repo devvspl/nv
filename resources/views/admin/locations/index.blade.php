@@ -11,13 +11,14 @@
             <p class="text-gray-600 mt-1">Manage locations for properties</p>
         </div>
         @canDo('locations.create')
-<a href="{{ route('admin.locations.create') }}" 
-           class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+        <a href="{{ route('admin.locations.create') }}"
+            class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             Add Location
         </a>
+        @endCanDo
     </div>
 
     <!-- Success Message -->
@@ -52,15 +53,16 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @canDo('locations.delete')
-<form action="{{ route('admin.locations.toggle-status', $location) }}" method="POST" class="inline">
+                                @canDo('locations.edit')
+                                <form action="{{ route('admin.locations.toggle-status', $location) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" 
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $location->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
+                                    <button type="submit"
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $location->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
                                         {{ $location->status ? 'Active' : 'Inactive' }}
                                     </button>
                                 </form>
+                                @endCanDo
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                 {{ $location->sort_order }}
@@ -70,22 +72,24 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('admin.locations.show', $location) }}" 
-                                       class="text-blue-600 hover:text-blue-900 transition-colors">
+                                    <a href="{{ route('admin.locations.show', $location) }}"
+                                        class="text-blue-600 hover:text-blue-900 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
                                     </a>
                                     @canDo('locations.edit')
-<a href="{{ route('admin.locations.edit', $location) }}" 
-                                       class="text-indigo-600 hover:text-indigo-900 transition-colors">
+                                    <a href="{{ route('admin.locations.edit', $location) }}"
+                                        class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </a>
+                                    @endCanDo
+                                    @canDo('locations.delete')
                                     <form action="{{ route('admin.locations.destroy', $location) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Are you sure you want to delete this location?')">
+                                        onsubmit="return confirm('Are you sure you want to delete this location?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900 transition-colors">
@@ -94,6 +98,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endCanDo
                                 </div>
                             </td>
                         </tr>
@@ -106,8 +111,8 @@
                                 </svg>
                                 <p class="text-lg font-medium">No locations found</p>
                                 <p class="mt-1">Get started by creating your first location.</p>
-                                <a href="{{ route('admin.locations.create') }}" 
-                                   class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
+                                <a href="{{ route('admin.locations.create') }}"
+                                    class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
@@ -136,34 +141,39 @@
                             <span>{{ $location->created_at->format('M d, Y') }}</span>
                         </div>
                     </div>
+                    @canDo('locations.edit')
                     <form action="{{ route('admin.locations.toggle-status', $location) }}" method="POST" class="inline">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" 
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $location->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
+                        <button type="submit"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors {{ $location->status ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
                             {{ $location->status ? 'Active' : 'Inactive' }}
                         </button>
                     </form>
+                    @endCanDo
                 </div>
-                
+
                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                    <a href="{{ route('admin.locations.show', $location) }}" 
-                       class="inline-flex items-center px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                    <a href="{{ route('admin.locations.show', $location) }}"
+                        class="inline-flex items-center px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 transition-colors">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
                         View
                     </a>
-                    <a href="{{ route('admin.locations.edit', $location) }}" 
-                       class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
+                    @canDo('locations.edit')
+                    <a href="{{ route('admin.locations.edit', $location) }}"
+                        class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                         Edit
                     </a>
+                    @endCanDo
+                    @canDo('locations.delete')
                     <form action="{{ route('admin.locations.destroy', $location) }}" method="POST" class="inline"
-                          onsubmit="return confirm('Are you sure you want to delete this location?')">
+                        onsubmit="return confirm('Are you sure you want to delete this location?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 hover:text-red-800 transition-colors">
@@ -173,7 +183,7 @@
                             Delete
                         </button>
                     </form>
-@endCanDo
+                    @endCanDo
                 </div>
             </div>
         @empty
@@ -184,15 +194,13 @@
                 </svg>
                 <p class="text-lg font-medium text-gray-900">No locations found</p>
                 <p class="mt-1 text-gray-600">Get started by creating your first location.</p>
-                <a href="{{ route('admin.locations.create') }}" 
-                   class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
+                <a href="{{ route('admin.locations.create') }}"
+                    class="mt-4 inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     Add First Location
                 </a>
-@endCanDo
-@endCanDo
             </div>
         @endforelse
     </div>

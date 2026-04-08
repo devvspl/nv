@@ -35,6 +35,7 @@
             </svg>
             Add New FAQ
         </a>
+        @endCanDo
     </div>
 
     <!-- FAQs Table -->
@@ -143,6 +144,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endCanDo
                                 </div>
                             </td>
                         </tr>
@@ -221,6 +223,7 @@
                             Edit
                         </a>
                         @endCanDo
+                        @canDo('faqs.delete')
                         <form action="{{ route('admin.faqs.toggle-status', $faq) }}" method="POST"
                             class="inline-block">
                             @csrf
@@ -257,7 +260,6 @@
                                 Delete
                             </button>
                         </form>
-                        @endCanDo
                         @endCanDo
                     </div>
                 </div>

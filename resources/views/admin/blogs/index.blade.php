@@ -14,6 +14,7 @@
                 </svg>
                 Add New Post
             </a>
+            @endCanDo
         </div>
 
         @if (session('success'))
@@ -111,6 +112,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endCanDo
                                 </div>
                             </td>
                         </tr>
@@ -166,6 +168,7 @@
                                 </svg>
                                 View
                             </a>
+                            @canDo('blogs.edit')
                             <a href="{{ route('admin.blogs.edit', $blog) }}"
                                 class="flex-1 flex items-center justify-center px-3 py-2 bg-zendo-gold text-white text-sm rounded-lg hover:bg-opacity-90 transition-colors">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,6 +178,8 @@
                                 </svg>
                                 Edit
                             </a>
+                            @endCanDo
+                            @canDo('blogs.delete')
                             <form action="{{ route('admin.blogs.destroy', $blog) }}" method="POST" class="flex-1">
                                 @csrf
                                 @method('DELETE')
@@ -196,8 +201,6 @@
                 <div class="bg-white rounded-lg shadow-lg p-6 text-center text-gray-500">
                     No blog posts found. <a href="{{ route('admin.blogs.create') }}"
                         class="text-zendo-gold hover:underline">Create one now</a>
-                    @endCanDo
-                    @endCanDo
                 </div>
             @endforelse
         </div>

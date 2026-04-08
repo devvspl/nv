@@ -11,7 +11,7 @@
                 <p class="text-gray-600 mt-1">Manage client logos displayed on the About page</p>
             </div>
             @canDo('our-clients.create')
-<a href="{{ route('admin.our-clients.create') }}"
+            <a href="{{ route('admin.our-clients.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
@@ -19,6 +19,7 @@
                 </svg>
                 Add Client
             </a>
+            @endCanDo
         </div>
 
         <!-- Success Message -->
@@ -81,7 +82,7 @@
                                             </svg>
                                         </a>
                                         @canDo('our-clients.edit')
-<a href="{{ route('admin.our-clients.edit', $client) }}"
+                                        <a href="{{ route('admin.our-clients.edit', $client) }}"
                                             class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,7 +92,7 @@
                                         </a>
                                         @endCanDo
                                         @canDo('our-clients.delete')
-<form action="{{ route('admin.our-clients.destroy', $client) }}"
+                                        <form action="{{ route('admin.our-clients.destroy', $client) }}"
                                             method="POST" class="inline"
                                             onsubmit="return confirm('Are you sure you want to delete this client?')">
                                             @csrf
@@ -106,6 +107,7 @@
                                                 </svg>
                                             </button>
                                         </form>
+                                        @endCanDo
                                     </div>
                                 </td>
                             </tr>
@@ -166,6 +168,7 @@
                             </svg>
                             View
                         </a>
+                        @canDo('our-clients.edit')
                         <a href="{{ route('admin.our-clients.edit', $client) }}"
                             class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,6 +178,8 @@
                             </svg>
                             Edit
                         </a>
+                        @endCanDo
+                        @canDo('our-clients.delete')
                         <form action="{{ route('admin.our-clients.destroy', $client) }}" method="POST"
                             class="inline"
                             onsubmit="return confirm('Are you sure you want to delete this client?')">
@@ -190,7 +195,7 @@
                                 Delete
                             </button>
                         </form>
-@endCanDo
+                        @endCanDo
                     </div>
                 </div>
             @empty
@@ -211,8 +216,6 @@
                         </svg>
                         Add First Client
                     </a>
-@endCanDo
-@endCanDo
                 </div>
             @endforelse
         </div>

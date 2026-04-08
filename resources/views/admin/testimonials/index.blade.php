@@ -28,13 +28,14 @@ Manage customer testimonials that appear on the website.
         <p class="text-gray-600 mt-1">Total {{ $testimonials->total() }} testimonials</p>
     </div>
     @canDo('testimonials.create')
-<a href="{{ route('admin.testimonials.create') }}" 
+    <a href="{{ route('admin.testimonials.create') }}" 
        class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-medium rounded-lg hover:bg-zendo-navy transition-colors">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
         Add New Testimonial
     </a>
+    @endCanDo
 </div>
 
 <!-- Testimonials Table -->
@@ -104,7 +105,7 @@ Manage customer testimonials that appear on the website.
                                     </svg>
                                 </a>
                                 @canDo('testimonials.edit')
-<a href="{{ route('admin.testimonials.edit', $testimonial) }}" 
+                                <a href="{{ route('admin.testimonials.edit', $testimonial) }}" 
                                    class="text-zendo-gold hover:text-zendo-navy p-1 rounded">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -137,6 +138,7 @@ Manage customer testimonials that appear on the website.
                                         </svg>
                                     </button>
                                 </form>
+                                @endCanDo
                             </div>
                         </td>
                     </tr>
@@ -224,6 +226,7 @@ Manage customer testimonials that appear on the website.
                         Edit
                     </a>
                     @endCanDo
+                    @canDo('testimonials.delete')
                     <form action="{{ route('admin.testimonials.toggle-status', $testimonial) }}" method="POST" class="inline-block">
                         @csrf
                         @method('PATCH')
@@ -252,8 +255,7 @@ Manage customer testimonials that appear on the website.
                             Delete
                         </button>
                     </form>
-@endCanDo
-@endCanDo
+                    @endCanDo
                 </div>
             </div>
         @empty
