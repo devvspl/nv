@@ -181,7 +181,8 @@
                             </span>
                         </div>
 
-                        <form action="{{ route('admin.property-inquiries.update-status', $propertyInquiry) }}" method="POST">
+                        @canDo('property-inquiries.delete')
+<form action="{{ route('admin.property-inquiries.update-status', $propertyInquiry) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <div class="mb-4">
@@ -244,6 +245,7 @@
                                 Delete Inquiry
                             </button>
                         </form>
+@endCanDo
                     </div>
                 </div>
             </div>

@@ -72,7 +72,9 @@
                         </form>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="{{ route('admin.property-page-sections.edit', $section) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                        @canDo('property-page-sections.edit')
+<a href="{{ route('admin.property-page-sections.edit', $section) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+@endCanDo
                     </td>
                 </tr>
             @empty

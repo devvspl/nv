@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // Seed all the content
         $this->call([
+            PermissionSeeder::class,
             TestimonialSeeder::class,
             FaqSeeder::class,
             FeatureSeeder::class,

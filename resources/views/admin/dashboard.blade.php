@@ -9,6 +9,40 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
 
 @section('content')
 
+@php $isAdmin = in_array(Auth::user()->role, ['super_admin', 'admin']); @endphp
+
+@if(!$isAdmin)
+{{-- ── STAFF: Restricted Dashboard ─────────────────────────────────────── --}}
+<div class="space-y-6">
+    {{-- Welcome --}}
+    <div class="bg-gradient-to-r from-zendo-navy to-gray-800 rounded-xl shadow-lg p-6 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-2xl font-bold font-heading">
+                {{ substr(Auth::user()->name, 0, 1) }}
+            </div>
+            <div>
+                <h1 class="text-xl font-bold font-heading">Good {{ date('H') < 12 ? 'Morning' : (date('H') < 17 ? 'Afternoon' : 'Evening') }}, {{ Auth::user()->name }}! 👋</h1>
+                <p class="text-gray-300 text-sm mt-0.5">{{ date('l, F j, Y') }}</p>
+                <span class="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                    Staff
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    {{-- Info notice --}}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+        <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-sm text-amber-700">Your account has limited access. Contact an administrator to request additional permissions.</p>
+    </div>
+</div>
+
+@else
+{{-- ── ADMIN / SUPER ADMIN: Full Dashboard ─────────────────────────────── --}}
+
 <!-- Welcome Banner -->
 <div class="bg-gradient-to-r from-zendo-navy to-gray-800 rounded-xl shadow-lg p-6 mb-8 text-white">
     <div class="flex items-center justify-between">
@@ -368,9 +402,13 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
     </div>
 </div>
 
+@endif
+{{-- ── End role check ───────────────────────────────────────────────────── --}}
+
 @endsection
 
 @section('scripts')
+@if($isAdmin)
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -692,4 +730,5 @@ Welcome back, {{ Auth::user()->name }}! Here's what's happening with your real e
         loadAnalytics('all');
     });
 </script>
+@endif
 @endsection

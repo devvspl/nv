@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Users Management')
 
@@ -10,6 +10,7 @@
                 <h2 class="text-2xl font-heading text-zendo-navy font-semibold">Users</h2>
                 <p class="text-gray-600 mt-1">Manage all users in the system</p>
             </div>
+            @canDo('users.create')
             <a href="{{ route('admin.users.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,6 +45,8 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Role</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Joined</th>
@@ -73,6 +76,24 @@
                                     <div class="text-sm text-gray-600">{{ $user->email }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $roleLabels = [
+                                            'super_admin' => 'Super Admin',
+                                            'admin' => 'Admin',
+                                            'staff' => 'Staff',
+                                        ];
+                                        $roleColors = [
+                                            'super_admin' => 'bg-purple-100 text-purple-800',
+                                            'admin' => 'bg-blue-100 text-blue-800',
+                                            'staff' => 'bg-gray-100 text-gray-800',
+                                        ];
+                                    @endphp
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800' }}">
+                                        {{ $roleLabels[$user->role] ?? $user->role }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     @if ($user->email_verified_at)
                                         <span
                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -100,6 +121,7 @@
                                                 </path>
                                             </svg>
                                         </a>
+                                        @canDo('users.edit')
                                         <a href="{{ route('admin.users.edit', $user) }}"
                                             class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +130,9 @@
                                                 </path>
                                             </svg>
                                         </a>
+                                        @endCanDo
                                         @if ($user->id !== auth()->id())
+                                            @canDo('users.delete')
                                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
                                                 class="inline"
                                                 onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
@@ -118,7 +142,8 @@
                                                     class="text-red-600 hover:text-red-900 transition-colors">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
                                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                         </path>
                                                     </svg>
@@ -130,7 +155,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                     <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -170,6 +195,24 @@
                                     <span class="text-xs text-zendo-gold font-medium">(You)</span>
                                 @endif
                                 <p class="text-sm text-gray-600 mb-2">{{ $user->email }}</p>
+                                <div class="flex items-center space-x-2 mb-2">
+                                    @php
+                                        $roleLabels = [
+                                            'super_admin' => 'Super Admin',
+                                            'admin' => 'Admin',
+                                            'staff' => 'Staff',
+                                        ];
+                                        $roleColors = [
+                                            'super_admin' => 'bg-purple-100 text-purple-800',
+                                            'admin' => 'bg-blue-100 text-blue-800',
+                                            'staff' => 'bg-gray-100 text-gray-800',
+                                        ];
+                                    @endphp
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800' }}">
+                                        {{ $roleLabels[$user->role] ?? $user->role }}
+                                    </span>
+                                </div>
                                 <div class="flex items-center space-x-4 text-xs text-gray-500">
                                     <span>{{ $user->created_at->format('M d, Y') }}</span>
                                 </div>
@@ -224,6 +267,7 @@
                                     Delete
                                 </button>
                             </form>
+                            @endCanDo
                         @endif
                     </div>
                 </div>
@@ -245,6 +289,7 @@
                         </svg>
                         Add First User
                     </a>
+                    @endCanDo
                 </div>
             @endforelse
         </div>

@@ -344,6 +344,7 @@ Manage consultation requests from "Get Free Consultation" forms.
                         View
                     </a>
                     
+                    @canDo('consultations.delete')
                     <form action="{{ route('admin.consultations.destroy', $consultation) }}" method="POST" class="inline-block" 
                           onsubmit="return confirm('Are you sure you want to delete this consultation?')">
                         @csrf
@@ -355,6 +356,7 @@ Manage consultation requests from "Get Free Consultation" forms.
                             Delete
                         </button>
                     </form>
+                    @endCanDo
                 </div>
             </div>
         @empty

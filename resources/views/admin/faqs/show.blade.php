@@ -81,7 +81,8 @@ View the complete FAQ information.
 
             <!-- Actions -->
             <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-                <form action="{{ route('admin.faqs.toggle-status', $faq) }}" method="POST" class="inline-block">
+                @canDo('faqs.delete')
+<form action="{{ route('admin.faqs.toggle-status', $faq) }}" method="POST" class="inline-block">
                     @csrf
                     @method('PATCH')
                     <button type="submit" 
@@ -89,10 +90,12 @@ View the complete FAQ information.
                         {{ $faq->is_active ? 'Deactivate' : 'Activate' }}
                     </button>
                 </form>
-                <a href="{{ route('admin.faqs.edit', $faq) }}" 
+                @canDo('faqs.edit')
+<a href="{{ route('admin.faqs.edit', $faq) }}" 
                    class="px-4 py-2 bg-zendo-gold text-white rounded-lg text-sm font-medium hover:bg-zendo-navy transition-colors">
                     Edit FAQ
                 </a>
+@endCanDo
                 <form action="{{ route('admin.faqs.destroy', $faq) }}" method="POST" class="inline-block" 
                       onsubmit="return confirm('Are you sure you want to delete this FAQ?')">
                     @csrf
@@ -102,6 +105,7 @@ View the complete FAQ information.
                         Delete FAQ
                     </button>
                 </form>
+@endCanDo
             </div>
         </div>
     </div>

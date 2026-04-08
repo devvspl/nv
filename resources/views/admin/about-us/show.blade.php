@@ -12,7 +12,8 @@
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-heading text-zendo-navy font-semibold">About Us Entry Details</h2>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('admin.about-us.edit', $aboutUs) }}" 
+                    @canDo('about-us.edit')
+<a href="{{ route('admin.about-us.edit', $aboutUs) }}" 
                        class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -178,7 +179,8 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200">
                 <div class="flex items-center space-x-3">
-                    <form action="{{ route('admin.about-us.toggle-status', $aboutUs) }}" method="POST" class="inline">
+                    @canDo('about-us.delete')
+<form action="{{ route('admin.about-us.toggle-status', $aboutUs) }}" method="POST" class="inline">
                         @csrf
                         @method('PATCH')
                         <button type="submit" 
@@ -196,6 +198,7 @@
                         </svg>
                         Edit Entry
                     </a>
+@endCanDo
                     <form action="{{ route('admin.about-us.destroy', $aboutUs) }}" method="POST" class="inline"
                           onsubmit="return confirm('Are you sure you want to delete this about us entry? This action cannot be undone.')">
                         @csrf
@@ -208,6 +211,7 @@
                             Delete Entry
                         </button>
                     </form>
+@endCanDo
                 </div>
             </div>
         </div>

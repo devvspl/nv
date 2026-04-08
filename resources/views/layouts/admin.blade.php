@@ -250,8 +250,10 @@
             </div>
             <!-- Navigation -->
             <nav class="mt-2 custom-scrollbar overflow-y-auto h-full pb-20">
+                @php $navPerms = auth()->check() ? auth()->user()->getPermissions() : []; @endphp
                 <div class="px-3 space-y-1">
                     <!-- Dashboard -->
+                    @if(in_array('dashboard.view', $navPerms))
                     <a href="{{ route('dashboard') }}"
                         class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'active' : 'text-gray-300 hover:text-white' }}"
                         :class="{ 'justify-center': sidebarCollapsed }" x-data="{ tooltip: false }"
@@ -270,8 +272,10 @@
                             Dashboard
                         </div>
                     </a>
+                    @endif
 
                     <!-- Users -->
+                    @if(in_array('users.view', $navPerms))
                     <a href="{{ route('admin.users.index') }}"
                         class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.users.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                         :class="{ 'justify-center': sidebarCollapsed }" x-data="{ tooltip: false }"
@@ -289,8 +293,22 @@
                             Users
                         </div>
                     </a>
+                    @endif
+
+                    <!-- Role Permissions -->
+                    @if(in_array('users.edit', $navPerms))
+                    <a href="{{ route('admin.role-permissions.index') }}"
+                        class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.role-permissions.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
+                        :class="{ 'justify-center': sidebarCollapsed }">
+                        <svg class="w-5 h-5 flex-shrink-0" :class="{ 'mr-3': !sidebarCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span x-show="!sidebarCollapsed" x-transition>Role Permissions</span>
+                    </a>
+                    @endif
 
                     <!-- Lead Tracking Dropdown -->
+                    @if(in_array('inquiries.view', $navPerms) || in_array('consultations.view', $navPerms) || in_array('property-inquiries.view', $navPerms))
                     <div x-data="{ open: {{ request()->routeIs('admin.inquiries.*', 'admin.consultations.*', 'admin.property-inquiries.*') ? 'true' : 'false' }}, showFloating: false }"
                         @mouseenter="showFloating = sidebarCollapsed" @mouseleave="showFloating = false"
                         class="relative">
@@ -335,6 +353,7 @@
                                 class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
                                 Lead Tracking
                             </div>
+                            @if(in_array('inquiries.view', $navPerms))
                             <a href="{{ route('admin.inquiries.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.inquiries.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -350,6 +369,8 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
+                            @if(in_array('consultations.view', $navPerms))
                             <a href="{{ route('admin.consultations.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.consultations.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,6 +386,8 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
+                            @if(in_array('property-inquiries.view', $navPerms))
                             <a href="{{ route('admin.property-inquiries.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.property-inquiries.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -380,6 +403,7 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -389,6 +413,7 @@
                             x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
 
                             <!-- Inquiries -->
+                            @if(in_array('inquiries.view', $navPerms))
                             <a href="{{ route('admin.inquiries.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.inquiries.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -405,8 +430,10 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
 
                             <!-- Consultations -->
+                            @if(in_array('consultations.view', $navPerms))
                             <a href="{{ route('admin.consultations.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.consultations.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -423,8 +450,10 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
 
                             <!-- Property Inquiries -->
+                            @if(in_array('property-inquiries.view', $navPerms))
                             <a href="{{ route('admin.property-inquiries.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.property-inquiries.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -441,10 +470,13 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
                     <!-- Property Management Dropdown -->
+                    @if(in_array('properties.view', $navPerms) || in_array('service-types.view', $navPerms) || in_array('property-types.view', $navPerms) || in_array('locations.view', $navPerms) || in_array('builders.view', $navPerms) || in_array('amenities.view', $navPerms))
                     <div x-data="{ open: {{ request()->routeIs('admin.service-types.*', 'admin.property-types.*', 'admin.locations.*', 'admin.project-statuses.*', 'admin.bhks.*', 'admin.builders.*', 'admin.amenities.*', 'admin.properties.*') ? 'true' : 'false' }}, showFloating: false }"
                         @mouseenter="showFloating = sidebarCollapsed" @mouseleave="showFloating = false"
                         class="relative">
@@ -476,6 +508,7 @@
                                 Property Management
                             </div>
 
+                            @if(in_array('service-types.view', $navPerms))
                             <a href="{{ route('admin.service-types.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.service-types.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -485,7 +518,9 @@
                                 </svg>
                                 Service Types
                             </a>
+                            @endif
 
+                            @if(in_array('property-types.view', $navPerms))
                             <a href="{{ route('admin.property-types.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.property-types.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -495,7 +530,9 @@
                                 </svg>
                                 Property Types
                             </a>
+                            @endif
 
+                            @if(in_array('locations.view', $navPerms))
                             <a href="{{ route('admin.locations.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.locations.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -508,7 +545,9 @@
                                 </svg>
                                 Locations
                             </a>
+                            @endif
 
+                            @if(in_array('project-statuses.view', $navPerms))
                             <a href="{{ route('admin.project-statuses.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.project-statuses.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -518,7 +557,9 @@
                                 </svg>
                                 Project Statuses
                             </a>
+                            @endif
 
+                            @if(in_array('bhks.view', $navPerms))
                             <a href="{{ route('admin.bhks.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.bhks.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -528,7 +569,9 @@
                                 </svg>
                                 BHK
                             </a>
+                            @endif
 
+                            @if(in_array('builders.view', $navPerms))
                             <a href="{{ route('admin.builders.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.builders.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -538,7 +581,9 @@
                                 </svg>
                                 Builders
                             </a>
+                            @endif
 
+                            @if(in_array('amenities.view', $navPerms))
                             <a href="{{ route('admin.amenities.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.amenities.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -548,9 +593,11 @@
                                 </svg>
                                 Amenities
                             </a>
+                            @endif
 
                             <div class="border-t border-gray-700 my-2"></div>
 
+                            @if(in_array('properties.view', $navPerms))
                             <a href="{{ route('admin.properties.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.properties.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -560,6 +607,7 @@
                                 </svg>
                                 Properties
                             </a>
+                            @endif
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -569,6 +617,7 @@
                             x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
 
                             <!-- Service Types -->
+                            @if(in_array('service-types.view', $navPerms))
                             <a href="{{ route('admin.service-types.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.service-types.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -579,8 +628,10 @@
                                 </svg>
                                 Service Types
                             </a>
+                            @endif
 
                             <!-- Property Types -->
+                            @if(in_array('property-types.view', $navPerms))
                             <a href="{{ route('admin.property-types.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.property-types.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -591,8 +642,10 @@
                                 </svg>
                                 Property Types
                             </a>
+                            @endif
 
                             <!-- Locations -->
+                            @if(in_array('locations.view', $navPerms))
                             <a href="{{ route('admin.locations.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.locations.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -606,8 +659,10 @@
                                 </svg>
                                 Locations
                             </a>
+                            @endif
 
                             <!-- Project Statuses -->
+                            @if(in_array('project-statuses.view', $navPerms))
                             <a href="{{ route('admin.project-statuses.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.project-statuses.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -618,8 +673,10 @@
                                 </svg>
                                 Project Statuses
                             </a>
+                            @endif
 
                             <!-- BHK -->
+                            @if(in_array('bhks.view', $navPerms))
                             <a href="{{ route('admin.bhks.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.bhks.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -630,8 +687,10 @@
                                 </svg>
                                 BHK
                             </a>
+                            @endif
 
                             <!-- Builders -->
+                            @if(in_array('builders.view', $navPerms))
                             <a href="{{ route('admin.builders.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.builders.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -642,8 +701,10 @@
                                 </svg>
                                 Builders
                             </a>
+                            @endif
 
                             <!-- Amenities -->
+                            @if(in_array('amenities.view', $navPerms))
                             <a href="{{ route('admin.amenities.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.amenities.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -654,10 +715,12 @@
                                 </svg>
                                 Amenities
                             </a>
+                            @endif
 
                             <div class="border-t border-gray-700 my-2 mx-4"></div>
 
                             <!-- Properties -->
+                            @if(in_array('properties.view', $navPerms))
                             <a href="{{ route('admin.properties.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.properties.*') && !request()->routeIs('admin.property-page-sections.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -668,24 +731,20 @@
                                 </svg>
                                 Properties
                             </a>
+                            @endif
                             
                             <!-- Work Processes -->
+                            @if(in_array('work-processes.view', $navPerms))
                             <a href="{{ route('admin.work-processes.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.work-processes.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
-                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
-                                    </path>
+                                <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                                 </svg>
                                 How We Work
                             </a>
-                            </path>
-                            </svg>
-
-                            </a>
-                            
+                            @endif
                             <!-- Property Page Sections -->
+                            @if(in_array('property-page-sections.view', $navPerms))
                             <a href="{{ route('admin.property-page-sections.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.property-page-sections.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -696,11 +755,14 @@
                                 </svg>
                                 Property Page Sections
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
 
                     <!-- Home Page Dropdown -->
+                    @if(in_array('hero-sections.view', $navPerms) || in_array('about-us.view', $navPerms) || in_array('features.view', $navPerms) || in_array('categories.view', $navPerms) || in_array('cities.view', $navPerms) || in_array('testimonials.view', $navPerms) || in_array('faqs.view', $navPerms) || in_array('commercial-sections.view', $navPerms))
                     <div x-data="{ open: {{ request()->routeIs('admin.hero-sections.*', 'admin.about-us.*', 'admin.features.*', 'admin.categories.*', 'admin.cities.*', 'admin.testimonials.*', 'admin.faqs.*', 'admin.commercial-sections.*') ? 'true' : 'false' }}, showFloating: false }"
                         @mouseenter="showFloating = sidebarCollapsed" @mouseleave="showFloating = false"
                         class="relative">
@@ -733,6 +795,7 @@
                                 Home Page
                             </div>
 
+                            @if(in_array('hero-sections.view', $navPerms))
                             <a href="{{ route('admin.hero-sections.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.hero-sections.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -742,7 +805,9 @@
                                 </svg>
                                 Hero Sections
                             </a>
+                            @endif
 
+                            @if(in_array('about-us.view', $navPerms))
                             <a href="{{ route('admin.about-us.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.about-us.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -752,7 +817,9 @@
                                 </svg>
                                 About Us
                             </a>
+                            @endif
 
+                            @if(in_array('categories.view', $navPerms))
                             <a href="{{ route('admin.categories.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.categories.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -762,7 +829,9 @@
                                 </svg>
                                 Categories
                             </a>
+                            @endif
 
+                            @if(in_array('cities.view', $navPerms))
                             <a href="{{ route('admin.cities.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.cities.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -772,7 +841,9 @@
                                 </svg>
                                 Cities
                             </a>
+                            @endif
 
+                            @if(in_array('commercial-sections.view', $navPerms))
                             <a href="{{ route('admin.commercial-sections.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.commercial-sections.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -782,7 +853,9 @@
                                 </svg>
                                 Commercial Sections
                             </a>
+                            @endif
 
+                            @if(in_array('features.view', $navPerms))
                             <a href="{{ route('admin.features.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.features.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -792,7 +865,9 @@
                                 </svg>
                                 Services
                             </a>
+                            @endif
 
+                            @if(in_array('testimonials.view', $navPerms))
                             <a href="{{ route('admin.testimonials.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.testimonials.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -802,7 +877,9 @@
                                 </svg>
                                 Testimonials
                             </a>
+                            @endif
 
+                            @if(in_array('faqs.view', $navPerms))
                             <a href="{{ route('admin.faqs.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.faqs.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -812,6 +889,7 @@
                                 </svg>
                                 FAQs
                             </a>
+                            @endif
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -821,6 +899,7 @@
                             x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
 
                             <!-- Hero Sections -->
+                            @if(in_array('hero-sections.view', $navPerms))
                             <a href="{{ route('admin.hero-sections.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.hero-sections.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -831,8 +910,10 @@
                                 </svg>
                                 Hero Sections
                             </a>
+                            @endif
 
                             <!-- About Us -->
+                            @if(in_array('about-us.view', $navPerms))
                             <a href="{{ route('admin.about-us.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.about-us.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -843,9 +924,11 @@
                                 </svg>
                                 About Us
                             </a>
+                            @endif
 
 
                             <!-- Categories -->
+                            @if(in_array('categories.view', $navPerms))
                             <a href="{{ route('admin.categories.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.categories.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -856,8 +939,10 @@
                                 </svg>
                                 Categories
                             </a>
+                            @endif
 
                             <!-- Cities -->
+                            @if(in_array('cities.view', $navPerms))
                             <a href="{{ route('admin.cities.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.cities.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -868,8 +953,10 @@
                                 </svg>
                                 Cities
                             </a>
+                            @endif
 
                             <!-- Commercial Sections -->
+                            @if(in_array('commercial-sections.view', $navPerms))
                             <a href="{{ route('admin.commercial-sections.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.commercial-sections.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -880,9 +967,11 @@
                                 </svg>
                                 Commercial Sections
                             </a>
+                            @endif
 
 
                             <!-- Services -->
+                            @if(in_array('features.view', $navPerms))
                             <a href="{{ route('admin.features.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.features.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -893,8 +982,10 @@
                                 </svg>
                                 Services
                             </a>
+                            @endif
 
                             <!-- Testimonials -->
+                            @if(in_array('testimonials.view', $navPerms))
                             <a href="{{ route('admin.testimonials.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.testimonials.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -905,8 +996,10 @@
                                 </svg>
                                 Testimonials
                             </a>
+                            @endif
 
                             <!-- FAQs -->
+                            @if(in_array('faqs.view', $navPerms))
                             <a href="{{ route('admin.faqs.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.faqs.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -917,10 +1010,13 @@
                                 </svg>
                                 FAQs
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
                     <!-- About Page Dropdown -->
+                    @if(in_array('about-page.view', $navPerms) || in_array('our-clients.view', $navPerms) || in_array('team-members.view', $navPerms))
                     <div x-data="{ open: {{ request()->routeIs('admin.about-page.*', 'admin.our-clients.*', 'admin.team-members.*') ? 'true' : 'false' }}, showFloating: false }"
                         @mouseenter="showFloating = sidebarCollapsed" @mouseleave="showFloating = false"
                         class="relative">
@@ -950,6 +1046,7 @@
                                 class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
                                 About Page
                             </div>
+                            @if(in_array('about-page.view', $navPerms))
                             <a href="{{ route('admin.about-page.edit') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.about-page.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -959,7 +1056,9 @@
                                 </svg>
                                 About Page Content
                             </a>
+                            @endif
 
+                            @if(in_array('our-clients.view', $navPerms))
                             <a href="{{ route('admin.our-clients.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.our-clients.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -969,7 +1068,9 @@
                                 </svg>
                                 Our Clients
                             </a>
+                            @endif
 
+                            @if(in_array('team-members.view', $navPerms))
                             <a href="{{ route('admin.team-members.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.team-members.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -979,6 +1080,7 @@
                                 </svg>
                                 Team Members
                             </a>
+                            @endif
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -988,6 +1090,7 @@
                             x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
 
                             <!-- About Page Content -->
+                            @if(in_array('about-page.view', $navPerms))
                             <a href="{{ route('admin.about-page.edit') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.about-page.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -998,8 +1101,10 @@
                                 </svg>
                                 About Page Content
                             </a>
+                            @endif
 
                             <!-- Our Clients -->
+                            @if(in_array('our-clients.view', $navPerms))
                             <a href="{{ route('admin.our-clients.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.our-clients.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -1010,8 +1115,10 @@
                                 </svg>
                                 Our Clients
                             </a>
+                            @endif
 
                             <!-- Team Members -->
+                            @if(in_array('team-members.view', $navPerms))
                             <a href="{{ route('admin.team-members.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.team-members.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -1022,10 +1129,13 @@
                                 </svg>
                                 Team Members
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
                     <!-- Contact Page Dropdown -->
+                    @if(in_array('contact-page.view', $navPerms) || in_array('contact-info.view', $navPerms))
                     <div x-data="{ open: {{ request()->routeIs('admin.contact-page.*', 'admin.contact-info.*') ? 'true' : 'false' }}, showFloating: false }"
                         @mouseenter="showFloating = sidebarCollapsed" @mouseleave="showFloating = false"
                         class="relative">
@@ -1056,6 +1166,7 @@
                                 class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
                                 Contact Page
                             </div>
+                            @if(in_array('contact-page.view', $navPerms))
                             <a href="{{ route('admin.contact-page.edit') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.contact-page.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1065,7 +1176,9 @@
                                 </svg>
                                 Contact Page Content
                             </a>
+                            @endif
 
+                            @if(in_array('contact-info.view', $navPerms))
                             <a href="{{ route('admin.contact-info.index') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.contact-info.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1075,6 +1188,7 @@
                                 </svg>
                                 Contact Information
                             </a>
+                            @endif
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -1083,6 +1197,7 @@
                             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
                             x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
                             <!-- Contact Page Content -->
+                            @if(in_array('contact-page.view', $navPerms))
                             <a href="{{ route('admin.contact-page.edit') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.contact-page.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -1093,8 +1208,10 @@
                                 </svg>
                                 Contact Page Content
                             </a>
+                            @endif
 
                             <!-- Contact Information -->
+                            @if(in_array('contact-info.view', $navPerms))
                             <a href="{{ route('admin.contact-info.index') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.contact-info.*') ? 'active' : 'text-gray-400 hover:text-white' }}">
                                 <svg class="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
@@ -1105,10 +1222,13 @@
                                 </svg>
                                 Contact Information
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
                     <!-- Blog/News -->
+                    @if(in_array('blogs.view', $navPerms))
                     <a href="{{ route('admin.blogs.index') }}"
                         class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.blogs.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                         :class="{ 'justify-center': sidebarCollapsed }">
@@ -1120,8 +1240,10 @@
                         </svg>
                         <span x-show="!sidebarCollapsed" x-transition>Blog/News</span>
                     </a>
+                    @endif
 
                     <!-- Legal Dropdown -->
+                    @if(in_array('privacy-policy.view', $navPerms) || in_array('terms-and-conditions.view', $navPerms))
                     <div x-data="{ open: {{ request()->routeIs('admin.privacy-policy.*', 'admin.terms-and-conditions.*') ? 'true' : 'false' }}, showFloating: false }"
                         @mouseenter="showFloating = sidebarCollapsed" @mouseleave="showFloating = false"
                         class="relative">
@@ -1154,6 +1276,7 @@
                                 class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700 mb-2">
                                 Legal
                             </div>
+                            @if(in_array('privacy-policy.view', $navPerms))
                             <a href="{{ route('admin.privacy-policy.edit') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.privacy-policy.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1163,6 +1286,8 @@
                                 </svg>
                                 Privacy Policy
                             </a>
+                            @endif
+                            @if(in_array('terms-and-conditions.view', $navPerms))
                             <a href="{{ route('admin.terms-and-conditions.edit') }}"
                                 class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors {{ request()->routeIs('admin.terms-and-conditions.*') ? 'bg-gray-700 text-white' : '' }}">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1172,6 +1297,7 @@
                                 </svg>
                                 Terms &amp; Conditions
                             </a>
+                            @endif
                         </div>
 
                         <!-- Dropdown Menu (Expanded State) -->
@@ -1181,6 +1307,7 @@
                             x-transition:leave-end="opacity-0" class="dropdown-submenu mt-1">
 
                             <!-- Privacy Policy -->
+                            @if(in_array('privacy-policy.view', $navPerms))
                             <a href="{{ route('admin.privacy-policy.edit') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.privacy-policy.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                                 :class="{ 'justify-center': sidebarCollapsed }">
@@ -1192,8 +1319,10 @@
                                 </svg>
                                 <span x-show="!sidebarCollapsed" x-transition>Privacy Policy</span>
                             </a>
+                            @endif
 
                             <!-- Terms & Conditions -->
+                            @if(in_array('terms-and-conditions.view', $navPerms))
                             <a href="{{ route('admin.terms-and-conditions.edit') }}"
                                 class="admin-sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.terms-and-conditions.*') ? 'active' : 'text-gray-300 hover:text-white' }}"
                                 :class="{ 'justify-center': sidebarCollapsed }">
@@ -1205,8 +1334,10 @@
                                 </svg>
                                 <span x-show="!sidebarCollapsed" x-transition>Terms &amp; Conditions</span>
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
                 </div>
             </nav>
         </div>

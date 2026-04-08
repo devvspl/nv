@@ -17,7 +17,8 @@
             Back to Amenities
         </a>
         <div class="flex space-x-3">
-            <a href="{{ route('admin.amenities.edit', $amenity) }}" 
+            @canDo('amenities.edit')
+<a href="{{ route('admin.amenities.edit', $amenity) }}" 
                class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white rounded-lg hover:bg-zendo-navy transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -105,6 +106,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </a>
+@endCanDo
                     </div>
                 </div>
             @endforeach
@@ -129,7 +131,8 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 class="text-xl font-heading font-semibold text-zendo-navy mb-4">Quick Actions</h2>
         <div class="flex flex-wrap gap-3">
-            <form action="{{ route('admin.amenities.toggle-status', $amenity) }}" method="POST" class="inline">
+            @canDo('amenities.delete')
+<form action="{{ route('admin.amenities.toggle-status', $amenity) }}" method="POST" class="inline">
                 @csrf
                 @method('PATCH')
                 <button type="submit" 
@@ -148,6 +151,7 @@
                     Delete Amenity
                 </button>
             </form>
+@endCanDo
             @if($amenity->properties->count() > 0)
                 <p class="text-sm text-gray-600 flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

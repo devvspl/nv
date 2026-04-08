@@ -314,6 +314,7 @@
                         View
                     </a>
                     
+                    @canDo('property-inquiries.delete')
                     <form action="{{ route('admin.property-inquiries.destroy', $inquiry) }}" method="POST" class="inline-block" 
                           onsubmit="return confirm('Are you sure you want to delete this inquiry?')">
                         @csrf
@@ -325,6 +326,7 @@
                             Delete
                         </button>
                     </form>
+                @endCanDo
                 </div>
             </div>
         @empty

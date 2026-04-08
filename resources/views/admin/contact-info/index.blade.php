@@ -9,7 +9,8 @@
                 <h2 class="text-2xl font-heading text-zendo-navy font-semibold">Contact Information</h2>
                 <p class="text-gray-600 mt-1">Manage contact details displayed on the Contact page</p>
             </div>
-            <a href="{{ route('admin.contact-info.create') }}"
+            @canDo('contact-info.create')
+<a href="{{ route('admin.contact-info.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
@@ -76,7 +77,8 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        <a href="{{ route('admin.contact-info.edit', $info) }}"
+                                        @canDo('contact-info.edit')
+<a href="{{ route('admin.contact-info.edit', $info) }}"
                                             class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -120,6 +122,8 @@
                                         </svg>
                                         Add First Contact Info
                                     </a>
+@endCanDo
+@endCanDo
                                 </td>
                             </tr>
                         @endforelse

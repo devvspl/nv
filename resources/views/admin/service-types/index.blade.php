@@ -10,7 +10,8 @@
                 <h2 class="text-2xl font-heading text-zendo-navy font-semibold">Service Types</h2>
                 <p class="text-gray-600 mt-1">Manage service types (Buy, Lease, Rental) and their property mappings</p>
             </div>
-            <a href="{{ route('admin.service-types.create') }}"
+            @canDo('service-types.create')
+<a href="{{ route('admin.service-types.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-zendo-gold text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
@@ -78,7 +79,8 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <form action="{{ route('admin.service-types.toggle-status', $serviceType) }}"
+                                    @canDo('service-types.delete')
+<form action="{{ route('admin.service-types.toggle-status', $serviceType) }}"
                                         method="POST" class="inline">
                                         @csrf
                                         @method('PATCH')
@@ -106,7 +108,8 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        <a href="{{ route('admin.service-types.edit', $serviceType) }}"
+                                        @canDo('service-types.edit')
+<a href="{{ route('admin.service-types.edit', $serviceType) }}"
                                             class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -229,6 +232,7 @@
                                 Delete
                             </button>
                         </form>
+@endCanDo
                     </div>
                 </div>
             @empty
@@ -249,6 +253,8 @@
                         </svg>
                         Add First Service Type
                     </a>
+@endCanDo
+@endCanDo
                 </div>
             @endforelse
         </div>

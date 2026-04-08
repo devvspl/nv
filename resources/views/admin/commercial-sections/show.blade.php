@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Commercial Section Details - ZendoIndia Admin')
 @section('page-title', 'Commercial Section Details')
@@ -138,7 +138,8 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-heading text-zendo-navy font-semibold mb-4">Quick Actions</h3>
                 <div class="space-y-3">
-                    <a href="{{ route('admin.commercial-sections.edit', $commercialSection) }}" 
+                    @canDo('commercial-sections.edit')
+<a href="{{ route('admin.commercial-sections.edit', $commercialSection) }}" 
                        class="w-full inline-flex items-center justify-center px-4 py-2 bg-zendo-gold text-white rounded-lg hover:bg-opacity-90 transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -146,7 +147,9 @@
                         Edit Section
                     </a>
 
-                    <form action="{{ route('admin.commercial-sections.toggle-status', $commercialSection) }}" method="POST" class="w-full">
+                    @endCanDo
+                    @canDo('commercial-sections.delete')
+<form action="{{ route('admin.commercial-sections.toggle-status', $commercialSection) }}" method="POST" class="w-full">
                         @csrf
                         @method('PATCH')
                         <button type="submit" 
@@ -172,6 +175,7 @@
                         </svg>
                         Back to List
                     </a>
+@endCanDo
                 </div>
             </div>
 
@@ -220,6 +224,7 @@
                         Delete Section
                     </button>
                 </form>
+@endCanDo
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\FaqController;
@@ -87,18 +88,22 @@ Route::post('/consultations', [ConsultationController::class, 'store'])->name('c
 
 Route::middleware('auth')->group(function () {
     // Dashboard
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->middleware('verified')->name('dashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->middleware(['verified', 'permission'])->name('dashboard');
     
     // Dashboard Analytics API
-    Route::get('/api/dashboard/visitor-analytics', [DashboardController::class, 'getVisitorAnalytics'])->name('dashboard.analytics');
+    Route::get('/api/dashboard/visitor-analytics', [DashboardController::class, 'getVisitorAnalytics'])->middleware('permission')->name('dashboard.analytics');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     // Admin Routes
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('permission')->group(function () {
         Route::resource('users', UserController::class);
+
+        // Role Permissions
+        Route::get('role-permissions', [RolePermissionController::class, 'index'])->name('role-permissions.index');
+        Route::put('role-permissions/{role}', [RolePermissionController::class, 'update'])->name('role-permissions.update');
         Route::resource('testimonials', TestimonialController::class);
         Route::patch('testimonials/{testimonial}/toggle-status', [TestimonialController::class, 'toggleStatus'])->name('testimonials.toggle-status');
         Route::resource('faqs', FaqController::class);

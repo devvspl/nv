@@ -9,7 +9,8 @@
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-heading text-zendo-navy font-semibold">Property Type Details</h2>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('admin.property-types.edit', $propertyType) }}" 
+                    @canDo('property-types.edit')
+<a href="{{ route('admin.property-types.edit', $propertyType) }}" 
                        class="inline-flex items-center px-4 py-2 text-sm bg-zendo-gold text-white rounded-lg hover:bg-opacity-90 transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -23,6 +24,7 @@
                         </svg>
                         Back to List
                     </a>
+@endCanDo
                 </div>
             </div>
         </div>

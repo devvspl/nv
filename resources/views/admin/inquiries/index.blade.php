@@ -196,6 +196,7 @@ Manage customer inquiries and follow up on leads.
                                     </div>
                                 </div>
                                 
+                                @canDo('inquiries.delete')
                                 <form action="{{ route('admin.inquiries.destroy', $inquiry) }}" method="POST" class="inline-block" 
                                       onsubmit="return confirm('Are you sure you want to delete this inquiry?')">
                                     @csrf
@@ -206,6 +207,7 @@ Manage customer inquiries and follow up on leads.
                                         </svg>
                                     </button>
                                 </form>
+                                @endCanDo
                             </div>
                         </td>
                     </tr>
@@ -271,6 +273,7 @@ Manage customer inquiries and follow up on leads.
                         View
                     </a>
                     
+                    @canDo('inquiries.delete')
                     <form action="{{ route('admin.inquiries.destroy', $inquiry) }}" method="POST" class="inline-block" 
                           onsubmit="return confirm('Are you sure you want to delete this inquiry?')">
                         @csrf
@@ -282,6 +285,7 @@ Manage customer inquiries and follow up on leads.
                             Delete
                         </button>
                     </form>
+                    @endCanDo
                 </div>
             </div>
         @empty

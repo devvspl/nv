@@ -119,7 +119,8 @@ View the complete feature information.
 
             <!-- Actions -->
             <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-                <form action="{{ route('admin.features.toggle-status', $feature) }}" method="POST" class="inline-block">
+                @canDo('features.delete')
+<form action="{{ route('admin.features.toggle-status', $feature) }}" method="POST" class="inline-block">
                     @csrf
                     @method('PATCH')
                     <button type="submit" 
@@ -127,10 +128,12 @@ View the complete feature information.
                         {{ $feature->is_active ? 'Deactivate' : 'Activate' }}
                     </button>
                 </form>
-                <a href="{{ route('admin.features.edit', $feature) }}" 
+                @canDo('features.edit')
+<a href="{{ route('admin.features.edit', $feature) }}" 
                    class="px-4 py-2 bg-zendo-gold text-white rounded-lg text-sm font-medium hover:bg-zendo-navy transition-colors">
                     Edit Feature
                 </a>
+@endCanDo
                 <form action="{{ route('admin.features.destroy', $feature) }}" method="POST" class="inline-block" 
                       onsubmit="return confirm('Are you sure you want to delete this feature?')">
                     @csrf
@@ -140,6 +143,7 @@ View the complete feature information.
                         Delete Feature
                     </button>
                 </form>
+@endCanDo
             </div>
         </div>
     </div>

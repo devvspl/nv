@@ -36,12 +36,14 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:super_admin,admin,staff'],
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
             'email_verified_at' => now(),
         ]);
 
@@ -74,11 +76,13 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:super_admin,admin,staff'],
         ]);
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
+            'role' => $request->role,
         ];
 
         if ($request->filled('password')) {

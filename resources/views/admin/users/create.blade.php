@@ -52,6 +52,21 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div class="md:col-span-2">
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role *</label>
+                        <select name="role" id="role"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent @error('role') border-red-500 @enderror"
+                                required>
+                            <option value="">Select a role</option>
+                            <option value="super_admin" {{ old('role') === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="staff" {{ old('role') === 'staff' ? 'selected' : '' }}>Staff</option>
+                        </select>
+                        @error('role')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

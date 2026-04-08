@@ -9,7 +9,8 @@
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-heading text-zendo-navy font-semibold">User Details</h2>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('admin.users.edit', $user) }}" 
+                    @canDo('users.edit')
+<a href="{{ route('admin.users.edit', $user) }}" 
                        class="inline-flex items-center px-4 py-2 text-sm bg-zendo-gold text-white rounded-lg hover:bg-opacity-90 transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -23,6 +24,7 @@
                         </svg>
                         Back to List
                     </a>
+@endCanDo
                 </div>
             </div>
         </div>
@@ -80,6 +82,16 @@
                     <div>
                         <p class="text-sm text-gray-600 mb-1">User ID</p>
                         <p class="text-base font-medium text-gray-900">#{{ $user->id }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Role</p>
+                        @php
+                            $roleLabels = ['super_admin' => 'Super Admin', 'admin' => 'Admin', 'staff' => 'Staff'];
+                            $roleColors = ['super_admin' => 'bg-purple-100 text-purple-800', 'admin' => 'bg-blue-100 text-blue-800', 'staff' => 'bg-gray-100 text-gray-800'];
+                        @endphp
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800' }}">
+                            {{ $roleLabels[$user->role] ?? $user->role }}
+                        </span>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Email Status</p>

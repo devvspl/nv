@@ -14,10 +14,12 @@
         <div class="flex items-center justify-between">
             <h2 class="text-2xl font-heading text-zendo-navy font-semibold">Work Process Step Details</h2>
             <div class="flex gap-2">
-                <a href="{{ route('admin.work-processes.edit', $workProcess) }}"
+                @canDo('work-processes.edit')
+<a href="{{ route('admin.work-processes.edit', $workProcess) }}"
                    class="px-4 py-2 bg-zendo-gold text-white font-medium rounded-lg hover:bg-zendo-navy transition-colors">
                     Edit
                 </a>
+@endCanDo
                 <form action="{{ route('admin.work-processes.destroy', $workProcess) }}" method="POST" class="inline"
                       onsubmit="return confirm('Are you sure you want to delete this step?')">
                     @csrf

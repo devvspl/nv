@@ -213,7 +213,8 @@
                             </span>
                         </div>
 
-                        <form action="{{ route('admin.consultations.update-status', $consultation) }}" method="POST">
+                        @canDo('consultations.delete')
+<form action="{{ route('admin.consultations.update-status', $consultation) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <div class="mb-4">
@@ -292,6 +293,7 @@
                                 Delete Consultation
                             </button>
                         </form>
+@endCanDo
                     </div>
                 </div>
             </div>
