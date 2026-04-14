@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,11 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Property extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = [
         'title',
         'slug',
         'description',
+        'hidden_details',
+        'show_hidden_details',
         'property_type_id',
         'bhk_id',
         'city_id',
@@ -49,6 +53,7 @@ class Property extends Model
         'is_featured' => 'boolean',
         'is_verified' => 'boolean',
         'is_active' => 'boolean',
+        'show_hidden_details' => 'boolean',
         'published_at' => 'datetime',
     ];
 

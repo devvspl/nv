@@ -38,7 +38,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <h3 class="text-2xl font-heading font-bold text-zendo-navy mb-2">{{ $property->title }}</h3>
-                            <p class="text-gray-600">{{ $property->location->name }}, {{ $property->city->name }}</p>
+                            <p class="text-gray-600">{{ $property->location?->name ?? '-' }}, {{ $property->city?->name ?? '-' }}</p>
                         </div>
                         <div class="flex flex-col space-y-2">
                             <span
@@ -86,15 +86,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Property Type</p>
-                            <p class="text-base font-medium text-gray-900">{{ $property->propertyType->name }}</p>
+                            <p class="text-base font-medium text-gray-900">{{ $property->propertyType?->name ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600 mb-1">BHK</p>
-                            <p class="text-base font-medium text-gray-900">{{ $property->bhk->name }}</p>
+                            <p class="text-base font-medium text-gray-900">{{ $property->bhk?->name ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Project Status</p>
-                            <p class="text-base font-medium text-gray-900">{{ $property->projectStatus->name }}</p>
+                            <p class="text-base font-medium text-gray-900">{{ $property->projectStatus?->name ?? '-' }}</p>
                         </div>
                         @if ($property->builder)
                             <div>
@@ -104,7 +104,7 @@
                         @endif
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Created By</p>
-                            <p class="text-base font-medium text-gray-900">{{ $property->user->name }}</p>
+                            <p class="text-base font-medium text-gray-900">{{ $property->user?->name ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Views</p>
@@ -118,6 +118,21 @@
                             <p class="text-base text-gray-900">{{ $property->description }}</p>
                         </div>
                     @endif
+
+                    {{-- Hidden Details — always shown to admin --}}
+                    <div class="mt-6 border border-yellow-200 bg-yellow-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-sm font-semibold text-yellow-800">Hidden Details (Admin Only)</p>
+                            <span class="text-xs px-2 py-0.5 rounded-full {{ $property->show_hidden_details ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' }}">
+                                {{ $property->show_hidden_details ? 'Visible on public page' : 'Hidden from public' }}
+                            </span>
+                        </div>
+                        @if ($property->hidden_details)
+                            <div class="prose prose-sm max-w-none text-gray-800">{!! $property->hidden_details !!}</div>
+                        @else
+                            <p class="text-sm text-yellow-700 italic">No hidden details added yet.</p>
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Pricing & Area -->
@@ -271,11 +286,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">City</p>
-                            <p class="text-base font-medium text-gray-900">{{ $property->city->name }}</p>
+                            <p class="text-base font-medium text-gray-900">{{ $property->city?->name ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Location</p>
-                            <p class="text-base font-medium text-gray-900">{{ $property->location->name }}</p>
+                            <p class="text-base font-medium text-gray-900">{{ $property->location?->name ?? '-' }}</p>
                         </div>
                         @if ($property->address)
                             <div class="md:col-span-2">

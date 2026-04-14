@@ -103,6 +103,8 @@ class PropertyController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'hidden_details' => 'nullable|string',
+            'show_hidden_details' => 'boolean',
             'property_type_id' => 'required|exists:property_types,id',
             'bhk_id' => 'nullable|exists:bhks,id',
             'city_id' => 'required|exists:cities,id',
@@ -255,6 +257,8 @@ class PropertyController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'hidden_details' => 'nullable|string',
+            'show_hidden_details' => 'boolean',
             'property_type_id' => 'required|exists:property_types,id',
             'bhk_id' => 'nullable|exists:bhks,id',
             'city_id' => 'required|exists:cities,id',
@@ -387,15 +391,51 @@ class PropertyController extends Controller
 
     public function destroy(Property $property)
     {
+        $property->delete(); // soft delete — moves to trash
+
+        return redirect()->route('admin.properties.index')
+            ->with('success', 'Property moved to trash.');
+    }
+
+    public function trash(Request $request)
+    {
+        $query = Property::onlyTrashed()->with(['propertyType', 'city', 'mainImage']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+
+        $properties = $query->latest('deleted_at')->paginate(10)->withQueryString();
+
+        return view('admin.properties.trash', compact('properties'));
+    }
+
+    public function restore($id)
+    {
+        $property = Property::onlyTrashed()->findOrFail($id);
+        $property->restore();
+
+        return redirect()->route('admin.properties.trash')
+            ->with('success', 'Property restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $property = Property::onlyTrashed()->findOrFail($id);
+
         // Delete images from storage
         foreach ($property->images as $image) {
             Storage::disk('public')->delete($image->image_path);
         }
 
-        $property->delete();
+        $property->forceDelete();
 
-        return redirect()->route('admin.properties.index')
-            ->with('success', 'Property deleted successfully.');
+        return redirect()->route('admin.properties.trash')
+            ->with('success', 'Property permanently deleted.');
     }
 
     public function toggleStatus(Property $property)

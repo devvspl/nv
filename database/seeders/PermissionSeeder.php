@@ -37,7 +37,7 @@ class PermissionSeeder extends Seeder
             'locations'              => ['type' => 'full',  'label' => 'Locations'],
             'our-clients'            => ['type' => 'full',  'label' => 'Our Clients'],
             'project-statuses'       => ['type' => 'full',  'label' => 'Project Statuses'],
-            'properties'             => ['type' => 'full',  'label' => 'Properties'],
+            'properties'             => ['type' => 'full',  'label' => 'Properties', 'extra' => ['restore']],
             'property-page-sections' => ['type' => 'full',  'label' => 'Property Page Sections'],
             'property-types'         => ['type' => 'full',  'label' => 'Property Types'],
             'service-types'          => ['type' => 'full',  'label' => 'Service Types'],
@@ -93,8 +93,7 @@ class PermissionSeeder extends Seeder
                 'locations'              => ['view', 'create', 'edit', 'delete'],
                 'our-clients'            => ['view', 'create', 'edit', 'delete'],
                 'project-statuses'       => ['view', 'create', 'edit', 'delete'],
-                'properties'             => ['view', 'create', 'edit', 'delete'],
-                'property-page-sections' => ['view', 'create', 'edit', 'delete'],
+                'properties'             => ['view', 'create', 'edit', 'delete', 'restore'],
                 'property-types'         => ['view', 'create', 'edit', 'delete'],
                 'service-types'          => ['view', 'create', 'edit', 'delete'],
                 'team-members'           => ['view', 'create', 'edit', 'delete'],
@@ -116,7 +115,7 @@ class PermissionSeeder extends Seeder
 
             'staff' => [
                 // Can manage properties and blogs
-                'properties'             => ['view', 'create', 'edit'],
+                'properties'             => ['view', 'create', 'edit', 'restore'],
                 'blogs'                  => ['view', 'create', 'edit'],
                 // View-only on everything else
                 'about-us'               => ['view'],
@@ -156,7 +155,8 @@ class PermissionSeeder extends Seeder
         $permissionMap = []; // name => id
 
         foreach ($modules as $module => $config) {
-            foreach ($actionsByType[$config['type']] as $action) {
+            $actions = array_merge($actionsByType[$config['type']], $config['extra'] ?? []);
+            foreach ($actions as $action) {
                 $name = "{$module}.{$action}";
                 $label = ucfirst($action) . ' ' . $config['label'];
                 $perm = Permission::create([

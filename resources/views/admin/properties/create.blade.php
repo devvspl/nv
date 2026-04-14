@@ -354,6 +354,31 @@
                         Add FAQ
                     </button>
                 </div>
+                <!-- Hidden Details (Admin Only) -->
+                <div class="pt-6 border-t border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900">Hidden Details</h3>
+                            <p class="text-xs text-gray-500 mt-0.5">Always visible to admin. Shown publicly only when "Show on public page" is enabled.</p>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Admin Only</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <textarea id="hidden_details" name="hidden_details" rows="8"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">{{ old('hidden_details') }}</textarea>
+                        </div>
+                        <div>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" name="show_hidden_details" value="1"
+                                    {{ old('show_hidden_details') ? 'checked' : '' }}
+                                    class="rounded border-gray-300 text-zendo-gold focus:ring-zendo-gold">
+                                <span class="text-sm font-medium text-gray-700">Show on public property page</span>
+                            </label>
+                            <p class="text-xs text-gray-500 mt-1 ml-6">When checked, this content will be visible to visitors on the property detail page.</p>
+                        </div>
+                    </div>
+                </div>
                 <!-- Status & Publishing -->
                 <div class="pt-6 border-t border-gray-200">
                     <h3 class="text-base font-semibold text-gray-900 mb-4">Status & Publishing</h3>
@@ -402,6 +427,79 @@
     </div>
 @endsection
 @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.2/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#hidden_details',
+            height: 450,
+            plugins: 'advlist lists link image table preview fullscreen charmap paste codesample code',
+            toolbar: `bold italic underline | alignleft aligncenter alignright alignjustify | fontsizeselect | forecolor backcolor | numlist bullist | indent outdent | link image | increasefontsize decreasefontsize | print table | preview fullscreen | charmap code | importword exportpdf exportword`,
+            automatic_uploads: true,
+            images_upload_url: '{{ route("admin.blogs.upload-image") }}',
+            images_upload_handler: function (blobInfo, success, failure) {
+                var xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '{{ route("admin.blogs.upload-image") }}');
+                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+                xhr.onload = function() {
+                    if (xhr.status != 200) { failure('HTTP Error: ' + xhr.status); return; }
+                    var json = JSON.parse(xhr.responseText);
+                    if (!json || typeof json.location != 'string') { failure('Invalid JSON: ' + xhr.responseText); return; }
+                    success(json.location);
+                };
+                var formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            },
+            file_picker_types: 'image',
+            file_picker_callback: function(callback, value, meta) {
+                if (meta.filetype === 'image') {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+                    input.onchange = function() {
+                        var file = this.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            var id = 'blobid' + (new Date()).getTime();
+                            var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                            var base64 = reader.result.split(',')[1];
+                            var blobInfo = blobCache.create(id, file, base64);
+                            blobCache.add(blobInfo);
+                            callback(blobInfo.blobUri(), { title: file.name });
+                        };
+                        reader.readAsDataURL(file);
+                    };
+                    input.click();
+                }
+            },
+            setup: function(editor) {
+                editor.ui.registry.addButton('increasefontsize', {
+                    text: 'A+',
+                    onAction: () => editor.execCommand('FontSize', false, 'larger')
+                });
+                editor.ui.registry.addButton('decreasefontsize', {
+                    text: 'A-',
+                    onAction: () => editor.execCommand('FontSize', false, 'smaller')
+                });
+                editor.ui.registry.addButton('exportpdf', {
+                    text: 'Export PDF',
+                    onAction: () => editor.execCommand('mcePrint')
+                });
+                editor.ui.registry.addButton('exportword', {
+                    text: 'Export Word',
+                    onAction: function() {
+                        let content = editor.getContent();
+                        let blob = new Blob([content], { type: 'application/msword' });
+                        let url = URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = url; a.download = 'document.doc'; a.click();
+                        URL.revokeObjectURL(url);
+                    }
+                });
+            }
+        });
+    </script>
     <script>
         let faqIndex = 0;
 

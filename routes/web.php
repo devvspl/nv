@@ -160,6 +160,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('properties/{property}/toggle-featured', [PropertyController::class, 'toggleFeatured'])->name('properties.toggle-featured');
         Route::patch('properties/{property}/toggle-verified', [PropertyController::class, 'toggleVerified'])->name('properties.toggle-verified');
         Route::delete('properties/images/{image}', [PropertyController::class, 'deleteImage'])->name('properties.delete-image');
+        // Trash
+        Route::get('properties-trash', [PropertyController::class, 'trash'])->name('properties.trash');
+        Route::patch('properties-trash/{id}/restore', [PropertyController::class, 'restore'])->name('properties.restore');
+        Route::delete('properties-trash/{id}/force-delete', [PropertyController::class, 'forceDelete'])->name('properties.force-delete');
         
         // Property Page Sections
         Route::resource('property-page-sections', PropertyPageSectionController::class);
