@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\HeroSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -49,7 +50,7 @@ class HeroSectionController extends Controller
 
         // Handle poster image upload
         if ($request->hasFile('poster_image')) {
-            $validated['poster_image'] = $request->file('poster_image')->store('hero/posters', 'public');
+            $validated['poster_image'] = ImageHelper::storeWebp($request->file('poster_image'), $validated['title'], 0, 'poster', 'hero/posters');
         }
 
         HeroSection::create($validated);
@@ -116,7 +117,7 @@ class HeroSectionController extends Controller
             if ($heroSection->poster_image) {
                 \Storage::disk('public')->delete($heroSection->poster_image);
             }
-            $validated['poster_image'] = $request->file('poster_image')->store('hero/posters', 'public');
+            $validated['poster_image'] = ImageHelper::storeWebp($request->file('poster_image'), $validated['title'], $heroSection->id, 'poster', 'hero/posters');
         }
 
         $heroSection->update($validated);

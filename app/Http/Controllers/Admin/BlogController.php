@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +47,7 @@ class BlogController extends Controller
         }
 
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store('blogs', 'public');
+            $validated['featured_image'] = ImageHelper::storeWebp($request->file('featured_image'), $validated['title'], 0, 'featured', 'blogs');
         }
 
         Blog::create($validated);
@@ -93,7 +94,7 @@ class BlogController extends Controller
             if ($blog->featured_image) {
                 Storage::disk('public')->delete($blog->featured_image);
             }
-            $validated['featured_image'] = $request->file('featured_image')->store('blogs', 'public');
+            $validated['featured_image'] = ImageHelper::storeWebp($request->file('featured_image'), $validated['title'], $blog->id, 'featured', 'blogs');
         }
 
         $blog->update($validated);

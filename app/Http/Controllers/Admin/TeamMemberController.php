@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -32,7 +33,7 @@ class TeamMemberController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('team-members', 'public');
+            $validated['photo'] = ImageHelper::storeWebp($request->file('photo'), $validated['name'], 0, 'photo', 'team-members');
         }
 
         $validated['is_active'] = $request->has('is_active');
@@ -64,7 +65,7 @@ class TeamMemberController extends Controller
             if ($teamMember->photo) {
                 Storage::disk('public')->delete($teamMember->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('team-members', 'public');
+            $validated['photo'] = ImageHelper::storeWebp($request->file('photo'), $validated['name'], $teamMember->id, 'photo', 'team-members');
         }
 
         $validated['is_active'] = $request->has('is_active');

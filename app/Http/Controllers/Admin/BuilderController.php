@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -44,7 +45,7 @@ class BuilderController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('builders', 'public');
+            $validated['logo'] = ImageHelper::storeWebp($request->file('logo'), $validated['name'], 0, 'logo', 'builders');
         }
 
         Builder::create($validated);
@@ -90,7 +91,7 @@ class BuilderController extends Controller
             if ($builder->logo) {
                 Storage::disk('public')->delete($builder->logo);
             }
-            $validated['logo'] = $request->file('logo')->store('builders', 'public');
+            $validated['logo'] = ImageHelper::storeWebp($request->file('logo'), $validated['name'], $builder->id, 'logo', 'builders');
         }
 
         $builder->update($validated);

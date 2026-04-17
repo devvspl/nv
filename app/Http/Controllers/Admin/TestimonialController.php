@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -45,7 +46,7 @@ class TestimonialController extends Controller
         
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
-            $data['avatar'] = $request->file('avatar')->store('testimonials', 'public');
+            $data['avatar'] = ImageHelper::storeWebp($request->file('avatar'), $request->name, 0, 'avatar', 'testimonials');
         }
 
         // Set default values
@@ -97,7 +98,7 @@ class TestimonialController extends Controller
             if ($testimonial->avatar) {
                 Storage::disk('public')->delete($testimonial->avatar);
             }
-            $data['avatar'] = $request->file('avatar')->store('testimonials', 'public');
+            $data['avatar'] = ImageHelper::storeWebp($request->file('avatar'), $request->name, $testimonial->id, 'avatar', 'testimonials');
         }
 
         // Set default values

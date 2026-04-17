@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\PropertyPageSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -100,8 +101,8 @@ class PropertyPageSectionController extends Controller
         $images = $propertyPageSection->images ?? [];
         
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('property-page-sections', 'public');
+            foreach ($request->file('images') as $index => $image) {
+                $path = ImageHelper::storeWebp($image, $propertyPageSection->section_key, $propertyPageSection->id, 'img-' . ($index + 1), 'property-page-sections');
                 $images[] = $path;
             }
         }

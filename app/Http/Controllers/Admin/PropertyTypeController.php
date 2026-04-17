@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ImageHelper;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
 use App\Models\PropertyPageSection;
@@ -229,8 +230,8 @@ class PropertyTypeController extends Controller
         
         // Upload new images
         if ($request->hasFile("{$prefix}_images")) {
-            foreach ($request->file("{$prefix}_images") as $image) {
-                $path = $image->store('property-page-sections', 'public');
+            foreach ($request->file("{$prefix}_images") as $index => $image) {
+                $path = ImageHelper::storeWebp($image, $propertyType->name, $propertyType->id, "{$prefix}-" . ($index + 1), 'property-page-sections');
                 $images[] = $path;
             }
         }

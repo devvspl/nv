@@ -14,6 +14,7 @@ use App\Models\Amenity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\ImageHelper;
 
 class PropertyController extends Controller
 {
@@ -148,7 +149,7 @@ class PropertyController extends Controller
             'faqs.*.is_active' => 'nullable|boolean',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        $validated['slug'] = $this->uniqueSlug($validated['title']);
         $validated['user_id'] = auth()->id();
 
         $property = Property::create($validated);
@@ -176,7 +177,7 @@ class PropertyController extends Controller
         // Handle image uploads
         // Upload main image
         if ($request->hasFile('main_image')) {
-            $path = $request->file('main_image')->store('properties', 'public');
+            $path = ImageHelper::storeWebp($request->file('main_image'), $validated['title'], $property->id, 'main');
             $property->images()->create([
                 'image_path' => $path,
                 'image_type' => 'main',
@@ -187,7 +188,7 @@ class PropertyController extends Controller
         // Upload gallery images
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $index => $image) {
-                $path = $image->store('properties', 'public');
+                $path = ImageHelper::storeWebp($image, $validated['title'], $property->id, 'gallery-' . ($index + 1));
                 $property->images()->create([
                     'image_path' => $path,
                     'image_type' => 'gallery',
@@ -295,7 +296,7 @@ class PropertyController extends Controller
             'rera_id' => 'nullable|string|max:100',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        $validated['slug'] = $this->uniqueSlug($validated['title'], $property->id);
 
         $property->update($validated);
 
@@ -333,9 +334,8 @@ class PropertyController extends Controller
                 Storage::disk('public')->delete($oldMainImage->image_path);
                 $oldMainImage->delete();
             }
-            
-            // Upload new main image
-            $path = $request->file('main_image')->store('properties', 'public');
+
+            $path = ImageHelper::storeWebp($request->file('main_image'), $validated['title'], $property->id, 'main');
             $property->images()->create([
                 'image_path' => $path,
                 'image_type' => 'main',
@@ -346,9 +346,9 @@ class PropertyController extends Controller
         // Upload new gallery images
         if ($request->hasFile('gallery_images')) {
             $lastOrder = $property->images()->where('image_type', 'gallery')->max('display_order') ?? 0;
-            
+
             foreach ($request->file('gallery_images') as $index => $image) {
-                $path = $image->store('properties', 'public');
+                $path = ImageHelper::storeWebp($image, $validated['title'], $property->id, 'gallery-' . ($lastOrder + $index + 1));
                 $property->images()->create([
                     'image_path' => $path,
                     'image_type' => 'gallery',
@@ -466,5 +466,28 @@ class PropertyController extends Controller
         $image->delete();
 
         return back()->with('success', 'Image deleted successfully.');
+    }
+
+    /**
+     * Generate a unique slug for a property, appending -2, -3 … when duplicates exist.
+     * Pass $excludeId when updating so the property's own current slug is not counted.
+     */
+    private function uniqueSlug(string $title, ?int $excludeId = null): string
+    {
+        $base  = Str::slug($title);
+        $slug  = $base;
+        $count = 2;
+
+        while (
+            Property::withTrashed()
+                ->where('slug', $slug)
+                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->exists()
+        ) {
+            $slug = "{$base}-{$count}";
+            $count++;
+        }
+
+        return $slug;
     }
 }
