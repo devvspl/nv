@@ -339,6 +339,33 @@
                     </div>
                 </div>
 
+                <!-- Video & Media -->
+                <div class="pt-6 border-t border-gray-200">
+                    <h3 class="text-base font-semibold text-gray-900 mb-4">Video & Media</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">YouTube URL</label>
+                            <input type="url" name="youtube_url" value="{{ old('youtube_url') }}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent"
+                                placeholder="https://www.youtube.com/watch?v=...">
+                            <p class="mt-1 text-sm text-gray-500">Paste a YouTube video link for this property.</p>
+                            @error('youtube_url')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Video</label>
+                            <input type="file" name="video_path"
+                                accept="video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                            <p class="mt-1 text-sm text-gray-500">Accepted formats: MP4, MOV, AVI, WMV. Max size: 100MB.</p>
+                            @error('video_path')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
                 <!-- FAQs -->
                 <div class="pt-6 border-t border-gray-200">
                     <h3 class="text-base font-semibold text-gray-900 mb-4">Frequently Asked Questions</h3>

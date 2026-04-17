@@ -80,6 +80,48 @@
                     </div>
                 @endif
 
+                <!-- Video & Media -->
+                @if($property->youtube_url || $property->video_path)
+                <div class="pt-6 border-t border-gray-200">
+                    <h3 class="text-base font-semibold text-gray-900 mb-4">Video & Media</h3>
+                    <div class="space-y-4">
+                        @if($property->youtube_url)
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">YouTube</p>
+                            <a href="{{ $property->youtube_url }}" target="_blank"
+                               class="inline-flex items-center text-blue-600 hover:text-blue-800 break-all">
+                                <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                                {{ $property->youtube_url }}
+                            </a>
+                            @php
+                                preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $property->youtube_url, $m);
+                                $ytId = $m[1] ?? null;
+                            @endphp
+                            @if($ytId)
+                            <div class="mt-3 aspect-video rounded-lg overflow-hidden max-w-xl">
+                                <iframe class="w-full h-full"
+                                    src="https://www.youtube.com/embed/{{ $ytId }}"
+                                    frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
+
+                        @if($property->video_path)
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">Uploaded Video</p>
+                            <video controls class="w-full max-w-xl rounded-lg border border-gray-200">
+                                <source src="{{ asset('storage/' . $property->video_path) }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
                 <!-- Basic Information -->
                 <div class="pt-6 border-t border-gray-200">
                     <h3 class="text-base font-semibold text-gray-900 mb-4">Basic Information</h3>

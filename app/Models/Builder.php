@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Builder extends Model
 {
@@ -11,6 +12,8 @@ class Builder extends Model
         'name',
         'slug',
         'logo',
+        'video_path',
+        'youtube_url',
         'description',
         'website',
         'email',
@@ -32,6 +35,16 @@ class Builder extends Model
     public function properties(): HasMany
     {
         return $this->hasMany(Property::class);
+    }
+
+    public function amenities(): BelongsToMany
+    {
+        return $this->belongsToMany(Amenity::class, 'builder_amenity');
+    }
+
+    public function projectStatuses(): BelongsToMany
+    {
+        return $this->belongsToMany(ProjectStatus::class, 'builder_project_status');
     }
 
     // Scopes

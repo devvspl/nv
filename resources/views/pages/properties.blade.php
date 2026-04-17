@@ -1131,6 +1131,68 @@
 </section>
 @endif
 
+<!-- Builder Video Section -->
+@if($selectedBuilder)
+@php
+    $bYtId = null;
+    if ($selectedBuilder->youtube_url) {
+        preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $selectedBuilder->youtube_url, $ym);
+        $bYtId = $ym[1] ?? null;
+    }
+    $hasVideo = $bYtId || $selectedBuilder->video_path;
+@endphp
+@if($hasVideo)
+<section class="bvs-section">
+  <div class="bvs-inner">
+    <div class="bvs-text">
+      <span class="bvs-badge">{{ $selectedBuilder->name }}</span>
+      <h2 class="bvs-heading">{{ $selectedBuilder->description ?: 'Discover the vision behind every project.' }}</h2>
+      <div class="bvs-meta">
+        @if($selectedBuilder->established_year)
+          <span class="bvs-chip">Est. {{ $selectedBuilder->established_year }}</span>
+        @endif
+        @if($selectedBuilder->is_verified)
+          <span class="bvs-chip bvs-chip--blue">✓ Verified</span>
+        @endif
+      </div>
+      <div class="bvs-actions">
+        <a href="#enquiry" class="bvs-btn bvs-btn--gold">Enquire Now</a>
+      </div>
+    </div>
+    <div class="bvs-media">
+      @if($bYtId)
+        <div class="bvs-player">
+          <iframe src="https://www.youtube.com/embed/{{ $bYtId }}?rel=0" allowfullscreen loading="lazy"></iframe>
+        </div>
+      @elseif($selectedBuilder->video_path)
+        <video controls class="bvs-player" style="height:auto;">
+          <source src="{{ asset('storage/'.$selectedBuilder->video_path) }}" type="video/mp4">
+        </video>
+      @endif
+    </div>
+  </div>
+</section>
+<style>
+.bvs-section{background:linear-gradient(135deg,#0b2c3d 0%,#0f3d55 100%);padding:64px 24px}
+.bvs-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:center}
+.bvs-badge{display:inline-block;background:rgba(179,147,89,.2);border:1px solid rgba(179,147,89,.45);color:#d4aa6a;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:999px;margin-bottom:16px}
+.bvs-heading{font-size:clamp(20px,2.4vw,30px);font-weight:800;color:#fff;line-height:1.35;margin:0 0 20px}
+.bvs-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.bvs-chip{font-size:12px;font-weight:600;padding:4px 14px;border-radius:999px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15)}
+.bvs-chip--blue{background:rgba(59,130,246,.15);color:#93c5fd;border-color:rgba(59,130,246,.3)}
+.bvs-actions{display:flex;flex-wrap:wrap;gap:12px}
+.bvs-btn{text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14px;font-weight:700;transition:transform .15s,box-shadow .15s}
+.bvs-btn:hover{transform:translateY(-2px)}
+.bvs-btn--gold{background:#b39359;color:#fff;box-shadow:0 8px 24px rgba(179,147,89,.35)}
+.bvs-btn--outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.bvs-media{width:100%}
+.bvs-player{width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4);display:block;border:none}
+.bvs-player iframe{width:100%;height:100%;border:none;display:block}
+@media(max-width:860px){.bvs-inner{grid-template-columns:1fr;gap:32px}.bvs-media{order:-1}}
+</style>
+@endif
+@endif
+
 <!-- Property Listing Section -->
 <section id="apw-resiPage" class="apw-resiPage">
   <div class="apw-resiWrap">

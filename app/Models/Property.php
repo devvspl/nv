@@ -34,6 +34,8 @@ class Property extends Model
         'latitude',
         'longitude',
         'map_embed_code',
+        'video_path',
+        'youtube_url',
         'is_featured',
         'is_verified',
         'is_active',

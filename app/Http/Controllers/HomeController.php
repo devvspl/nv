@@ -94,7 +94,9 @@ class HomeController extends Controller
         if ($request->filled('builder_id')) {
             $query->filterByBuilder($request->builder_id);
         }
-        if ($request->filled('min_price') || $request->filled('max_price')) {
+        $selectedBuilder = $request->filled('builder_id')
+            ? Builder::with(['amenities', 'projectStatuses'])->find($request->builder_id)
+            : null;        if ($request->filled('min_price') || $request->filled('max_price')) {
             $query->filterByPriceRange($request->min_price, $request->max_price);
         }
         if ($request->filled('search')) {
@@ -156,13 +158,13 @@ class HomeController extends Controller
             }
         }
         
-        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses', 'carouselSection', 'perspectiveSection', 'introSection'));
+        return view('pages.properties', compact('properties', 'cities', 'locations', 'propertyTypes', 'bhks', 'projectStatuses', 'builders', 'workProcesses', 'carouselSection', 'perspectiveSection', 'introSection', 'selectedBuilder'));
     }
 
     public function show(Property $property)
     {
         $property->incrementViews();
-        $property->load(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder', 'images', 'amenities', 'specifications', 'faqs' => function ($query) {
+        $property->load(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'builder.amenities', 'builder.projectStatuses', 'images', 'amenities', 'specifications', 'faqs' => function ($query) {
             $query->active()->ordered();
         }]);
         $similarProperties = Property::with(['propertyType', 'bhk', 'city', 'mainImage'])->active()->published()->where('id', '!=', $property->id)->where('property_type_id', $property->property_type_id)->where('city_id', $property->city_id)->limit(3)->get();
@@ -235,4 +237,13 @@ class HomeController extends Controller
     {
         return view('pages.calculators.length-calculator');
     }
+
+    public function acreToSquareMeter()  { return view('pages.calculators.acre-to-squaremeter'); }
+    public function centToSquareFeet()   { return view('pages.calculators.cent-to-square-feet'); }
+    public function centToSquareMeter()  { return view('pages.calculators.cent-to-square-meter'); }
+    public function cmToMm()             { return view('pages.calculators.cm-to-mm'); }
+    public function cmToInches()         { return view('pages.calculators.cm-to-inches'); }
+    public function ftToCm()             { return view('pages.calculators.ft-to-cm'); }
+    public function ftToInches()         { return view('pages.calculators.ft-to-inches'); }
+    public function ftToMm()             { return view('pages.calculators.ft-to-mm'); }
 }

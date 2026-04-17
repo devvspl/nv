@@ -1425,6 +1425,32 @@
 
     <!-- GALLERY + SIMILAR PROPERTIES -->
     <section id="sg-gallery-similar">
+
+    {{-- ── VIDEO SECTION ── --}}
+    @if($property->youtube_url || $property->video_path)
+    <section style="background:#f8f6f1;padding:48px 20px;">
+      <div style="max-width:1200px;margin:0 auto;">
+        <h2 style="font-size:26px;font-weight:700;color:#0b2c3d;margin:0 0 20px;">Property Video</h2>
+        <div style="max-width:760px;">
+          @if($property->youtube_url)
+            @php preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $property->youtube_url, $pm); $ytId = $pm[1] ?? null; @endphp
+            @if($ytId)
+            <div style="aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);">
+              <iframe style="width:100%;height:100%;border:0;" src="https://www.youtube.com/embed/{{ $ytId }}" allowfullscreen loading="lazy"></iframe>
+            </div>
+            @endif
+          @elseif($property->video_path)
+          <video controls style="width:100%;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.1);">
+            <source src="{{ asset('storage/'.$property->video_path) }}" type="video/mp4">
+          </video>
+          @endif
+        </div>
+      </div>
+    </section>
+    @endif
+
+    <!-- GALLERY + SIMILAR PROPERTIES -->
+    <section id="sg-gallery-similar">
         <div class="sg-gs-row">
             <div class="sg-gallery-box">
                 <h2 class="sg-gallery-title">Gallery</h2>

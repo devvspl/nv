@@ -54,6 +54,14 @@ Route::get('/calculators/acre-to-bigha', [HomeController::class, 'acreToBigha'])
 Route::get('/calculators/acre-to-hectare', [HomeController::class, 'acreToHectare'])->name('calculators.acre-to-hectare');
 Route::get('/calculators/emi-calculator', [HomeController::class, 'emiCalculator'])->name('calculators.emi-calculator');
 Route::get('/calculators/length-calculator', [HomeController::class, 'lengthCalculator'])->name('calculators.length-calculator');
+Route::get('/calculators/acre-to-squaremeter', [HomeController::class, 'acreToSquareMeter'])->name('calculators.acre-to-squaremeter');
+Route::get('/calculators/cent-to-square-feet', [HomeController::class, 'centToSquareFeet'])->name('calculators.cent-to-square-feet');
+Route::get('/calculators/cent-to-square-meter', [HomeController::class, 'centToSquareMeter'])->name('calculators.cent-to-square-meter');
+Route::get('/calculators/cm-to-mm', [HomeController::class, 'cmToMm'])->name('calculators.cm-to-mm');
+Route::get('/calculators/cm-to-inches', [HomeController::class, 'cmToInches'])->name('calculators.cm-to-inches');
+Route::get('/calculators/ft-to-cm', [HomeController::class, 'ftToCm'])->name('calculators.ft-to-cm');
+Route::get('/calculators/ft-to-inches', [HomeController::class, 'ftToInches'])->name('calculators.ft-to-inches');
+Route::get('/calculators/ft-to-mm', [HomeController::class, 'ftToMm'])->name('calculators.ft-to-mm');
 
 // Cache clearing routes
 Route::get('/clear-cache', function() {

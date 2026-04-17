@@ -121,6 +121,86 @@
             </div>
         </div>
 
+        @if($builder->youtube_url || $builder->video_path)
+        <!-- Video & Media -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-xl font-heading font-semibold text-zendo-navy mb-4">Video & Media</h2>
+            <div class="space-y-4">
+                @if($builder->youtube_url)
+                <div>
+                    <p class="text-sm text-gray-600 mb-2">YouTube</p>
+                    <a href="{{ $builder->youtube_url }}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 break-all">
+                        <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        {{ $builder->youtube_url }}
+                    </a>
+                    @php
+                        preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $builder->youtube_url, $m);
+                        $ytId = $m[1] ?? null;
+                    @endphp
+                    @if($ytId)
+                    <div class="mt-3 aspect-video rounded-lg overflow-hidden max-w-xl">
+                        <iframe class="w-full h-full"
+                            src="https://www.youtube.com/embed/{{ $ytId }}"
+                            frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    @endif
+                </div>
+                @endif
+
+                @if($builder->video_path)
+                <div>
+                    <p class="text-sm text-gray-600 mb-2">Uploaded Video</p>
+                    <video controls class="w-full max-w-xl rounded-lg border border-gray-200">
+                        <source src="{{ asset('storage/' . $builder->video_path) }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                @endif
+            </div>
+        </div>
+        @endif
+
+        <!-- Common Details -->
+        @if($builder->amenities->count() || $builder->projectStatuses->count())
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-xl font-heading font-semibold text-zendo-navy mb-5">Common Details</h2>
+
+            @if($builder->amenities->count())
+            <div class="mb-6">
+                <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Amenities Offered</h3>
+                <div class="flex flex-wrap gap-2">
+                    @foreach($builder->amenities as $amenity)
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-zendo-gold/10 text-zendo-navy font-medium">
+                        <svg class="w-3.5 h-3.5 mr-1.5 text-zendo-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        {{ $amenity->name }}
+                    </span>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            @if($builder->projectStatuses->count())
+            <div class="mb-6">
+                <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Project Statuses Available</h3>
+                <div class="flex flex-wrap gap-2">
+                    @foreach($builder->projectStatuses as $ps)
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                        {{ $ps->tag_color ? '' : 'bg-blue-100 text-blue-800' }}"
+                        @if($ps->tag_color) style="background-color: {{ $ps->tag_color }}20; color: {{ $ps->tag_color }}" @endif>
+                        {{ $ps->name }}
+                    </span>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+        @endif
+
         <!-- Associated Properties -->
         @if ($builder->properties->count() > 0)
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

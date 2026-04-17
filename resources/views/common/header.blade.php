@@ -47,20 +47,20 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2">
+                    <div class="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2">
                         <div class="py-2">
-                            <a href="{{ route('calculators.emi-calculator') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
-                                EMI Calculator
-                            </a>
-                            <a href="{{ route('calculators.acre-to-bigha') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
-                                Acre to Bigha
-                            </a>
-                            <a href="{{ route('calculators.acre-to-hectare') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
-                                Acre to Hectare
-                            </a>
-                            <a href="{{ route('calculators.length-calculator') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">
-                                Length Calculator
-                            </a>
+                            <a href="{{ route('calculators.emi-calculator') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">EMI Calculator</a>
+                            <a href="{{ route('calculators.acre-to-bigha') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Acre to Bigha</a>
+                            <a href="{{ route('calculators.acre-to-hectare') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Acre to Hectare</a>
+                            <a href="{{ route('calculators.acre-to-squaremeter') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Acre to Square Meter</a>
+                            <a href="{{ route('calculators.cent-to-square-feet') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Cent to Square Feet</a>
+                            <a href="{{ route('calculators.cent-to-square-meter') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Cent to Square Meter</a>
+                            <a href="{{ route('calculators.length-calculator') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Length Calculator</a>
+                            <a href="{{ route('calculators.cm-to-mm') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">CM to MM</a>
+                            <a href="{{ route('calculators.cm-to-inches') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">CM to Inches</a>
+                            <a href="{{ route('calculators.ft-to-cm') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Feet to CM</a>
+                            <a href="{{ route('calculators.ft-to-inches') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Feet to Inches</a>
+                            <a href="{{ route('calculators.ft-to-mm') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-zendo-light-bg hover:text-zendo-navy transition-colors">Feet to MM</a>
                         </div>
                     </div>
                 </div>
@@ -135,22 +135,18 @@
                     </svg>
                 </button>
                 <div x-show="open" x-transition class="ml-4 mt-2 space-y-2">
-                    <a href="{{ route('calculators.emi-calculator') }}"
-                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
-                        EMI Calculator
-                    </a>
-                    <a href="{{ route('calculators.acre-to-bigha') }}"
-                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
-                        Acre to Bigha
-                    </a>
-                    <a href="{{ route('calculators.acre-to-hectare') }}"
-                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
-                        Acre to Hectare
-                    </a>
-                    <a href="{{ route('calculators.length-calculator') }}"
-                        class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">
-                        Length Calculator
-                    </a>
+                    <a href="{{ route('calculators.emi-calculator') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">EMI Calculator</a>
+                    <a href="{{ route('calculators.acre-to-bigha') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Acre to Bigha</a>
+                    <a href="{{ route('calculators.acre-to-hectare') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Acre to Hectare</a>
+                    <a href="{{ route('calculators.acre-to-squaremeter') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Acre to Square Meter</a>
+                    <a href="{{ route('calculators.cent-to-square-feet') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Cent to Square Feet</a>
+                    <a href="{{ route('calculators.cent-to-square-meter') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Cent to Square Meter</a>
+                    <a href="{{ route('calculators.length-calculator') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Length Calculator</a>
+                    <a href="{{ route('calculators.cm-to-mm') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">CM to MM</a>
+                    <a href="{{ route('calculators.cm-to-inches') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">CM to Inches</a>
+                    <a href="{{ route('calculators.ft-to-cm') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Feet to CM</a>
+                    <a href="{{ route('calculators.ft-to-inches') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Feet to Inches</a>
+                    <a href="{{ route('calculators.ft-to-mm') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-zendo-navy">Feet to MM</a>
                 </div>
             </div>
             

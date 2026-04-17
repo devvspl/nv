@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Helpers\ImageHelper;
 use App\Models\Builder;
+use App\Models\Amenity;
+use App\Models\ProjectStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -23,7 +25,9 @@ class BuilderController extends Controller
 
     public function create()
     {
-        return view('admin.builders.create');
+        $amenities = Amenity::active()->ordered()->get();
+        $projectStatuses = ProjectStatus::active()->ordered()->get();
+        return view('admin.builders.create', compact('amenities', 'projectStatuses'));
     }
 
     public function store(Request $request)
@@ -37,9 +41,16 @@ class BuilderController extends Controller
             'address' => 'nullable|string',
             'established_year' => 'nullable|integer|min:1800|max:' . date('Y'),
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'video_path' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400',
+            'youtube_url' => 'nullable|url|max:255',
             'is_verified' => 'boolean',
             'status' => 'boolean',
             'display_order' => 'nullable|integer|min:0',
+            // Common Details
+            'amenities' => 'nullable|array',
+            'amenities.*' => 'exists:amenities,id',
+            'project_statuses' => 'nullable|array',
+            'project_statuses.*' => 'exists:project_statuses,id',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -48,7 +59,14 @@ class BuilderController extends Controller
             $validated['logo'] = ImageHelper::storeWebp($request->file('logo'), $validated['name'], 0, 'logo', 'builders');
         }
 
-        Builder::create($validated);
+        if ($request->hasFile('video_path')) {
+            $validated['video_path'] = $request->file('video_path')->store('builders/videos', 'public');
+        }
+
+        $builder = Builder::create($validated);
+
+        $builder->amenities()->sync($request->input('amenities', []));
+        $builder->projectStatuses()->sync($request->input('project_statuses', []));
 
         return redirect()->route('admin.builders.index')
             ->with('success', 'Builder created successfully.');
@@ -58,14 +76,17 @@ class BuilderController extends Controller
     {
         $builder->load(['properties' => function($query) {
             $query->latest()->take(10);
-        }]);
+        }, 'amenities', 'projectStatuses']);
 
         return view('admin.builders.show', compact('builder'));
     }
 
     public function edit(Builder $builder)
     {
-        return view('admin.builders.edit', compact('builder'));
+        $builder->load(['amenities', 'projectStatuses']);
+        $amenities = Amenity::active()->ordered()->get();
+        $projectStatuses = ProjectStatus::active()->ordered()->get();
+        return view('admin.builders.edit', compact('builder', 'amenities', 'projectStatuses'));
     }
 
     public function update(Request $request, Builder $builder)
@@ -79,22 +100,46 @@ class BuilderController extends Controller
             'address' => 'nullable|string',
             'established_year' => 'nullable|integer|min:1800|max:' . date('Y'),
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'video_path' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400',
+            'youtube_url' => 'nullable|url|max:255',
+            'remove_video' => 'nullable|boolean',
             'is_verified' => 'boolean',
             'status' => 'boolean',
             'display_order' => 'nullable|integer|min:0',
+            // Common Details
+            'amenities' => 'nullable|array',
+            'amenities.*' => 'exists:amenities,id',
+            'project_statuses' => 'nullable|array',
+            'project_statuses.*' => 'exists:project_statuses,id',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('logo')) {
-            // Delete old logo
             if ($builder->logo) {
                 Storage::disk('public')->delete($builder->logo);
             }
             $validated['logo'] = ImageHelper::storeWebp($request->file('logo'), $validated['name'], $builder->id, 'logo', 'builders');
         }
 
+        // Handle video removal
+        if ($request->boolean('remove_video') && $builder->video_path) {
+            Storage::disk('public')->delete($builder->video_path);
+            $validated['video_path'] = null;
+        }
+
+        // Handle new video upload
+        if ($request->hasFile('video_path')) {
+            if ($builder->video_path) {
+                Storage::disk('public')->delete($builder->video_path);
+            }
+            $validated['video_path'] = $request->file('video_path')->store('builders/videos', 'public');
+        }
+
         $builder->update($validated);
+
+        $builder->amenities()->sync($request->input('amenities', []));
+        $builder->projectStatuses()->sync($request->input('project_statuses', []));
 
         return redirect()->route('admin.builders.index')
             ->with('success', 'Builder updated successfully.');
@@ -108,6 +153,10 @@ class BuilderController extends Controller
 
         if ($builder->logo) {
             Storage::disk('public')->delete($builder->logo);
+        }
+
+        if ($builder->video_path) {
+            Storage::disk('public')->delete($builder->video_path);
         }
 
         $builder->delete();

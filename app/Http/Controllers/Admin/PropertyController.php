@@ -121,6 +121,8 @@ class PropertyController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'map_embed_code' => 'nullable|string',
+            'video_path' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400',
+            'youtube_url' => 'nullable|url|max:255',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
@@ -195,6 +197,13 @@ class PropertyController extends Controller
                     'display_order' => $index + 1,
                 ]);
             }
+        }
+
+        // Upload video
+        if ($request->hasFile('video_path')) {
+            $property->update([
+                'video_path' => $request->file('video_path')->store('properties/videos', 'public'),
+            ]);
         }
 
         // Handle FAQs
@@ -275,6 +284,9 @@ class PropertyController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'map_embed_code' => 'nullable|string',
+            'video_path' => 'nullable|file|mimes:mp4,mov,avi,wmv|max:102400',
+            'youtube_url' => 'nullable|url|max:255',
+            'remove_video' => 'nullable|boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
@@ -357,6 +369,22 @@ class PropertyController extends Controller
             }
         }
 
+        // Handle video removal
+        if ($request->boolean('remove_video') && $property->video_path) {
+            Storage::disk('public')->delete($property->video_path);
+            $property->update(['video_path' => null]);
+        }
+
+        // Handle new video upload
+        if ($request->hasFile('video_path')) {
+            if ($property->video_path) {
+                Storage::disk('public')->delete($property->video_path);
+            }
+            $property->update([
+                'video_path' => $request->file('video_path')->store('properties/videos', 'public'),
+            ]);
+        }
+
         // Handle FAQs - only if explicitly provided in request
         if ($request->has('faqs') && is_array($request->faqs)) {
             $existingFaqIds = [];
@@ -430,6 +458,10 @@ class PropertyController extends Controller
         // Delete images from storage
         foreach ($property->images as $image) {
             Storage::disk('public')->delete($image->image_path);
+        }
+
+        if ($property->video_path) {
+            Storage::disk('public')->delete($property->video_path);
         }
 
         $property->forceDelete();
