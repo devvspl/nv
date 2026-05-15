@@ -246,37 +246,11 @@
           </div>
 
           <nav class="apw-sideNavV2">
-            <a class="apw-sideNavV2__item is-active" href="{{ route('calculators.emi-calculator') }}" aria-current="page">
-              <span class="apw-sideNavV2__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 10.5L12 3l9 7.5" stroke="#b39359" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M6 10.5V21h12V10.5" stroke="#b39359" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M10 21v-6h4v6" stroke="#b39359" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </span>
-              <span class="apw-sideNavV2__text">EMI Calculator</span>
-            </a>
-            <a class="apw-sideNavV2__item" href="{{ route('calculators.length-calculator') }}">
-              <span class="apw-sideNavV2__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 19V5" stroke="#b39359" stroke-width="2" stroke-linecap="round" />
-                  <path d="M4 19H20" stroke="#b39359" stroke-width="2" stroke-linecap="round" />
-                  <path d="M7 15l4-4 3 3 6-6" stroke="#b39359" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </span>
-              <span class="apw-sideNavV2__text">Length Calculator</span>
-            </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.acre-to-squaremeter') }}">
               <span class="apw-sideNavV2__icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 3h10v6l-2 2H9L7 9V3Z" stroke="#b39359" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M7 11h10v10H7V11Z" stroke="#b39359" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
+                  <path d="M3 3h18v18H3V3z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 9h6v6H9V9z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               <span class="apw-sideNavV2__text">Acre to Square Meter</span>
@@ -284,36 +258,107 @@
             <a class="apw-sideNavV2__item" href="{{ route('calculators.acre-to-hectare') }}">
               <span class="apw-sideNavV2__icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2v20" stroke="#b39359" stroke-width="2" stroke-linecap="round" />
-                  <path d="M17 6H10a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6H7" stroke="#b39359" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M3 3h18v18H3V3z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 7h10v10H7V7z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               <span class="apw-sideNavV2__text">Acre to Hectare</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.acre-to-bigha') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 3h18v18H3V3z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8 8h8v8H8V8z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">Acre to Bigha</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.cent-to-square-feet') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 3h18v18H3V3z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 6h12v12H6V6z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">Cent to Square Feet</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.cent-to-square-meter') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 3h18v18H3V3z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 5h14v14H5V5z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">Cent to Square Meter</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.cm-to-inches') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 12h10" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 17h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">CM to Inches</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.cm-to-mm') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 12h12" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 17h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">CM to MM</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.ft-to-cm') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 12h14" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 17h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">Feet to CM</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.ft-to-inches') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 12h8" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 17h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">Feet to Inches</span>
             </a>
             <a class="apw-sideNavV2__item" href="{{ route('calculators.ft-to-mm') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 12h6" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M4 17h16" stroke="#b39359" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
               <span class="apw-sideNavV2__text">Feet to MM</span>
+            </a>
+            <a class="apw-sideNavV2__item" href="{{ route('calculators.length-calculator') }}">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 14H3l1.5-2h15l1.5 2z" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4.5 12L6 10h12l1.5 2" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="apw-sideNavV2__text">Length Calculator</span>
+            </a>
+            <a class="apw-sideNavV2__item is-active" href="{{ route('calculators.emi-calculator') }}" aria-current="page">
+              <span class="apw-sideNavV2__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 10.5L12 3l9 7.5" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 10.5V21h12V10.5" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 21v-6h4v6" stroke="#b39359" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="apw-sideNavV2__text">EMI Calculator</span>
             </a>
           </nav>
         </div>
