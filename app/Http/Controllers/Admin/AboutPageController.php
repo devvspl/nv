@@ -11,16 +11,15 @@ class AboutPageController extends Controller
 {
     public function edit()
     {
-        $aboutPage = AboutPageSection::first();
-        
-        if (!$aboutPage) {
-            $aboutPage = AboutPageSection::create([
+        $aboutPage = AboutPageSection::firstOrCreate(
+            ['id' => 1],
+            [
                 'section_title' => 'Our Company',
                 'section_subtitle' => 'Lorem Ipsum Conedosvtr',
                 'is_active' => true,
-            ]);
-        }
-        
+            ]
+        );
+
         return view('admin.about-page.edit', compact('aboutPage'));
     }
 
@@ -48,11 +47,8 @@ class AboutPageController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $aboutPage = AboutPageSection::first();
-        
-        if (!$aboutPage) {
-            $aboutPage = new AboutPageSection();
-        }
+        // Always update the single record (id=1), never insert a new one
+        $aboutPage = AboutPageSection::firstOrNew(['id' => 1]);
 
         // Handle icon uploads
         if ($request->hasFile('who_we_are_icon')) {
@@ -76,7 +72,7 @@ class AboutPageController extends Controller
             $validated['vision_icon'] = $request->file('vision_icon')->store('about-icons', 'public');
         }
 
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_active'] = 1;
 
         $aboutPage->fill($validated);
         $aboutPage->save();

@@ -766,20 +766,41 @@
               <p class="apw-sideCardV2__hint">Pick any calculator to explore</p>
             </div>
             <nav class="apw-sideNavV2">
-              <a class="apw-sideNavV2__item is-active" href="#apw-calcHubV2" aria-current="page">
-                <span class="apw-sideNavV2__text">Unit Converter</span>
+              <a class="apw-sideNavV2__item is-active" href="{{ route('calculators.acre-to-bigha') }}" aria-current="page">
+                <span class="apw-sideNavV2__text">Acre to Bigha</span>
               </a>
-              <a class="apw-sideNavV2__item" href="#">
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.acre-to-hectare') }}">
                 <span class="apw-sideNavV2__text">Acre to Hectare</span>
               </a>
-              <a class="apw-sideNavV2__item" href="#">
-                <span class="apw-sideNavV2__text">Acre to Square feet</span>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.acre-to-squaremeter') }}">
+                <span class="apw-sideNavV2__text">Acre to Square Meter</span>
               </a>
-              <a class="apw-sideNavV2__item" href="#">
-                <span class="apw-sideNavV2__text">Acre to Square meter</span>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.cent-to-square-feet') }}">
+                <span class="apw-sideNavV2__text">Cent to Square Feet</span>
               </a>
-              <a class="apw-sideNavV2__item" href="#">
-                <span class="apw-sideNavV2__text">Bigha to Acre</span>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.cent-to-square-meter') }}">
+                <span class="apw-sideNavV2__text">Cent to Square Meter</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.cm-to-inches') }}">
+                <span class="apw-sideNavV2__text">CM to Inches</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.cm-to-mm') }}">
+                <span class="apw-sideNavV2__text">CM to MM</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.ft-to-cm') }}">
+                <span class="apw-sideNavV2__text">Feet to CM</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.ft-to-inches') }}">
+                <span class="apw-sideNavV2__text">Feet to Inches</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.ft-to-mm') }}">
+                <span class="apw-sideNavV2__text">Feet to MM</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.length-calculator') }}">
+                <span class="apw-sideNavV2__text">Length Calculator</span>
+              </a>
+              <a class="apw-sideNavV2__item" href="{{ route('calculators.emi-calculator') }}">
+                <span class="apw-sideNavV2__text">EMI Calculator</span>
               </a>
             </nav>
           </div>
