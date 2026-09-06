@@ -14,8 +14,11 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->has('redirect')) {
+            session(['url.intended' => $request->input('redirect')]);
+        }
         return view('auth.login');
     }
 
@@ -24,15 +27,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        if ($request->has('redirect')) {
+            session(['url.intended' => $request->input('redirect')]);
+        }
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
         $user = $request->user();
 
-        // Clear generic /dashboard or /login intended URLs so non-admins are never sent to 404/403 pages
+        // Clear generic /dashboard, /login, or /register intended URLs
         $intended = session('url.intended');
-        if ($intended && (str_contains($intended, '/dashboard') || str_contains($intended, '/login'))) {
+        if ($intended && (str_contains($intended, '/dashboard') || str_contains($intended, '/login') || str_contains($intended, '/register'))) {
             session()->forget('url.intended');
         }
 

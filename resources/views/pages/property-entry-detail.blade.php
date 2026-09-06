@@ -31,7 +31,15 @@
         }
     }
 
-    // dd($entry);
+    $photoUrls = [];
+    if (isset($entry->photos) && $entry->photos->count() > 0) {
+        foreach($entry->photos as $photo) {
+            $photoUrls[] = asset('images/property_photos/' . basename($photo->file_path));
+        }
+    } else {
+        $photoUrls[] = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=70';
+    }
+    $heroPhotoUrl = $photoUrls[0];
 @endphp
 
 @section('styles')
@@ -433,33 +441,322 @@
             display: grid;
             grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
             gap: 24px;
-            align-items: stretch;
+            align-items: flex-start;
         }
 
         .sgdxp-image-card {
             background: #fff;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 14px 35px rgba(0, 0, 0, .07);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, .08);
             line-height: 0;
+            position: relative;
+            height: 480px;
         }
 
         .sgdxp-image-wrapper {
             position: relative;
             width: 100%;
-            height: 100%;
-            min-height: 300px;
-            max-height: 480px;
+            height: 480px;
             overflow: hidden;
             line-height: 0;
             border-radius: 18px;
+            background: #091a24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .sgdxp-image-wrapper img {
+        .sgdxp-image-bg-blur {
+            position: absolute;
+            inset: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
+            background-size: cover;
+            background-position: center;
+            filter: blur(25px) brightness(0.45);
+            opacity: 0.85;
+            transform: scale(1.1);
+            transition: all 0.5s ease;
+        }
+
+        .sgdxp-image-main {
+            position: relative;
+            z-index: 2;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sgdxp-image-wrapper:hover .sgdxp-image-main {
+            transform: scale(1.02);
+        }
+
+        .sgdxp-image-main.guest-blurred {
+            filter: blur(14px) brightness(0.7);
+            pointer-events: none;
+        }
+
+        /* Photo Lock Overlay for Guests */
+        .photo-lock-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            background: rgba(11, 44, 61, 0.78);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            color: #fff;
+            border-radius: 18px;
+        }
+
+        .photo-lock-badge {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #b39359, #8b7444);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(179, 147, 89, 0.4);
+        }
+
+        .photo-lock-title {
+            font-family: 'Forum', cursive;
+            font-size: 26px !important;
+            color: #fff;
+            margin-bottom: 6px !important;
+            font-weight: 700;
+        }
+
+        .photo-lock-subtext {
+            font-size: 14px;
+            color: #d1dbe5;
+            max-width: 340px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .photo-lock-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .photo-lock-btn-primary {
+            background: linear-gradient(135deg, #b39359 0%, #9a7c4d 100%);
+            color: #fff !important;
+            padding: 10px 24px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 6px 16px rgba(179, 147, 89, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .photo-lock-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(179, 147, 89, 0.5);
+        }
+
+        .photo-lock-btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .photo-lock-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Lightbox Trigger Badge */
+        .sgdxp-image-badge {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            z-index: 5;
+            background: rgba(11, 44, 61, 0.88);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            border: 1px solid rgba(179, 147, 89, 0.6);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .sgdxp-image-wrapper:hover .sgdxp-image-badge {
+            background: #b39359;
+            color: #fff;
+            border-color: #b39359;
+            transform: translateY(-2px);
+        }
+
+        /* Fullscreen Lightbox Modal */
+        .zendo-lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(5, 15, 23, 0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .zendo-lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .zendo-lightbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 28px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .zendo-lightbox-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #b39359;
+        }
+
+        .zendo-lightbox-count {
+            font-size: 14px;
+            color: #d0deeb;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .zendo-lightbox-close {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .zendo-lightbox-close:hover {
+            background: #ef4444;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .zendo-lightbox-body {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .zendo-lightbox-img {
+            max-width: 90vw;
+            max-height: 75vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.25s ease;
+        }
+
+        .zendo-lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 32px;
+            transition: all 0.2s ease;
+            z-index: 10;
+            user-select: none;
+        }
+
+        .zendo-lightbox-nav:hover {
+            background: #b39359;
+            border-color: #b39359;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .zendo-lightbox-prev { left: 24px; }
+        .zendo-lightbox-next { right: 24px; }
+
+        .zendo-lightbox-thumbs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: rgba(0, 0, 0, 0.5);
+            overflow-x: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .zendo-lightbox-thumb {
+            width: 68px;
+            height: 50px;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.5;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .zendo-lightbox-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .zendo-lightbox-thumb.active,
+        .zendo-lightbox-thumb:hover {
+            opacity: 1;
+            border-color: #b39359;
+            transform: scale(1.05);
         }
 
         .sgdxp-contact-card {
@@ -1155,7 +1452,7 @@
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 24px;">
-                <a href="{{ route('login') }}" 
+                <a href="{{ route('login', ['redirect' => url()->current() . '?open_lightbox=1']) }}" 
                    class="popup-submit-btn" 
                    style="flex: 1; text-align: center; text-decoration: none; display: block; background: linear-gradient(135deg, #B39359 0%, #9a7c4d 100%);">
                     Login to Continue
@@ -1169,7 +1466,7 @@
             </div>
 
             <p class="popup-privacy-text" style="margin-top: 16px;">
-                Don't have an account? <a href="{{ route('register') }}" style="color: #B39359; font-weight: 600;">Create one now</a>
+                Don't have an account? <a href="{{ route('register', ['redirect' => url()->current() . '?open_lightbox=1']) }}" style="color: #B39359; font-weight: 600;">Create one now</a>
             </p>
         </div>
     </div>
@@ -1227,11 +1524,25 @@
         <div id="sgdxp-main">
             <div class="sgdxp-image-card">
                 <div class="sgdxp-image-wrapper">
-                    @if($entry->photos->count() > 0)
-                        <img src="{{ asset('images/property_photos/' . basename($entry->photos->first()->file_path)) }}" alt="{{ $entry->facility_type }}">
-                    @else
-                        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=70" alt="{{ $entry->facility_type }}">
+                    <img src="{{ $heroPhotoUrl }}" 
+                         id="hero-main-img" 
+                         class="sgdxp-image-main" 
+                         alt="{{ $entry->facility_type }}"
+                         @auth onclick="openLightbox(0)" @endauth>
+
+                    @auth
+                    @if(count($photoUrls) > 1)
+                    <div class="sgdxp-image-badge" onclick="openLightbox(0)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                        </svg>
+                        <span>View Full Gallery ({{ count($photoUrls) }})</span>
+                    </div>
                     @endif
+                    @endauth
                 </div>
             </div>
 
@@ -2094,34 +2405,209 @@
     </section>
 
     <!-- GALLERY -->
-    @if($entry->photos->count() > 0)
+    @if(count($photoUrls) > 0)
     <section id="sg-gallery-similar">
         <div class="sg-gs-row">
             <div class="sg-gallery-box">
-                <h2 class="sg-gallery-title">Gallery</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
+                    <h2 class="sg-gallery-title" style="margin: 0 !important;">Property Photo Gallery</h2>
+                    @auth
+                    <button type="button" onclick="openLightbox(0)" style="background: var(--zendo-gold); color: #fff; border: none; padding: 8px 20px; border-radius: 999px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(179,147,89,0.3);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M15 3h6v6M14 10l7-7M9 21H3v-6M10 14l-7 7"/>
+                        </svg>
+                        Open Lightbox ({{ count($photoUrls) }})
+                    </button>
+                    @endauth
+                </div>
                 <hr class="sg2-hr">
 
-                <div class="sg-slider">
-                    @foreach($entry->photos as $photo)
-                        <div class="sg-slide">
-                            <img src="{{ asset('images/property_photos/' . basename($photo->file_path)) }}" alt="{{ $entry->facility_type }}">
+                <div class="sg-slider" style="position: relative;">
+                    @foreach($photoUrls as $index => $photoUrl)
+                        <div class="sg-slide" style="{{ $index === 0 ? 'display: block;' : 'display: none;' }}">
+                            <div style="position: relative; width: 100%; height: 420px; background: #091a24; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                <div style="position: absolute; inset: -20px; background-image: url('{{ $photoUrl }}'); background-size: cover; background-position: center; filter: blur(25px) brightness(0.45); opacity: 0.85;"></div>
+                                <img src="{{ $photoUrl }}" 
+                                     class="{{ auth()->check() ? '' : 'guest-blurred' }}"
+                                     style="position: relative; z-index: 2; max-width: 100%; max-height: 420px; object-fit: contain; cursor: pointer;" 
+                                     alt="{{ $entry->facility_type }}"
+                                     @auth onclick="openLightbox({{ $index }})" @else onclick="document.getElementById('login-modal-overlay').classList.remove('hidden')" @endauth>
+                            </div>
                         </div>
                     @endforeach
 
+                    @guest
+                    <div class="photo-lock-overlay" style="border-radius: 12px;">
+                        <div class="photo-lock-badge">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="photo-lock-title">Login to View Gallery</h3>
+                        <p class="photo-lock-subtext">Log in to browse all {{ count($photoUrls) }} high-resolution site photos.</p>
+                        <div class="photo-lock-actions">
+                            <a href="{{ route('login', ['redirect' => url()->current() . '?open_lightbox=1']) }}" class="photo-lock-btn-primary">Login Now</a>
+                            <a href="{{ route('register', ['redirect' => url()->current() . '?open_lightbox=1']) }}" class="photo-lock-btn-secondary">Register</a>
+                        </div>
+                    </div>
+                    @else
                     <div class="sg-prev" onclick="sgPlusSlides(-1)">‹</div>
                     <div class="sg-next" onclick="sgPlusSlides(1)">›</div>
+                    @endguest
                 </div>
+
+                {{-- Gallery Thumbnails Strip --}}
+                @auth
+                @if(count($photoUrls) > 1)
+                <div style="display: flex; gap: 10px; margin-top: 14px; overflow-x: auto; padding: 4px 0;">
+                    @foreach($photoUrls as $index => $photoUrl)
+                        <div onclick="setGallerySlide({{ $index + 1 }}); openLightbox({{ $index }});" 
+                             style="width: 84px; height: 60px; border-radius: 8px; overflow: hidden; cursor: pointer; flex-shrink: 0; border: 2px solid #e2e6ed; transition: all 0.2s ease; background: #091a24; position: relative;">
+                            <img src="{{ $photoUrl }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Thumbnail {{ $index + 1 }}">
+                        </div>
+                    @endforeach
+                </div>
+                @endif
+                @endauth
             </div>
         </div>
     </section>
     @endif
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="zendo-lightbox-modal" class="zendo-lightbox-overlay">
+        <div class="zendo-lightbox-header">
+            <div>
+                <div class="zendo-lightbox-title">{{ $entry->property_name ?? $entry->facility_type }}</div>
+                <div style="font-size: 13px; color: #a0aec0;">{{ $entry->code }} &bull; {{ $entry->nearest_city ?? '' }}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span id="lightbox-count-element" class="zendo-lightbox-count">Photo 1 of {{ count($photoUrls) }}</span>
+                <button type="button" class="zendo-lightbox-close" onclick="closeLightbox()">&times;</button>
+            </div>
+        </div>
+        <div class="zendo-lightbox-body" onclick="if(event.target === this) closeLightbox();">
+            <button type="button" class="zendo-lightbox-nav zendo-lightbox-prev" onclick="navigateLightbox(-1)">&lsaquo;</button>
+            <img id="lightbox-img-element" src="{{ $heroPhotoUrl }}" class="zendo-lightbox-img" alt="Enlarged Photo">
+            <button type="button" class="zendo-lightbox-nav zendo-lightbox-next" onclick="navigateLightbox(1)">&rsaquo;</button>
+        </div>
+        @if(count($photoUrls) > 1)
+        <div class="zendo-lightbox-thumbs">
+            @foreach($photoUrls as $idx => $url)
+                <div class="zendo-lightbox-thumb {{ $idx === 0 ? 'active' : '' }}" onclick="setLightboxSlide({{ $idx }})">
+                    <img src="{{ $url }}" alt="Thumb {{ $idx + 1 }}">
+                </div>
+            @endforeach
+        </div>
+        @endif
+    </div>
 
 @endsection
 
 
 @section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    // Lightbox & Gallery logic
+    const isUserLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+    const galleryPhotos = @json($photoUrls);
+    let currentLightboxIndex = 0;
+
+    window.openLightbox = function(index = 0) {
+        if (!isUserLoggedIn) {
+            const loginModal = document.getElementById('login-modal-overlay');
+            if (loginModal) loginModal.classList.remove('hidden');
+            return;
+        }
+        if (!galleryPhotos || !galleryPhotos.length) return;
+        currentLightboxIndex = index;
+        updateLightboxContent();
+        const modal = document.getElementById('zendo-lightbox-modal');
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+    function openLightbox(index) { return window.openLightbox(index); }
+
+    window.closeLightbox = function() {
+        const modal = document.getElementById('zendo-lightbox-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    };
+    function closeLightbox() { return window.closeLightbox(); }
+
+    window.navigateLightbox = function(direction) {
+        if (!galleryPhotos.length) return;
+        currentLightboxIndex = (currentLightboxIndex + direction + galleryPhotos.length) % galleryPhotos.length;
+        updateLightboxContent();
+    };
+    function navigateLightbox(direction) { return window.navigateLightbox(direction); }
+
+    window.setLightboxSlide = function(index) {
+        currentLightboxIndex = index;
+        updateLightboxContent();
+    };
+    function setLightboxSlide(index) { return window.setLightboxSlide(index); }
+
+    function updateLightboxContent() {
+        const img = document.getElementById('lightbox-img-element');
+        const count = document.getElementById('lightbox-count-element');
+        if (img) {
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = galleryPhotos[currentLightboxIndex];
+                img.style.opacity = '1';
+            }, 120);
+        }
+        if (count) {
+            count.textContent = `Photo ${currentLightboxIndex + 1} of ${galleryPhotos.length}`;
+        }
+        document.querySelectorAll('.zendo-lightbox-thumb').forEach((thumb, idx) => {
+            if (idx === currentLightboxIndex) {
+                thumb.classList.add('active');
+                thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
+
+    window.setGallerySlide = function(n) {
+        let slides = document.getElementsByClassName("sg-slide");
+        if (!slides.length) return;
+        for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+        slides[n - 1].style.display = "block";
+    };
+    function setGallerySlide(n) { return window.setGallerySlide(n); }
+
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('zendo-lightbox-modal');
+        if (modal && modal.classList.contains('active')) {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        }
+    });
+
+    // Auto-scroll to Gallery section and open Lightbox if redirected after login/register
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('open_lightbox')) {
+        const gallerySection = document.getElementById('sg-gallery-similar');
+        if (gallerySection) {
+            gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setTimeout(function() {
+            if (typeof openLightbox === 'function') {
+                openLightbox(0);
+            }
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+        }, 400);
+    }
+
     // Gallery Slider
     let slideIndex = 1;
     showSlides(slideIndex);
@@ -2217,70 +2703,57 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
-</script>
-@endsection
 
-
-<script>
-// Wishlist toggle functionality
-@auth
-document.addEventListener('DOMContentLoaded', function() {
+    // Wishlist toggle functionality
+    @auth
     const wishlistBtn = document.getElementById('wishlist-toggle-btn');
-    if (!wishlistBtn) return;
-    
-    wishlistBtn.addEventListener('click', function() {
-        const propertyEntryCode = this.dataset.propertyEntryCode;
-        const isInWishlist = this.dataset.inWishlist === 'true';
-        
-        // Disable button during request
-        wishlistBtn.disabled = true;
-        
-        fetch('{{ route("user.wishlist.toggle") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                property_entry_code: propertyEntryCode
+    if (wishlistBtn) {
+        wishlistBtn.addEventListener('click', function() {
+            const propertyEntryCode = this.dataset.propertyEntryCode;
+            const isInWishlist = this.dataset.inWishlist === 'true';
+            
+            wishlistBtn.disabled = true;
+            
+            fetch('{{ route("user.wishlist.toggle") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    property_entry_code: propertyEntryCode
+                })
             })
-        })
-        .then(response => response.json())
-        .then(data => {
+            .then(response => response.json())
+            .then(data => {
                 if (data.success) {
-                    // Update button state
                     const newState = data.action === 'added';
                     wishlistBtn.dataset.inWishlist = newState ? 'true' : 'false';
-                    
-                    // Update button styling
                     wishlistBtn.style.background = newState ? '#B39359' : 'white';
                     wishlistBtn.style.color = newState ? 'white' : '#0B2C3D';
                     
-                    // Update text
                     const wishlistText = document.getElementById('wishlist-text');
                     if (wishlistText) {
                         wishlistText.textContent = newState ? 'Saved' : 'Save';
                     }
                     
-                    // Show feedback message
                     const message = newState ? 'Added to wishlist!' : 'Removed from wishlist';
                     showWishlistMessage(message, 'success');
                 } else {
                     showWishlistMessage('Failed to update wishlist', 'error');
                 }
             })
-        .catch(error => {
-            console.error('Wishlist error:', error);
-            showWishlistMessage('An error occurred', 'error');
-        })
-        .finally(() => {
-            wishlistBtn.disabled = false;
+            .catch(error => {
+                console.error('Wishlist error:', error);
+                showWishlistMessage('An error occurred', 'error');
+            })
+            .finally(() => {
+                wishlistBtn.disabled = false;
+            });
         });
-    });
+    }
     
     function showWishlistMessage(message, type) {
-        // Create temporary message
         const msg = document.createElement('div');
         msg.textContent = message;
         msg.style.cssText = `
@@ -2303,11 +2776,9 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => msg.remove(), 300);
         }, 2000);
     }
-});
-@endauth
+    @endauth
 
-// Login button handler for non-authenticated users
-document.addEventListener('DOMContentLoaded', function() {
+    // Login button handler for non-authenticated users
     const loginBtn = document.getElementById('wishlist-login-btn');
     if (loginBtn) {
         loginBtn.addEventListener('click', function() {
@@ -2332,8 +2803,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
 </script>
+@endsection
 
 <style>
 @keyframes slideIn {

@@ -17,8 +17,11 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->has('redirect')) {
+            session(['url.intended' => $request->input('redirect')]);
+        }
         return view('auth.register');
     }
 
@@ -29,6 +32,10 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->has('redirect')) {
+            session(['url.intended' => $request->input('redirect')]);
+        }
+
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'phone'    => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:'.User::class.',phone'],
@@ -59,6 +66,11 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect($user->getDashboardUrl());
+        $intended = session('url.intended');
+        if ($intended && (str_contains($intended, '/dashboard') || str_contains($intended, '/login') || str_contains($intended, '/register'))) {
+            session()->forget('url.intended');
+        }
+
+        return redirect()->intended($user->getDashboardUrl());
     }
 }

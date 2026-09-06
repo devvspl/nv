@@ -133,7 +133,13 @@ class OtpController extends Controller
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        $redirectUrl = $user->getDashboardUrl();
+        $intended = session('url.intended');
+        if ($intended && (str_contains($intended, '/dashboard') || str_contains($intended, '/login') || str_contains($intended, '/register'))) {
+            session()->forget('url.intended');
+            $intended = null;
+        }
+
+        $redirectUrl = $intended ?: $user->getDashboardUrl();
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -198,17 +204,23 @@ class OtpController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        $redirectUrl = $user->getDashboardUrl();
+        $intended = session('url.intended');
+        if ($intended && (str_contains($intended, '/dashboard') || str_contains($intended, '/login') || str_contains($intended, '/register'))) {
+            session()->forget('url.intended');
+            $intended = null;
+        }
+
+        $redirectUrl = $intended ?: $user->getDashboardUrl();
 
         if ($request->wantsJson()) {
             return response()->json([
                 'success'      => true,
                 'message'      => 'Account created and verified successfully!',
-                'redirect_url' => $user->getDashboardUrl(),
+                'redirect_url' => $redirectUrl,
             ]);
         }
 
-        return redirect($redirectUrl);
+        return redirect()->intended($redirectUrl);
     }
 
     /**
