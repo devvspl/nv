@@ -70,7 +70,7 @@
                         </div>
                         <div class="apw-ctaRow">
                             <a class="apw-btnOutline"
-                                href="{{ route('property-entries.show', $entry->code) }}">View Details</a>
+                                href="{{ route('property-entries.show-type', ['type' => $entry->property_type_slug, 'entry' => $entry->code]) }}">View Details</a>
                         </div>
                     </div>
                     @if (count($entry->public_amenities))

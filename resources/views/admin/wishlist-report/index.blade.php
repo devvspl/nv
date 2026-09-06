@@ -341,7 +341,7 @@
                                 {{-- Action --}}
                                 <td class="px-5 py-4 text-right">
                                     @if($wishlist->property_entry_code)
-                                        <a href="{{ route('property-entries.show', $wishlist->property_entry_code) }}" target="_blank"
+                                        <a href="{{ $wishlist->propertyEntry ? route('property-entries.show-type', ['type' => $wishlist->propertyEntry->property_type_slug, 'entry' => $wishlist->property_entry_code]) : route('property-entries.show', $wishlist->property_entry_code) }}" target="_blank"
                                            class="inline-flex items-center text-xs font-semibold text-zendo-navy hover:text-zendo-gold transition-colors">
                                             View Entry &rarr;
                                         </a>

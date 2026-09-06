@@ -101,7 +101,7 @@
                 @endif
 
                 <div class="pt-2">
-                    <a href="{{ route('property-entries.show', $inquiry->property_entry_code) }}" 
+                    <a href="{{ route('property-entries.show-type', ['type' => $inquiry->propertyEntry->property_type_slug, 'entry' => $inquiry->property_entry_code]) }}" 
                         class="inline-flex items-center text-sm font-medium text-zendo-gold hover:text-zendo-navy transition-colors">
                         View Property Details →
                     </a>

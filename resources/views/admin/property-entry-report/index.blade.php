@@ -350,6 +350,20 @@
                     </select>
                 </div>
 
+                {{-- Property Type --}}
+                <div class="flex-1 min-w-[170px]">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Property Type</label>
+                    <select name="property_type" id="filter-property-type"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-zendo-gold focus:border-transparent">
+                        <option value="">All Property Types</option>
+                        @foreach(config('property_types.types', []) as $pTypeKey => $pTypeMeta)
+                            <option value="{{ $pTypeKey }}" {{ request('property_type') === $pTypeKey ? 'selected' : '' }}>
+                                {{ $pTypeMeta['label'] ?? ucfirst(str_replace('_', ' ', $pTypeKey)) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 {{-- Facility Type --}}
                 <div class="flex-1 min-w-[160px]">
                     <label class="block text-xs font-medium text-gray-600 mb-1">Facility Type</label>
@@ -578,7 +592,7 @@
                                 {{ $entry->submitted_at?->format('d M Y') ?? '—' }}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <a href="{{ route('admin.property-entry-report.show', $entry) }}"
+                                <a href="{{ route('admin.property-entry-report.show-type', ['type' => $entry->property_type_slug, 'entry' => $entry]) }}"
                                     class="inline-flex items-center text-xs font-medium text-zendo-navy hover:text-zendo-gold transition-colors">
                                     View
                                     <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -586,7 +600,7 @@
                                             d="M9 5l7 7-7 7" />
                                     </svg>
                                 </a>
-                                <a href="{{ route('admin.property-entry-report.edit', $entry) }}"
+                                <a href="{{ route('admin.property-entry-report.edit-type', ['type' => $entry->property_type_slug, 'entry' => $entry]) }}"
                                     class="inline-flex items-center text-xs font-medium text-amber-600 hover:text-amber-700 transition-colors ml-3">
                                     Edit
                                     <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

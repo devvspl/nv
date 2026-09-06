@@ -257,68 +257,48 @@
          <!-- Property Grid -->
          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid-container">
             @forelse($featuredProperties as $property)
-               <!-- Property Card: {{ $property->title }} -->
+               @php
+                  $entryPhoto = $property->photos->first();
+                  $entryImg = $entryPhoto
+                     ? asset('images/property_photos/' . basename($entryPhoto->file_path))
+                     : asset('main/images/properties/default.png');
+               @endphp
+               <!-- Property Card: {{ $property->public_title }} -->
                <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
                   <!-- Image Container -->
                   <div class="relative group overflow-hidden">
-                     <img src="{{ $property->main_image_url ?? asset('main/images/properties/default.png') }}"
-                        alt="{{ $property->title }}" class="card-image w-full h-64 object-cover">
+                     <img src="{{ $entryImg }}"
+                        alt="{{ $property->public_title }}" class="card-image w-full h-64 object-cover">
                      <!-- Tags -->
                      <div class="absolute top-4 left-4 flex space-x-2">
-                        @if($property->propertyType)
-                           <span
-                              class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ $property->propertyType->name }}</span>
-                        @endif
-                        @if($property->is_featured)
-                           <span class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">Featured</span>
-                        @endif
+                        <span
+                           class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ \Illuminate\Support\Str::headline($property->property_type) }}</span>
                      </div>
                      <!-- Price -->
                      <div class="absolute bottom-4 left-4">
                         <span
-                           class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->formatted_price }}</span>
+                           class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->public_price_label }}: {{ $property->public_price_value }}</span>
                      </div>
                   </div>
                   <!-- Card Content -->
                   <div class="p-6">
-                     @if($property->propertyType)
-                        <span class="text-sm font-semibold font-body text-zendo-gold">{{ $property->propertyType->name }}</span>
-                     @endif
+                     <span class="text-sm font-semibold font-body text-zendo-gold">{{ \Illuminate\Support\Str::headline($property->property_type) }}</span>
                      <h3
                         class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                        <a href="{{ route('properties.show', $property->slug) }}">{{ $property->title }}</a>
+                        <a href="{{ route('property-entries.show-type', ['type' => $property->property_type_slug, 'entry' => $property->code]) }}">{{ $property->public_title }}</a>
                      </h3>
                      <p class="mt-2 flex items-center text-gray-600 font-body">
                         <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
                            class="w-4 h-4 mr-2 flex-shrink-0">
-                        @if($property->location)
-                           {{ $property->location->name }}@if($property->city), {{ $property->city->name }}@endif
-                        @elseif($property->city)
-                           {{ $property->city->name }}
-                        @else
-                           {{ $property->address }}
-                        @endif
+                        {{ $property->public_detail_line }}
                      </p>
-                     <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                        @if($property->bhk)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon" class="w-4 h-4 mr-1.5">
-                              {{ $property->bhk->name }}
-                           </span>
-                        @endif
-                        @if($property->specifications && $property->specifications->bathrooms)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon" class="w-4 h-4 mr-1.5">
-                              Baths: {{ $property->specifications->bathrooms }}
-                           </span>
-                        @endif
-                        @if($property->carpet_area)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon" class="w-4 h-4 mr-1.5">
-                              {{ number_format($property->carpet_area) }} Sq Ft
-                           </span>
-                        @endif
-                     </div>
+                     @if(count($property->public_amenities))
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-wrap gap-2 text-gray-700 font-body">
+                           @foreach($property->public_amenities as $amenity)
+                              <span class="text-sm">{{ $amenity }}</span>
+                           @endforeach
+                        </div>
+                     @endif
                   </div>
                </div>
             @empty
@@ -1039,61 +1019,44 @@
          <!-- Property Grid -->
          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid-container">
             @forelse($popularProperties as $property)
-               <!-- Property Card: {{ $property->title }} -->
+               @php
+                  $entryPhoto = $property->photos->first();
+                  $entryImg = $entryPhoto
+                     ? asset('images/property_photos/' . basename($entryPhoto->file_path))
+                     : asset('main/images/properties/default.png');
+               @endphp
+               <!-- Property Card: {{ $property->public_title }} -->
                <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
                   <div class="relative group overflow-hidden">
-                     <img src="{{ $property->main_image_url ?? asset('main/images/properties/default.png') }}"
-                        alt="{{ $property->title }}" class="card-image w-full h-64 object-cover">
+                     <img src="{{ $entryImg }}"
+                        alt="{{ $property->public_title }}" class="card-image w-full h-64 object-cover">
                      <div class="absolute top-4 left-4 flex space-x-2">
-                        @if($property->propertyType)
-                           <span
-                              class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ $property->propertyType->name }}</span>
-                        @endif
+                        <span
+                           class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ \Illuminate\Support\Str::headline($property->property_type) }}</span>
                      </div>
                      <div class="absolute bottom-4 left-4">
                         <span
-                           class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->formatted_price }}</span>
+                           class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->public_price_label }}: {{ $property->public_price_value }}</span>
                      </div>
                   </div>
                   <div class="p-6">
-                     @if($property->propertyType)
-                        <span class="text-sm font-semibold font-body text-zendo-gold">{{ $property->propertyType->name }}</span>
-                     @endif
+                     <span class="text-sm font-semibold font-body text-zendo-gold">{{ \Illuminate\Support\Str::headline($property->property_type) }}</span>
                      <h3
                         class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                        <a href="{{ route('properties.show', $property->slug) }}">{{ $property->title }}</a>
+                        <a href="{{ route('property-entries.show', $property->code) }}">{{ $property->public_title }}</a>
                      </h3>
                      <p class="mt-2 flex items-center text-gray-600 font-body">
                         <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
                            class="w-4 h-4 mr-2 flex-shrink-0">
-                        @if($property->location)
-                           {{ $property->location->name }}@if($property->city), {{ $property->city->name }}@endif
-                        @elseif($property->city)
-                           {{ $property->city->name }}
-                        @else
-                           {{ $property->address }}
-                        @endif
+                        {{ $property->public_detail_line }}
                      </p>
-                     <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                        @if($property->bhk)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon" class="w-4 h-4 mr-1.5">
-                              {{ $property->bhk->name }}
-                           </span>
-                        @endif
-                        @if($property->specifications && $property->specifications->bathrooms)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon" class="w-4 h-4 mr-1.5">
-                              Baths: {{ $property->specifications->bathrooms }}
-                           </span>
-                        @endif
-                        @if($property->carpet_area)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon" class="w-4 h-4 mr-1.5">
-                              {{ number_format($property->carpet_area) }} Sq Ft
-                           </span>
-                        @endif
-                     </div>
+                     @if(count($property->public_amenities))
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-wrap gap-2 text-gray-700 font-body">
+                           @foreach($property->public_amenities as $amenity)
+                              <span class="text-sm">{{ $amenity }}</span>
+                           @endforeach
+                        </div>
+                     @endif
                   </div>
                </div>
             @empty
@@ -1210,61 +1173,44 @@
          <!-- Property Grid -->
          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid-container">
             @forelse($rentalProperties as $property)
-               <!-- Property Card: {{ $property->title }} -->
+               @php
+                  $entryPhoto = $property->photos->first();
+                  $entryImg = $entryPhoto
+                     ? asset('images/property_photos/' . basename($entryPhoto->file_path))
+                     : asset('main/images/properties/default.png');
+               @endphp
+               <!-- Property Card: {{ $property->public_title }} -->
                <div class="property-card card-item bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
                   <div class="relative group overflow-hidden">
-                     <img src="{{ $property->main_image_url ?? asset('main/images/properties/default.png') }}"
-                        alt="{{ $property->title }}" class="card-image w-full h-64 object-cover">
+                     <img src="{{ $entryImg }}"
+                        alt="{{ $property->public_title }}" class="card-image w-full h-64 object-cover">
                      <div class="absolute top-4 left-4 flex space-x-2">
-                        @if($property->propertyType)
-                           <span
-                              class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ $property->propertyType->name }}</span>
-                        @endif
+                        <span
+                           class="px-3 py-1 rounded text-sm font-semibold bg-zendo-gold text-white">{{ \Illuminate\Support\Str::headline($property->property_type) }}</span>
                      </div>
                      <div class="absolute bottom-4 left-4">
                         <span
-                           class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->formatted_price }}</span>
+                           class="text-2xl font-medium font-heading text-white bg-black/50 px-3 py-1 rounded">{{ $property->public_price_label }}: {{ $property->public_price_value }}</span>
                      </div>
                   </div>
                   <div class="p-6">
-                     @if($property->propertyType)
-                        <span class="text-sm font-semibold font-body text-zendo-gold">{{ $property->propertyType->name }}</span>
-                     @endif
+                     <span class="text-sm font-semibold font-body text-zendo-gold">{{ \Illuminate\Support\Str::headline($property->property_type) }}</span>
                      <h3
                         class="mt-2 text-2xl font-medium font-heading text-zendo-navy hover:text-zendo-gold transition-colors">
-                        <a href="{{ route('properties.show', $property->slug) }}">{{ $property->title }}</a>
+                        <a href="{{ route('property-entries.show', $property->code) }}">{{ $property->public_title }}</a>
                      </h3>
                      <p class="mt-2 flex items-center text-gray-600 font-body">
                         <img src="{{ asset('main/icons/location.svg') }}" alt="Location Icon"
                            class="w-4 h-4 mr-2 flex-shrink-0">
-                        @if($property->location)
-                           {{ $property->location->name }}@if($property->city), {{ $property->city->name }}@endif
-                        @elseif($property->city)
-                           {{ $property->city->name }}
-                        @else
-                           {{ $property->address }}
-                        @endif
+                        {{ $property->public_detail_line }}
                      </p>
-                     <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-gray-700 font-body">
-                        @if($property->bhk)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/single-bed.svg') }}" alt="Bed Icon" class="w-4 h-4 mr-1.5">
-                              {{ $property->bhk->name }}
-                           </span>
-                        @endif
-                        @if($property->specifications && $property->specifications->bathrooms)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/bathroom.svg') }}" alt="Bathroom Icon" class="w-4 h-4 mr-1.5">
-                              Baths: {{ $property->specifications->bathrooms }}
-                           </span>
-                        @endif
-                        @if($property->carpet_area)
-                           <span class="flex items-center text-sm">
-                              <img src="{{ asset('main/icons/full-size.svg') }}" alt="Area Icon" class="w-4 h-4 mr-1.5">
-                              {{ number_format($property->carpet_area) }} Sq Ft
-                           </span>
-                        @endif
-                     </div>
+                     @if(count($property->public_amenities))
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-wrap gap-2 text-gray-700 font-body">
+                           @foreach($property->public_amenities as $amenity)
+                              <span class="text-sm">{{ $amenity }}</span>
+                           @endforeach
+                        </div>
+                     @endif
                   </div>
                </div>
             @empty

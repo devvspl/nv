@@ -77,6 +77,7 @@ Route::get('/blogs', [HomeController::class, 'blogs'])->name('blogs.index');
 Route::get('/blog/{blog:slug}', [HomeController::class, 'blogShow'])->name('blogs.show');
 Route::get('/properties', [HomeController::class, 'properties'])->name('properties.index');
 Route::get('/properties/{property:slug}', [HomeController::class, 'show'])->name('properties.show');
+Route::get('/property-entries/{type}/{entry:code}', [HomeController::class, 'showEntry'])->name('property-entries.show-type');
 Route::get('/property-entries/{entry:code}', [HomeController::class, 'showEntry'])->name('property-entries.show');
 Route::get('/properties/search', [HomeController::class, 'search'])->name('properties.search');
 Route::get('/api/bhks-by-property-type', [HomeController::class, 'getBhksByPropertyType'])->name('api.bhks-by-property-type');
@@ -271,6 +272,9 @@ Route::middleware('auth')->group(function () {
         Route::put('video-tour', [VideoTourController::class, 'update'])->name('video-tour.update');
         Route::get('property-entry-report', [PropertyEntryReportController::class, 'index'])->name('property-entry-report.index');
         Route::get('property-entry-report/export', [PropertyEntryReportController::class, 'export'])->name('property-entry-report.export');
+        Route::get('property-entry-report/{type}/{entry}', [PropertyEntryReportController::class, 'show'])->name('property-entry-report.show-type');
+        Route::get('property-entry-report/{type}/{entry}/edit', [PropertyEntryReportController::class, 'edit'])->name('property-entry-report.edit-type');
+        Route::put('property-entry-report/{type}/{entry}', [PropertyEntryReportController::class, 'update'])->name('property-entry-report.update-type');
         Route::get('property-entry-report/{entry}', [PropertyEntryReportController::class, 'show'])->name('property-entry-report.show');
         Route::get('property-entry-report/{entry}/edit', [PropertyEntryReportController::class, 'edit'])->name('property-entry-report.edit');
         Route::put('property-entry-report/{entry}', [PropertyEntryReportController::class, 'update'])->name('property-entry-report.update');

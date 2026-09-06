@@ -48,9 +48,32 @@ class HomeController extends Controller
         $commercialSection = CommercialSection::getActive();
         $serviceTypes = ServiceType::active()->ordered()->with('propertyTypes')->get();
         $propertyTypes = PropertyType::active()->ordered()->get();
-        $featuredProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage'])->active()->published()->featured()->latest('published_at')->limit(3)->get();
-        $popularProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])->active()->published()->orderBy('views_count', 'desc')->limit(3)->get();
-        $rentalProperties = Property::with(['propertyType', 'bhk', 'city', 'location', 'projectStatus', 'mainImage', 'specifications'])->active()->published()->latest('published_at')->limit(3)->get();
+
+        // Home page's three showcase sections now source from property_entries
+        // (the legacy `properties` table is no longer fed). None of these
+        // categories has a dedicated flag on PropertyEntry (no is_featured /
+        // is_popular / investment column), so each section is a distinct,
+        // non-overlapping slice of the same publiclyVisible() pool rather
+        // than a fabricated ranking:
+        //   - Best Choice: newest publicly-visible listings
+        //   - Popular: most recently admin-approved listings
+        //   - Investment Opportunities: for-sale listings (has a sale price
+        //     band), falling back to newest remaining listings if too few
+        $publicEntryQuery = fn () => \App\Models\PropertyEntry::with('photos')->publiclyVisible();
+
+        $featuredProperties = $publicEntryQuery()->latest('submitted_at')->limit(3)->get();
+        $featuredIds = $featuredProperties->pluck('id');
+
+        $popularProperties = $publicEntryQuery()->whereNotIn('id', $featuredIds)->latest('admin_actioned_at')->limit(3)->get();
+        $shownIds = $featuredIds->merge($popularProperties->pluck('id'));
+
+        $rentalProperties = $publicEntryQuery()->whereNotIn('id', $shownIds)->whereNotNull('sale_price_band')->latest('submitted_at')->limit(3)->get();
+        if ($rentalProperties->count() < 3) {
+            $shownIds = $shownIds->merge($rentalProperties->pluck('id'));
+            $rentalProperties = $rentalProperties->merge(
+                $publicEntryQuery()->whereNotIn('id', $shownIds)->latest('submitted_at')->limit(3 - $rentalProperties->count())->get()
+            );
+        }
         $blogs = Blog::active()->published()->ordered()->limit(4)->get();
         $videoTour = VideoTourSection::getActive();
         $serviceTypeMapping = [];
@@ -238,8 +261,9 @@ class HomeController extends Controller
         ));
     }
 
-    public function showEntry(\App\Models\PropertyEntry $entry)
+    public function showEntry($typeOrEntry, ?\App\Models\PropertyEntry $entry = null)
     {
+        $entry = $typeOrEntry instanceof \App\Models\PropertyEntry ? $typeOrEntry : ($entry ?: \App\Models\PropertyEntry::where('code', $typeOrEntry)->firstOrFail());
         $entry->load(['photos']);
         
         // Get field configurations

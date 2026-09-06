@@ -263,8 +263,9 @@ class PropertyEntryReportController extends Controller
 
     // ── Admin Show (read-only, no role guard) ─────────────────────────────────
 
-    public function show(PropertyEntry $entry): View
+    public function show($typeOrEntry, ?PropertyEntry $entry = null): View
     {
+        $entry = $typeOrEntry instanceof PropertyEntry ? $typeOrEntry : ($entry ?: PropertyEntry::findOrFail($typeOrEntry));
         $entry->load(['photos', 'fieldOfficer', 'supplyHead', 'reviewer', 'adminActioner', 'logs.user']);
         $slots = self::PHOTO_SLOTS;
 
@@ -378,8 +379,9 @@ class PropertyEntryReportController extends Controller
 
     // ── Admin Edit Form ───────────────────────────────────────────────────────
 
-    public function edit(PropertyEntry $entry): View
+    public function edit($typeOrEntry, ?PropertyEntry $entry = null): View
     {
+        $entry = $typeOrEntry instanceof PropertyEntry ? $typeOrEntry : ($entry ?: PropertyEntry::findOrFail($typeOrEntry));
         $entry->load(['photos', 'fieldReviews', 'fieldOfficer', 'supplyHead', 'zone']);
         $property = $entry;
         $slots = self::PHOTO_SLOTS;
@@ -394,8 +396,9 @@ class PropertyEntryReportController extends Controller
 
     // ── Admin Update Processing ───────────────────────────────────────────────
 
-    public function update(Request $request, PropertyEntry $entry): RedirectResponse
+    public function update(Request $request, $typeOrEntry, ?PropertyEntry $entry = null): RedirectResponse
     {
+        $entry = $typeOrEntry instanceof PropertyEntry ? $typeOrEntry : ($entry ?: PropertyEntry::findOrFail($typeOrEntry));
         ini_set('memory_limit', '256M');
         ini_set('max_execution_time', 300);
 
@@ -450,7 +453,7 @@ class PropertyEntryReportController extends Controller
             'note'    => 'Property entry updated by admin.',
         ]);
 
-        return redirect()->route('admin.property-entry-report.show', $entry)
+        return redirect()->route('admin.property-entry-report.show-type', ['type' => $entry->property_type_slug, 'entry' => $entry])
             ->with('success', 'Property entry updated successfully by admin. Code: ' . $entry->code);
     }
 

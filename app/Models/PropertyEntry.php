@@ -30,7 +30,6 @@ class PropertyEntry extends Model
         'supply_head_viewed_at',
         'property_type',
         'custom_fields',
-        // A
         'facility_type',
         'property_name',
         'name_full_address',
@@ -48,7 +47,6 @@ class PropertyEntry extends Model
         'owner_contact_name',
         'owner_contact_phone',
         'owner_email',
-        // B
         'tenure',
         'approved_land_use',
         'fire_noc',
@@ -56,7 +54,6 @@ class PropertyEntry extends Model
         'occupancy_certificate',
         'pollution_noc',
         'pollution_category',
-        // C
         'plot_area',
         'built_up_area',
         'carpet_area',
@@ -68,7 +65,6 @@ class PropertyEntry extends Model
         'shed_length',
         'number_of_floors',
         'fsi_far',
-        // C — docks
         'dock_door_count',
         'dock_front',
         'dock_left',
@@ -115,41 +111,33 @@ class PropertyEntry extends Model
         'scrap_yard',
         'no_of_companies_same_premise',
         'extension_possible',
-        // D
         'dock_type',
         'dock_height',
         'truck_movement',
-        // E
         'flooring_type',
         'office_cabin_area',
         'washrooms',
         'ventilation_lighting',
-        // F
         'power_sanctioned_kva',
         'discom_name',
         'water_source',
         'water_tank_capacity',
         'fire_fighting_system',
         'solar',
-        // G
         'deal_type',
         'expected_rent',
         'expected_sale_price',
         'security_deposit_months',
         'lock_in_years',
         'available_from',
-        // H
         'approach_road_width',
         'top_neighbouring_companies',
         'flood_risk',
-        // I
         'nearest_hospital_km',
         'nearest_fire_station_km',
         'nearest_police_station_km',
-        // K
         'remarks',
         'form_submited_location',
-        // Apartment / Flat / Studio
         'submitter_full_name',
         'submitter_phone',
         'submitter_email',
@@ -256,7 +244,6 @@ class PropertyEntry extends Model
         'field_officer_name',
         'field_verified',
         'inspection_submission_date',
-        // Additional columns
         'ac_rooms',
         'age_of_building',
         'air_conditioning',
@@ -396,8 +383,6 @@ class PropertyEntry extends Model
         'lease_tenure'                 => 'float',
         'lock_in_remaining'            => 'float',
         'annual_escalation_in_lease'   => 'float',
-        'lease_tenure'                 => 'float',
-        'lock_in_remaining'            => 'float',
         'amenities'                    => 'array',
         'approach_road_width_ft'       => 'float',
         'area_in_standard_unit_sq_ft'  => 'float',
@@ -661,6 +646,11 @@ class PropertyEntry extends Model
     public function getResolvedPropertyTypeAttribute(): string
     {
         return $this->property_type ?: 'warehouse';
+    }
+
+    public function getPropertyTypeSlugAttribute(): string
+    {
+        return str_replace('_', '-', $this->resolved_property_type);
     }
 
     /**

@@ -142,7 +142,7 @@
                     </div>
 
                     <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <a href="{{ route('property-entries.show', $entry->code) }}" class="text-sm font-medium text-zendo-navy hover:text-zendo-gold transition-colors">
+                        <a href="{{ route('property-entries.show-type', ['type' => $entry->property_type_slug, 'entry' => $entry->code]) }}" class="text-sm font-medium text-zendo-navy hover:text-zendo-gold transition-colors">
                             View Details →
                         </a>
                         <button type="button" class="remove-wishlist-btn text-sm font-medium text-red-600 hover:text-red-700 transition-colors" data-property-id="" data-entry-code="{{ $entry->code }}">

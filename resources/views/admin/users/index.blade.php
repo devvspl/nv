@@ -36,8 +36,8 @@
     <!-- Filters Section -->
     <div class="bg-white rounded-lg shadow-md p-5">
         <form method="GET" action="{{ route('admin.users.index') }}">
-            <!-- Row 1: Search, Role, Supply Head, Region -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+            <!-- Filters grid: Search, Role, Division, Zone, Region, Area, Status, Actions -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <!-- Search -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Search</label>
@@ -101,10 +101,7 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
 
-            <!-- Row 2: Area, Status, Actions -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <!-- Area Filter -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Area</label>
@@ -130,11 +127,8 @@
                     </select>
                 </div>
 
-                <!-- Empty space to align buttons to the right -->
-                <div class="hidden lg:block"></div>
-
                 <!-- Action Buttons -->
-                <div class="flex gap-3">
+                <div class="flex items-end gap-3">
                     <button type="submit"
                         class="flex-1 px-5 py-2.5 bg-zendo-gold text-white text-sm font-bold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
                         Apply Filters
